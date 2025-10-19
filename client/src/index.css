@@ -1,0 +1,73 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  width: 100%;
+}
+/* @import "tailwindcss"; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+::before,
+::after {
+  margin: 0;
+
+  padding: 0;
+  box-sizing: border-box;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+.notfound {
+  background: url("/public/food_images/m5.jpg");
+  background-repeat: no-repeat;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  font-weight: 800;
+  font-size: min(30vw, 150px);
+  background-size: cover;
+  font-family: Arial, Helvetica, sans-serif;
+  background-position: center;
+}
+
+@media (max-width: 260px) {
+  :root,
+  body {
+    width: fit-content;
+  }
+}
+
+.switch {
+  width: 50px;
+  height: 25px;
+  background-color: lightgray;
+  border-radius: 15px;
+  position: relative;
+}
+
+.switch::before {
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  content: "";
+  cursor: pointer;
+  background-color: white;
+  top: 0;
+  left: 3px;
+  border-radius: 100%;
+}
+
+.switch::after {
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  transform: translateX(10);
+  content: "";
+  cursor: pointer;
+  background-color: rgb(24, 73, 24);
+  top: 0;
+  right: 3px;
+  border-radius: 100%;
+}
