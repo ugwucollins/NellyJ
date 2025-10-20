@@ -21,7 +21,11 @@ const SelectField = ({
         className={`w-full py-2  mt-1.5 text-base font-semibold outline-neutral-400 shadow rounded-2xl px-2 focus:shadow-md outline outline-1 ${className}`}
       >
         {options.map((list: OPTIONPROP, index) => (
-          <option key={index} value={list.value} className="capitalize">
+          <option
+            key={index}
+            value={list.value && list.value}
+            className="capitalize"
+          >
             {list.title}
           </option>
         ))}

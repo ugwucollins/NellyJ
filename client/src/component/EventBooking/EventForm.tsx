@@ -14,6 +14,7 @@ import SelectField from "../../context/SelectField";
 import toast from "react-hot-toast";
 import TextAreaField from "../../context/TextAreaField";
 import { BiLoaderCircle } from "react-icons/bi";
+import DateField from "../../context/DateField";
 
 const EventForm = () => {
   return (
@@ -63,6 +64,8 @@ export const EventPath = () => {
 
 export function EventFormField() {
   const [foods, setFoods]: any = useState([]);
+  const [date, setDate] = useState("");
+
   const [loading, setLoading]: any = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -75,7 +78,6 @@ export function EventFormField() {
     event: "",
     town: "",
     busTop: "",
-    date: "",
   });
 
   const handleChange = (e: any) => {
@@ -93,11 +95,15 @@ export function EventFormField() {
       setFoods(Remove);
     }
   };
+  const JsonValue: any = localStorage.getItem("event");
+  const [events, setEvents] = useState(JSON.parse(JsonValue) || []);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleArray = () => {
+    const id = Date.now();
+
     const data = {
+      _id: id,
+      id: id + formData.name,
       address: formData.address,
       name: formData.name,
       phone: formData.phone,
@@ -108,9 +114,19 @@ export function EventFormField() {
       town: formData.town,
       busTop: formData.busTop,
       event: formData.event,
-      date: formData.date,
+      date: date,
       foods: foods,
     };
+    const allInfo = { data };
+    const EventArray = [...events, allInfo ? allInfo : data];
+    localStorage.setItem("event", JSON.stringify(EventArray));
+    setEvents(EventArray);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+
     if (
       formData.name.trim() &&
       formData.phone.trim() &&
@@ -120,7 +136,7 @@ export function EventFormField() {
       formData.town.trim() &&
       formData.state.trim() &&
       formData.event.trim() &&
-      formData.date.trim() &&
+      date.trim() &&
       formData.country.trim() &&
       formData.person.trim() &&
       foods.length !== 0
@@ -136,11 +152,11 @@ export function EventFormField() {
         town: "",
         busTop: "",
         event: "",
-        date: "",
         address: "",
       });
-      localStorage.setItem("event", JSON.stringify(data));
       setFoods([]);
+      handleArray();
+      setDate("");
       setTimeout(() => {
         setLoading(false);
         window.location.replace("/event/history");
@@ -157,6 +173,7 @@ export function EventFormField() {
         <h1 className="font-semibold text-lg pb-2 max-sm:pb-4 max-sm:text-center max-sm:text-xl max-sm:underline">
           Book An Event With Us
         </h1>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-y-3">
           <InputField
             value={formData.name}
@@ -170,7 +187,7 @@ export function EventFormField() {
           <InputField
             value={formData.phone}
             label="Phone Number*"
-            placeholder="Enter your name"
+            placeholder="Enter your Number"
             type="number"
             name="phone"
             onChange={handleChange}
@@ -200,15 +217,6 @@ export function EventFormField() {
               value={formData.country}
             />
           </div>
-
-          <InputField
-            value={formData.date}
-            label="Date*"
-            placeholder="Enter The date"
-            type="date"
-            name="date"
-            onChange={handleChange}
-          />
 
           <div className="flex flex-row-reverse gap-y-3 gap-x-4 max-[400px]:flex-col">
             <InputField
@@ -243,6 +251,8 @@ export function EventFormField() {
             name="event"
             value={formData.event}
           />
+
+          <DateField setDate={setDate} />
 
           <div className="py-4">
             <h1 className="text-base underline font-bold py-3">

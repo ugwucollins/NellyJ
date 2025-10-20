@@ -134,6 +134,14 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
                           </NavLink>
 
                           <hr className="bg-secondary mt-2 h-[2px]" />
+                          <NavLink
+                            to={"/event/history"}
+                            className="py-2 px-8 font-bold text-sm"
+                          >
+                            EventHistory
+                          </NavLink>
+
+                          <hr className="bg-secondary mt-2 h-[2px]" />
 
                           <button
                             className="py-2 px-8 font-bold text-sm"
@@ -334,6 +342,15 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
                                 className="py-2 px-8 font-bold text-sm"
                               >
                                 WishList
+                              </NavLink>
+
+                              <hr className="bg-secondary mt-2 h-[2px]" />
+                              <NavLink
+                                to={"/event/history"}
+                                onClick={handleClose}
+                                className="py-2 px-8 font-bold text-sm"
+                              >
+                                EventHistory
                               </NavLink>
 
                               <hr className="bg-secondary mt-2 h-[2px]" />
