@@ -8,6 +8,7 @@ import { sellerPath } from "../../context/UserContext";
 import { MdProductionQuantityLimits } from "react-icons/md";
 import AddCard from "../Context/AddCard";
 import { PiPlus } from "react-icons/pi";
+import { RealValues } from "../Context/RealValues";
 
 const SellerDashboard = () => {
   return (
@@ -31,7 +32,8 @@ export default SellerDashboard;
 
 export const SellerDashboardContent = () => {
   const { seller }: any = UserSellerAuth();
-
+  const { product, orders, sales, customers } = RealValues();
+  const RealArray: any = [sales, orders, product, customers];
   return (
     <div>
       <div className=" mb-4 py-2 px-2">
@@ -42,13 +44,13 @@ export const SellerDashboardContent = () => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-5 my-5">
-        {CardArray.map((item: CardProp, index) => (
+        {CardArray.map((item: CardProp, index: number | any) => (
           <Card
             key={index}
             index={index}
             Title={item.Title}
             icon={item.icon}
-            value={item.value}
+            value={RealArray[index]}
             color={item.color}
             pen={item.pen}
             path={item.path}

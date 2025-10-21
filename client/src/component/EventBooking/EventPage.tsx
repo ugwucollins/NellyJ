@@ -11,7 +11,7 @@ const EventPage = () => {
     <div className="w-full min-h-screen">
       <EventHeader />
 
-      <div className="pt-10 pb-5 mx-auto w-full flex-wrap gap-y-5 flex gap-x-8 justify-center items-center">
+      <div className="pt-10 max-sm:pt-14 pb-5 mx-auto w-full flex-wrap gap-y-5 flex gap-x-8 justify-center items-center">
         {EventCardInfo.map((item: EventCardsProp, index: number) => (
           <motion.div
             variants={YSlideIn(100, 0.5, index, 0.5)}

@@ -6,8 +6,8 @@ import { BsArrowRight } from "react-icons/bs";
 
 const EventHeader = () => {
   return (
-    <div className="w-full relative">
-      <div className="min-h-[90vh] max-[900px]:min-h-[120vh] max-[328px]:min-h-screen w-full  absolute">
+    <div className="w-full relative max-[900px]:mb-10 max-sm:mb-16">
+      <div className="min-h-[90vh] max-[900px]:min-h-[120vh] max-[380px]:min-h-screen w-full max-[500px]:min-h-[110vh]  absolute">
         <div className="absolute w-full h-full z-[1] dark:bg-secondary dark:opacity-90 bg-black opacity-75 backdrop-blur-sm blur-sm" />
         <EventVideoCom className="absolute z-0 w-full h-full object-cover object-center" />
       </div>

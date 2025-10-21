@@ -9,11 +9,15 @@ import { RiHeartsFill } from "react-icons/ri";
 import { GiCoffin } from "react-icons/gi";
 import { PiFlowerLotusFill } from "react-icons/pi";
 import { IoRoseSharp } from "react-icons/io5";
+import { UserAuth } from "../../context/UserContext";
+import { EmptyItems } from "../ShoppingCart";
+import { FeatureArryMap as FeatureArrayMap } from "../HomeContent/HomeExportComponent";
 
 const History = () => {
   return (
     <div className="my-5">
       <HistoryCard />
+      <FeatureArrayMap />
     </div>
   );
 };
@@ -21,8 +25,9 @@ const History = () => {
 export default History;
 
 export const HistoryCard = () => {
-  const JsonValue: any = localStorage.getItem("event");
-  const [allEvents, setAllEvents] = useState(JSON.parse(JsonValue) || []);
+  const { events }: any = UserAuth();
+
+  const [allEvents, setAllEvents] = useState((events && events) || []);
 
   useEffect(() => {
     setAllEvents;
@@ -46,19 +51,19 @@ export const HistoryCard = () => {
                 <div className="z-[1] relative py-4">
                   <div className="w-full rounded-full top-3 left-0 h-[78%] absolute from-zinc-100 to-blue-900 bg-gradient-to-tr -z-[1] animate-spin delay-150 transition-all duration-300" />
                   <div className="size-20 bg-white flex justify-center items-center rounded-full text-4xl dark:text-black">
-                    {event.data.event === EventsCheck.Birthday ? (
+                    {event.event === EventsCheck.Birthday ? (
                       <BsCakeFill />
-                    ) : event.data.event === EventsCheck.Baby_Shower ? (
+                    ) : event.event === EventsCheck.Baby_Shower ? (
                       <FaBaby />
-                    ) : event.data.event === EventsCheck.Wedding ? (
+                    ) : event.event === EventsCheck.Wedding ? (
                       <RiHeartsFill />
-                    ) : event.data.event === EventsCheck.Burial ? (
+                    ) : event.event === EventsCheck.Burial ? (
                       <GiCoffin />
-                    ) : event.data.event === EventsCheck.Graduation ? (
+                    ) : event.event === EventsCheck.Graduation ? (
                       <FaGraduationCap />
-                    ) : event.data.event === EventsCheck.Anniversary ? (
+                    ) : event.event === EventsCheck.Anniversary ? (
                       <PiFlowerLotusFill />
-                    ) : event.data.event === EventsCheck.Get_Together ? (
+                    ) : event.event === EventsCheck.Get_Together ? (
                       <IoRoseSharp />
                     ) : (
                       <TbTransactionDollar />
@@ -72,10 +77,10 @@ export const HistoryCard = () => {
                 <div>
                   <div className="max-[300px]:pl-4">
                     <h1 className="font-bold capitalize text-lg text-left">
-                      {event.data.name}
+                      {event.name}
                     </h1>
                     <span className="text-base font-semibold opacity-75">
-                      {event.data.phone}
+                      {event.phone}
                     </span>
                   </div>
                 </div>
@@ -91,27 +96,39 @@ export const HistoryCard = () => {
             </div>
             <div>
               <div className="pl-4 pt-2">
-                <h1 className="font-bold text-base text-left">
-                  {event.data.event}
-                </h1>
+                <h1 className="font-bold text-base text-left">{event.event}</h1>
                 <span className="text-base font-semibold opacity-75">
-                  {event.data.date}
+                  {event.date}
                 </span>
               </div>
-              <div className="px-4 pb-5 pt-2 text-left font-semibold text-gray-600 first:capitalize dark:text-gray-400">
-                "{event.data.description}"
+              <div className="px-4 pb-5 text-balance pt-2 text-left font-semibold text-gray-600 first:capitalize dark:text-gray-400">
+                "
+                {event.description.length <= 120
+                  ? event.description
+                  : event.description.slice(0, 120) + "..."}
+                "
               </div>
               <span className="font-semibold ml-4 font-serif opacity-85">
                 Address:
               </span>
               <address className="px-4 pb-6 text-left font-semibold text-gray-600 dark:text-gray-400">
-                "{event.data.address && event.data.address}, {event.data.busTop}
-                , {event.data.town}, {event.data.state}, {event.data.country}"
+                "{event.address && event.address}, {event.busTop}, {event.town},{" "}
+                {event.state}, {event.country}"
               </address>
             </div>
           </div>
         </motion.div>
       ))}
+      {allEvents.length === 0 && (
+        <div>
+          <EmptyItems
+            Text="Book Now"
+            LinkPath="/event"
+            icon={<TbTransactionDollar />}
+            title="No Booked Event"
+          />
+        </div>
+      )}
     </div>
   );
 };

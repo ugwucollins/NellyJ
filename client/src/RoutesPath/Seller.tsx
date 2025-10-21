@@ -11,6 +11,8 @@ import OrdersInfo from "../seller/Orders/OrdersInfo";
 import { PersonalRoles } from "../RolesControlle/RolesValue";
 import { UserSellerAuth } from "../seller/Context/SellersContext";
 import { useEffect } from "react";
+import Contacts from "../seller/pages/Contacts";
+import ContactID from "../seller/Contact/ContactID";
 
 const Seller = () => {
   const { seller }: any = UserSellerAuth();
@@ -38,6 +40,8 @@ const Seller = () => {
             <Route path={"addproduct"} element={<AddProduct />} />
             <Route path={"listproduct"} element={<ListProduct />} />
             <Route path={"orders"} element={<Orders />} />
+            <Route path={"contact"} element={<Contacts />} />
+            <Route path={"contact/:id"} element={<ContactID />} />
             <Route path={"orders/:orderId"} element={<OrdersInfo />} />
           </Route>
         </Route>

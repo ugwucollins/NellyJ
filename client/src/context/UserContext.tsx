@@ -22,6 +22,8 @@ const UserContext = ({ children }: any) => {
   });
   const [isLogIn, setisLogIn] = useState(false);
   const [UsersAddress, setUsersAddress] = useState(DummyAddress);
+  const JsonValue: any = localStorage.getItem("event");
+  const [events, setEvents] = useState(JSON.parse(JsonValue) || []);
 
   const router = useNavigate();
 
@@ -90,6 +92,8 @@ const UserContext = ({ children }: any) => {
     router,
     UsersAddress,
     LogOut,
+    events,
+    setEvents,
   };
   return (
     <UserProvider.Provider value={Values}>{children}</UserProvider.Provider>

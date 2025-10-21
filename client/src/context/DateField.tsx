@@ -2,19 +2,6 @@ import { useState } from "react";
 import type { OPTIONPROP } from "./Types";
 import { Days, Months, Years } from "../component/assets";
 
-// type DateFieldProp = {
-//   label?: string;
-//   placeholder?: string;
-//   valueMonth: string;
-//   valueDay: string;
-//   valueYear: string;
-//   name?: string;
-//   className?: string;
-//   optionsM: OPTIONPROP[];
-//   optionsY: OPTIONPROP[];
-//   onChange: (e: any) => void;
-// };
-
 const DateField = ({ setDate }: any) => {
   const [dates, setDates] = useState({
     day: "",
@@ -38,18 +25,21 @@ const DateField = ({ setDate }: any) => {
   return (
     <div>
       <div className="w-full flex relative flex-col text-left">
-        <label htmlFor="category" className="font-bold capitalize text-base">
+        <label
+          htmlFor="category"
+          className="font-bold dark:text-white capitalize text-base"
+        >
           Date*
         </label>
 
-        <div className="rounded-full max-[400px]:flex-col max-[400px]:outline-none outline outline-1 w-full flex justify-between items-center gap-1 gap-y-2  mt-1.5 text-base font-semibold outline-neutral-400 px-2 shadow focus:shadow-md overflow-">
+        <div className="rounded-full dark:text-black dark:px-0 overflow-hidden max-[400px]:flex-col max-[400px]:outline-none outline outline-1 w-full flex justify-between items-center gap-1 gap-y-4  mt-1.5 text-base font-semibold outline-neutral-400 px-2 max-[400px]:px-0 shadow focus:shadow-md">
           <div className="w-full">
             <select
               name="day"
               value={dates.day}
               onChange={handleChangeDate}
               id={"day"}
-              className={`outline-none py-2 w-full`}
+              className={`outline-none py-2 dark:pl-2 w-full max-[400px]:outline max-[400px]:outline-1 max-[400px]:outline-neutral-400 max-[400px]:rounded-full max-[400px]:px-2`}
             >
               {Days.map((list: OPTIONPROP | any, index) => (
                 <option key={index} value={list.value} className="capitalize">
@@ -64,7 +54,7 @@ const DateField = ({ setDate }: any) => {
               value={dates.month}
               onChange={handleChangeDate}
               id={"month"}
-              className={`outline-none py-2 w-full`}
+              className={`outline-none py-2 w-full max-[400px]:outline max-[400px]:outline-1 max-[400px]:outline-neutral-400 max-[400px]:rounded-full max-[400px]:px-2`}
             >
               {Months.map((list: OPTIONPROP | any, index) => (
                 <option key={index} value={list.value} className="capitalize">
@@ -79,7 +69,7 @@ const DateField = ({ setDate }: any) => {
               value={dates.year}
               onChange={handleChangeDate}
               id={"year"}
-              className={`outline-none py-2 w-full`}
+              className={`outline-none py-2 dark:px-2 w-full max-[400px]:outline max-[400px]:outline-1 max-[400px]:outline-neutral-400 max-[400px]:rounded-full max-[400px]:px-2`}
             >
               {Years.map((list: OPTIONPROP | any, index) => (
                 <option key={index} value={list.value} className="capitalize">

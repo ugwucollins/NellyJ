@@ -1,5 +1,6 @@
 import { MdEmail } from "react-icons/md";
 import TextAnimation, { buttonClassName } from "../Animation";
+import { Link } from "react-router-dom";
 
 const NewsLetter = () => {
   return (
@@ -9,9 +10,11 @@ const NewsLetter = () => {
           <p className="text-[min(10vw,32px)] text-balance font-bold">
             Want Us to cover your Event
           </p>
-          <button className={buttonClassName}>
-            <p>Book us now</p>
-          </button>
+          <Link to={"/event"}>
+            <button className={buttonClassName}>
+              <p>Book us now</p>
+            </button>
+          </Link>
         </div>
 
         <hr className="w-full bg-secondary rounded-full dark:bg-primary1 h-1" />

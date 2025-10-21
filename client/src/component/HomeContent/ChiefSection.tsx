@@ -5,6 +5,7 @@ import { chiefsArrays } from "../assets";
 import { motion } from "framer-motion";
 import { buttonClassName, YSlideIn } from "../Animation";
 import { production } from "../../context/UserContext";
+import { Link } from "react-router-dom";
 
 const ChiefSection = () => {
   return (
@@ -15,9 +16,11 @@ const ChiefSection = () => {
             Meet With Our Chiefs
           </h1>
 
-          <button className={buttonClassName}>
-            <p>Book An Event</p>
-          </button>
+          <Link to={"/event"}>
+            <button className={buttonClassName}>
+              <p>Book An Event</p>
+            </button>
+          </Link>
         </div>
         <ChiefsCard />
       </div>

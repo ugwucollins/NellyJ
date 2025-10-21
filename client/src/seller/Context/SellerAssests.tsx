@@ -3,6 +3,7 @@ import { sellerPath } from "../../context/UserContext";
 import type { SidebarProp } from "./Types";
 import { RiProductHuntFill } from "react-icons/ri";
 import { GrDeliver } from "react-icons/gr";
+import { BiPhoneCall } from "react-icons/bi";
 
 export const SideBarMenu: SidebarProp[] = [
   {
@@ -24,5 +25,10 @@ export const SideBarMenu: SidebarProp[] = [
     icon: <GrDeliver />,
     path: sellerPath + "/orders",
     Title: "Orders",
+  },
+  {
+    icon: <BiPhoneCall />,
+    path: sellerPath + "/contact",
+    Title: "Contact",
   },
 ];

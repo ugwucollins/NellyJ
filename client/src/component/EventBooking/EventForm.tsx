@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import TextAreaField from "../../context/TextAreaField";
 import { BiLoaderCircle } from "react-icons/bi";
 import DateField from "../../context/DateField";
+import { UserAuth } from "../../context/UserContext";
 
 const EventForm = () => {
   return (
@@ -63,6 +64,7 @@ export const EventPath = () => {
 };
 
 export function EventFormField() {
+  const { events, setEvents }: any = UserAuth();
   const [foods, setFoods]: any = useState([]);
   const [date, setDate] = useState("");
 
@@ -95,8 +97,6 @@ export function EventFormField() {
       setFoods(Remove);
     }
   };
-  const JsonValue: any = localStorage.getItem("event");
-  const [events, setEvents] = useState(JSON.parse(JsonValue) || []);
 
   const handleArray = () => {
     const id = Date.now();
@@ -117,7 +117,7 @@ export function EventFormField() {
       date: date,
       foods: foods,
     };
-    const allInfo = { data };
+    const allInfo = data;
     const EventArray = [...events, allInfo ? allInfo : data];
     localStorage.setItem("event", JSON.stringify(EventArray));
     setEvents(EventArray);
