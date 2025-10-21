@@ -180,6 +180,7 @@ export const Products: ProductProps = [
     deliveryFee: 700,
     offerprice: 150,
     category: "rice",
+
     icon: (
       <>
         <FaStar />
@@ -198,6 +199,8 @@ export const Products: ProductProps = [
     createdAt: Date.now(),
     updatedAt: Date.now(),
     instock: true,
+    month: "march",
+    year: "2023",
   },
   {
     _id: "2",
@@ -205,6 +208,8 @@ export const Products: ProductProps = [
     price: 200,
     offerprice: 150,
     deliveryFee: 1000,
+    month: "June",
+    year: "2024",
     icon: (
       <>
         <FaStar />
@@ -215,7 +220,7 @@ export const Products: ProductProps = [
       </>
     ),
     category: "soup",
-    image: Assets.Jellofrice1,
+    image: Assets.Jellofrice2,
     description: [
       "Fresh and Organic",
       "Rich in Carbohydrates",
@@ -228,8 +233,10 @@ export const Products: ProductProps = [
   {
     _id: "3",
     name: "Jellof Rice",
-    price: 200,
+    price: 2000,
     offerprice: 150,
+    month: "may",
+    year: "2025",
     deliveryFee: 700,
 
     icon: (
@@ -242,7 +249,7 @@ export const Products: ProductProps = [
       </>
     ),
     category: "noddle",
-    image: Assets.Jellofrice1,
+    image: Assets.Jellofrice3,
     description: [
       "Fresh and Organic",
       "Rich in Carbohydrates",
@@ -257,6 +264,8 @@ export const Products: ProductProps = [
     name: "Jellof Rice",
     price: 200,
     offerprice: 150,
+    month: "july",
+    year: "2023",
     deliveryFee: 1500,
 
     icon: (
@@ -269,7 +278,7 @@ export const Products: ProductProps = [
       </>
     ),
     category: "soup",
-    image: Assets.Jellofrice1,
+    image: Assets.Jellofrice4,
     description: [
       "Fresh and Organic",
       "Rich in Carbohydrates",
@@ -282,10 +291,11 @@ export const Products: ProductProps = [
   {
     _id: "5",
     name: "Jellof Rice",
-    price: 200,
+    price: 5000,
     offerprice: 150,
     deliveryFee: 700,
-
+    month: "may",
+    year: "2024",
     icon: (
       <>
         <FaStar />
@@ -312,7 +322,8 @@ export const Products: ProductProps = [
     price: 200,
     offerprice: 150,
     deliveryFee: 1000,
-
+    month: "june",
+    year: "2023",
     icon: (
       <>
         <FaStar />
@@ -323,7 +334,7 @@ export const Products: ProductProps = [
       </>
     ),
     category: "noddle",
-    image: Assets.Jellofrice1,
+    image: Assets.Jellofrice5,
     description: [
       "Fresh and Organic",
       "Rich in Carbohydrates",

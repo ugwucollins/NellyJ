@@ -42,6 +42,8 @@ export type ProductProps = {
   createdAt: number | string | any;
   updatedAt: number | string | any;
   instock: boolean;
+  month?: string;
+  year?: string;
 }[];
 
 export type Testimonial = {
