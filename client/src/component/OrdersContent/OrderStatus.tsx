@@ -9,6 +9,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { IoMdCheckmark } from "react-icons/io";
 import { UserProduct } from "../../context/ProductContext";
+import { OrderStatusValues } from "../../seller/Orders/OrdersInfo";
 
 const OrderStatus = ({ orderID }: any | string) => {
   const { orders }: any = UserProduct();
@@ -57,28 +58,28 @@ const OrderStatus = ({ orderID }: any | string) => {
   }, []);
   const handleOrdersChange = () => {
     switch (OrderStatus) {
-      case "order placed":
+      case OrderStatusValues.Order_Placed:
         setWidth("8%");
         setColor("bg-red-700");
         setActive([1]);
         break;
-      case "accepted":
+      case OrderStatusValues.Accepted:
         setWidth("27.5%");
         setColor("bg-orange-800");
         setActive([1, 2]);
         break;
-      case "in progress":
+      case OrderStatusValues.In_Progress:
         setWidth("52.1%");
         setColor("bg-orange-500");
         setActive([1, 2, 3]);
         break;
-      case "on the way":
+      case OrderStatusValues.On_The_Way_Placed:
         setWidth("75%");
         setColor("bg-yellow-800");
         setActive([1, 2, 3, 4]);
 
         break;
-      case "Delivered":
+      case OrderStatusValues.Delivered:
         setWidth("100%");
         setColor("bg-green-800");
         setActive([1, 2, 3, 4, 5]);

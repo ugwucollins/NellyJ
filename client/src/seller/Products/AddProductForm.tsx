@@ -27,6 +27,7 @@ export const AddProduct = () => {
     category: "",
     price: "",
     offerprice: "",
+    deliveryFee: "",
   });
 
   const handleChange = (e: any) => {
@@ -53,6 +54,7 @@ export const AddProduct = () => {
         category: "",
         price: "",
         offerprice: "",
+        deliveryFee: "",
       });
     } else {
       toast.error("Please fill in the Required Space");
@@ -94,6 +96,14 @@ export const AddProduct = () => {
               label="category"
               onChange={handleChange}
             />
+            <SelectField
+              value={formData.deliveryFee}
+              options={DeliveryProduct}
+              name="deliveryFee"
+              className="rounded-md"
+              label="deliveryFee"
+              onChange={handleChange}
+            />
 
             <div className="flex gap-2 max-[400px]:flex-col flex-row w-full">
               <InputField
@@ -130,6 +140,13 @@ export const CategoryProduct = [
   { title: "Select Category", value: "" },
   { title: "Rice", value: "rice" },
   { title: "Soup", value: "soup" },
-  { title: "Noddles", value: "noddle" },
+  { title: "Noddles", value: "noddles" },
   { title: "Local-Food", value: "local_food" },
+];
+export const DeliveryProduct = [
+  { title: "700", value: "700" },
+  { title: "800", value: "800" },
+  { title: "1,000", value: "1000" },
+  { title: "1,500", value: "1500" },
+  { title: "2,000", value: "2000" },
 ];

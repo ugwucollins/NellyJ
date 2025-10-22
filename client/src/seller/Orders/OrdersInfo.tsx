@@ -10,11 +10,15 @@ import {
   IoBagRemoveOutline,
   IoCubeOutline,
 } from "react-icons/io5";
-import type { OrderStatusProp } from "../../context/Types";
+import type { OPTIONPROP, OrderStatusProp } from "../../context/Types";
 import { TbTruckDelivery } from "react-icons/tb";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { IoMdCheckmark } from "react-icons/io";
 import { Assets } from "../../component/assets";
+import SelectField from "../../context/SelectField";
+import { buttonClassName } from "../../component/Animation";
+import { BiLoaderCircle } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 const OrdersInfo = () => {
   const { orderId } = useParams();
@@ -49,11 +53,14 @@ export const OrdersInfoID = ({ orderId }: any) => {
   const [width, setWidth] = useState("0%");
   const [active, setActive] = useState(CheckOrder);
   const [Color, setColor] = useState("bg-black");
+  const [orderSValue, setOrderSValue] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const HandleOrders = () => {
     const findOrder = orders.find((order: any) => order._id === orderId);
     setOrderValue(findOrder);
     setOrderStatus(findOrder?.status!);
+    setOrderSValue(findOrder?.status!);
   };
 
   useEffect(() => {
@@ -61,28 +68,28 @@ export const OrdersInfoID = ({ orderId }: any) => {
   }, []);
   const handleOrdersChange = () => {
     switch (OrderStatus) {
-      case "order placed":
+      case OrderStatusValues.Order_Placed:
         setWidth("8%");
         setColor("bg-red-700");
         setActive([1]);
         break;
-      case "accepted":
+      case OrderStatusValues.Accepted:
         setWidth("27.5%");
         setColor("bg-orange-800");
         setActive([1, 2]);
         break;
-      case "in progress":
+      case OrderStatusValues.In_Progress:
         setWidth("52.1%");
         setColor("bg-orange-500");
         setActive([1, 2, 3]);
         break;
-      case "on the way":
+      case OrderStatusValues.On_The_Way_Placed:
         setWidth("75%");
         setColor("bg-yellow-800");
         setActive([1, 2, 3, 4]);
 
         break;
-      case "Delivered":
+      case OrderStatusValues.Delivered:
         setWidth("100%");
         setColor("bg-green-800");
         setActive([1, 2, 3, 4, 5]);
@@ -96,6 +103,22 @@ export const OrdersInfoID = ({ orderId }: any) => {
   useEffect(() => {
     handleOrdersChange();
   }, [OrderStatus]);
+
+  const HandleSubmit = async (e: any) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      setTimeout(() => {
+        setLoading(false);
+        setOrderStatus(orderSValue);
+        toast.success("Updated Order Successfully");
+      }, 1000);
+    } catch (error) {
+      toast.error("Server Error 501");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="w-full px-16 pt-5 max-md:px-14 max-sm:px-6 max-[170px]:px-1">
@@ -205,6 +228,37 @@ export const OrdersInfoID = ({ orderId }: any) => {
               </div>
             ))}
         </div>
+
+        <div className="w-full py-6 px-4 mb-2 rounded-xl shadow-lg drop-shadow-sm">
+          <h1
+            className="py-1
+          "
+          >
+            Order Status Change
+          </h1>
+
+          <form onSubmit={HandleSubmit} className="flex flex-col gap-y-4">
+            <SelectField
+              name="status"
+              label="Order Status"
+              value={orderSValue}
+              className="py-4"
+              options={OrderStatusArray}
+              onChange={(e) => setOrderSValue(e.target.value)}
+            />
+
+            <button
+              disabled={loading}
+              className={` disabled:opacity-80 ${buttonClassName}`}
+            >
+              {loading ? (
+                <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+              ) : (
+                <p>Update</p>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -237,3 +291,29 @@ export const OrderStatusProgress: OrderStatusProp[] = [
     title: "Delivered",
   },
 ];
+export const OrderStatusArray: OPTIONPROP[] = [
+  {
+    value: "order placed",
+    title: "Order Placed",
+  },
+  {
+    value: "accepted",
+    title: "Accepted",
+  },
+  { value: "in progress", title: "In Progress" },
+  {
+    value: "on the way",
+    title: "On The Way Placed",
+  },
+  {
+    value: "Delivered",
+    title: "Delivered",
+  },
+];
+export const OrderStatusValues = {
+  Order_Placed: "order placed",
+  Accepted: "accepted",
+  In_Progress: "in progress",
+  On_The_Way_Placed: "on the way",
+  Delivered: "Delivered",
+};
