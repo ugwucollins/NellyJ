@@ -1,43 +1,54 @@
-import React from "react";
 import toast from "react-hot-toast";
 import { LogoIcon } from "../../../Navbar";
-import InputField from "../../../../context/InputField";
-import { Link, useNavigate } from "react-router-dom";
+import { ZodInputField } from "../../../../context/InputField";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { buttonClassName } from "../../../Animation";
 import { adminPath } from "../../../../context/UserContext";
 import { BiLoaderCircle } from "react-icons/bi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "../../../../Zod/Schema/LoginSchema";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { LoginField } from "../../../../Zod/typesField";
 
 const LoginForm = () => {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [formData, setFormData] = React.useState({
-    password: "",
-    email: "",
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(LoginSchema),
   });
-  const HandleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const location = useLocation();
+  const from = location.state?.from?.pathname || adminPath;
 
   const router = useNavigate();
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    if (formData.email.trim() && formData.password.trim()) {
-      setFormData({
-        password: "",
-        email: "",
+
+  const OnSubmit: SubmitHandler<LoginField> = async (data) => {
+    try {
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          resolve;
+          localStorage.setItem("admin", JSON.stringify(data));
+          localStorage.setItem("index", JSON.stringify(0));
+          toast.success("Login Successfully");
+          window.location.replace(from);
+          router(adminPath);
+          setValue("email", "");
+          setValue("password", "");
+          router(from);
+        }, 1000)
+      );
+    } catch (error: any) {
+      const message =
+        error.message ||
+        "Server Error Pls try Again" ||
+        "Please Provide the Correct Details";
+      toast.error(message);
+      setError("root", {
+        message: message,
       });
-      toast.success("Login Successfully");
-      localStorage.setItem("admin", JSON.stringify(formData));
-      localStorage.setItem("index", JSON.stringify(0));
-      setTimeout(() => {
-        window.location.replace(adminPath);
-        router(adminPath);
-        setLoading(false);
-      }, 1000);
-    } else {
-      setLoading(false);
-      toast.error("Please Provide the Correct Details");
     }
   };
 
@@ -53,25 +64,23 @@ const LoginForm = () => {
       </p>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(OnSubmit)}
         className="max-sm:w-full text-black dark:text-white"
       >
         <div className="flex flex-col gap-y-4 py-4 text-black dark:text-black max-sm:dark:text-white max-sm:text-white">
-          <InputField
+          <ZodInputField
             label="email*"
             type="email"
-            onChange={HandleChange}
-            name="email"
             placeholder="Enter email Address"
-            value={formData.email}
+            value={register("email")}
+            error={errors.email?.message}
           />
-          <InputField
+          <ZodInputField
             label="password*"
             type="password"
-            onChange={HandleChange}
-            name="password"
+            error={errors.password?.message}
             placeholder="Enter password"
-            value={formData.password}
+            value={register("password")}
           />
         </div>
 
@@ -84,11 +93,17 @@ const LoginForm = () => {
           </Link>
         </div>
 
+        {errors.root && (
+          <span className="text-base text-red-500 font-semibold">
+            {errors.root.message}
+          </span>
+        )}
+
         <button
-          disabled={loading}
-          className={`outline-1 mt-5 disabled:opacity-85 hover:shadow-xl transition-all duration-150 max-sm:hover:text-white max-sm:hover:outline-white hover:drop-shadow w-full max-sm:dark:hover:outline-white hover:outline-black  dark:hover:text-black max-sm:dark:hover:text-white ${buttonClassName}`}
+          disabled={isSubmitting}
+          className={`outline-1 disabled:opacity-85 mt-5 hover:shadow-xl transition-all duration-150 max-sm:hover:text-white max-sm:hover:outline-white hover:drop-shadow dark:hover:outline-black  max-sm:dark:hover:outline-white  dark:hover:text-black w-full max-sm:dark:hover:text-white ${buttonClassName}`}
         >
-          {loading ? (
+          {isSubmitting ? (
             <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
           ) : (
             <p>LogIn</p>

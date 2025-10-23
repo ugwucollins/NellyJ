@@ -1,54 +1,58 @@
-import { useState } from "react";
-import InputField from "../../../../context/InputField";
+import { ZodInputField } from "../../../../context/InputField";
 import { LogoIcon } from "../../../Navbar";
 import { buttonClassName } from "../../../Animation";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { UserAuth } from "../../../../context/UserContext";
 import { BiLoaderCircle } from "react-icons/bi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { RegisterSchema } from "../../../../Zod/Schema/RegisterSchema";
+import type { RegisterField } from "../../../../Zod/typesField";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const { setuser }: any = UserAuth();
   const from = location.state?.from?.pathname || -1;
-  const [formData, setformData] = useState({
-    firstName: "",
-    lastName: "",
-    password: "",
-    email: "",
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(RegisterSchema),
   });
-  const HandleChange = (e: any) => {
-    const { name, value } = e.target;
-    setformData({ ...formData, [name]: value });
-  };
 
-  const handleSubumit = (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    const { firstName, lastName, password, email } = formData;
-    if (
-      formData.email.trim() &&
-      formData.password.trim() &&
-      formData.firstName.trim() &&
-      formData.lastName.trim()
-    ) {
-      setformData({
-        firstName: "",
-        lastName: "",
-        password: "",
-        email: "",
+  const OnSubumit: SubmitHandler<RegisterField> = async (data) => {
+    const { firstName, lastName, password, email } = data;
+    const UserData = {
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      password: password,
+    };
+
+    try {
+      await new Promise((resolve) =>
+        setTimeout(() => {
+          resolve;
+          setuser(UserData);
+          toast.success("Created Account Successfully");
+          navigate(from, { replace: true });
+          setValue("firstName", "");
+          setValue("lastName", "");
+          setValue("email", "");
+          setValue("password", "");
+        }, 500)
+      );
+    } catch (error: any) {
+      const message = error.message || "Internal Server Error";
+      toast.error(message);
+      setError("root", {
+        message: message,
       });
-      setuser(firstName, lastName, email, password);
-      toast.success("Created Account Successfully");
-      setTimeout(() => {
-        navigate(from, { replace: true });
-        setLoading(false);
-      }, 1000);
-    } else {
-      setLoading(false);
-      toast.error("Please fill In the Gaps");
     }
   };
 
@@ -61,50 +65,46 @@ const SignUpForm = () => {
         fill your information below correctly
       </p>
 
-      <form onSubmit={handleSubumit} className="max-sm:w-full">
+      <form onSubmit={handleSubmit(OnSubumit)} className="max-sm:w-full">
         <div className="w-full flex flex-row gap-4 max-[400px]:flex-col">
-          <InputField
+          <ZodInputField
             label="FirstName*"
             type="text"
-            onChange={HandleChange}
-            name="firstName"
             placeholder="Ex. John"
-            value={formData.firstName}
+            value={register("firstName")}
+            error={errors.firstName?.message}
           />
-          <InputField
+          <ZodInputField
             label="LastName*"
             type="text"
-            onChange={HandleChange}
-            name="lastName"
             placeholder="Ex. Doe"
-            value={formData.lastName}
+            value={register("lastName")}
+            error={errors.lastName?.message}
           />
         </div>
 
         <div className="flex flex-col gap-y-3.5 py-4">
-          <InputField
+          <ZodInputField
             label="email*"
             type="tel"
-            onChange={HandleChange}
-            name="email"
             placeholder="Enter email Address"
-            value={formData.email}
+            value={register("email")}
+            error={errors.email?.message}
           />
-          <InputField
+          <ZodInputField
             label="password*"
             type="password"
-            onChange={HandleChange}
-            name="password"
             placeholder="Enter password"
-            value={formData.password}
+            value={register("password")}
+            error={errors.password?.message}
           />
         </div>
 
         <button
-          disabled={loading}
+          disabled={isSubmitting}
           className={`outline-1 mt-5 disabled:opacity-85 hover:shadow-xl transition-all duration-150 max-sm:hover:text-white max-sm:hover:outline-white hover:drop-shadow w-full max-sm:dark:hover:outline-white hover:outline-black  dark:hover:text-black max-sm:dark:hover:text-white ${buttonClassName}`}
         >
-          {loading ? (
+          {isSubmitting ? (
             <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
           ) : (
             <p>Sign UP</p>
@@ -120,6 +120,12 @@ const SignUpForm = () => {
           Sign In
         </Link>
       </p>
+
+      {errors.root && (
+        <span className="text-base text-red-500 font-semibold">
+          {errors.root.message}
+        </span>
+      )}
     </div>
   );
 };

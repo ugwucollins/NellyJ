@@ -11,15 +11,7 @@ export const production: boolean = import.meta.env.PROD;
 export const NotAuth: string = "/auth/signin";
 
 const UserContext = ({ children }: any) => {
-  const [user, setuser] = useState<null | Object>({
-    firstName: "cOLLINS",
-    lastName: "uGWU",
-    email: "uuhag@gmai.com",
-    password: "uuha",
-    image: "/food_images/cl1.avif",
-    phone: 8101245121,
-    gender: "female",
-  });
+  const [user, setuser] = useState<null | Object>(null);
   const [isLogIn, setisLogIn] = useState(false);
   const [UsersAddress, setUsersAddress] = useState(DummyAddress);
   const JsonValue: any = localStorage.getItem("event");

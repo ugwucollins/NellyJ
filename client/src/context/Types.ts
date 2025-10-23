@@ -101,6 +101,14 @@ export interface InputProp {
   className?: string;
   onChange: (e: any) => void;
 }
+export interface ZodInputProp {
+  type: string;
+  label: string;
+  placeholder: string;
+  value: string | any;
+  className?: string;
+  error: string | undefined;
+}
 export interface OrdersProp {
   _id: string;
   userId: string;
