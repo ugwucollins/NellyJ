@@ -1,7 +1,7 @@
 import { ZodInputField } from "../../../../context/InputField";
 import { LogoIcon } from "../../../Navbar";
 import { buttonClassName } from "../../../Animation";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { UserAuth } from "../../../../context/UserContext";
 import { BiLoaderCircle } from "react-icons/bi";
@@ -11,10 +11,9 @@ import { RegisterSchema } from "../../../../Zod/Schema/RegisterSchema";
 import type { RegisterField } from "../../../../Zod/typesField";
 
 const SignUpForm = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { setuser }: any = UserAuth();
-  const from = location.state?.from?.pathname || -1;
+  // const navigate = useNavigate();
+  const { user, setuser }: any = UserAuth();
+  const from = `/complete/${user.length ? user._id : 1}`;
   const {
     register,
     handleSubmit,
@@ -35,18 +34,18 @@ const SignUpForm = () => {
     };
 
     try {
-      await new Promise((resolve) =>
-        setTimeout(() => {
-          resolve;
-          setuser(UserData);
-          toast.success("Created Account Successfully");
-          navigate(from, { replace: true });
-          setValue("firstName", "");
-          setValue("lastName", "");
-          setValue("email", "");
-          setValue("password", "");
-        }, 500)
-      );
+      setTimeout(() => {
+        setuser(UserData);
+        toast.success("Created Account Successfully");
+        window.location.replace(
+          from ? from : `/complete/${user.length ? user._id : 1}`
+        );
+        // navigate();
+        setValue("firstName", "");
+        setValue("lastName", "");
+        setValue("email", "");
+        setValue("password", "");
+      }, 100);
     } catch (error: any) {
       const message = error.message || "Internal Server Error";
       toast.error(message);

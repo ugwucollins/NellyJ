@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import TextAnimation, { XSlideIn, YSlideIn } from "../Animation";
-import { lazy, useState } from "react";
+import { useState } from "react";
 import {
   DarkModeClass,
   FeatureArryMap,
@@ -8,11 +8,17 @@ import {
 import { SocialMediaIcons } from "../assets";
 import { motion } from "framer-motion";
 import MapCompontentMap from "./MapContent";
-import TextAreaField from "../../context/TextAreaField";
+import { ZodTextAreaField } from "../../context/TextAreaField";
 import { BiLoaderCircle } from "react-icons/bi";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { ContactField } from "../../Zod/typesField";
+import { ContactSchema } from "../../Zod/Schema/Schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodInputField } from "../../context/InputField";
+import { UserAuth } from "../../context/UserContext";
 
-const InputField = lazy(() => import("../../context/InputField"));
+// const InputField = lazy(() => import("../../context/InputField"));
 
 export const ContactInputValues = {
   name: "",
@@ -64,46 +70,28 @@ export const ContactHeader = () => {
 };
 
 export const ContactForm = () => {
-  const [errors, seterrors] = useState(ContactInputValues);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [formData, setformData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
+  const { user }: any = UserAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      name: user ? user.lastName + " " + user.firstName : "",
+      email: user ? user.email : "",
+    },
+    resolver: zodResolver(ContactSchema),
   });
 
-  const handleOnChange = (e: any) => {
-    const { name, value } = e.target;
-    setformData({ ...formData, [name]: value });
-  };
-
-  const handleOnSubmit = (e: any) => {
-    e.preventDefault();
-    const isValid = contactVaildInput(formData, seterrors);
-    setLoading(true);
-    if (isValid === true) {
-      console.log({
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-        err: errors,
-      });
-      setformData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-      setTimeout(() => {
-        toast.success("Contacted Successfully!");
-        setLoading(false);
-      }, 1000);
-    } else {
-      setLoading(false);
-      console.log({ errors: errors });
-    }
+  const OnSubmit: SubmitHandler<ContactField> = (data) => {
+    const info = {
+      name: data.name,
+      email: data.email,
+      subject: data.subject,
+      phoneNumber: `0${user ? user.phoneNumber : data.phoneNumber}`,
+      message: data.message,
+    };
+    console.log(info);
   };
   const [indexIcon, setindexIcon] = useState(0);
 
@@ -124,50 +112,56 @@ export const ContactForm = () => {
             marked*
           </p>
         </div>
-        <form onSubmit={handleOnSubmit} className="flex gap-4 flex-col">
+        <form onSubmit={handleSubmit(OnSubmit)} className="flex gap-4 flex-col">
           <div className="flex gap-5 items-center max-[850px]:flex-col max-[750px]:flex-row max-[550px]:flex-col flex-row">
-            <InputField
+            <ZodInputField
               label="Your Name*"
               placeholder="Ex. john Deo"
               type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleOnChange}
+              error={errors.name?.message}
+              value={register("name")}
             />
 
-            <InputField
+            <ZodInputField
               label="Email*"
-              name="email"
               placeholder="example@gmail.com"
               type="email"
-              value={formData.email}
-              onChange={handleOnChange}
+              error={errors.email?.message}
+              value={register("email")}
             />
           </div>
-          <InputField
+          {!user && (
+            <ZodInputField
+              label="PhoneNumber*"
+              placeholder="Enter Your PhoneNumber"
+              type="number"
+              error={errors.phoneNumber?.message}
+              value={register("phoneNumber")}
+            />
+          )}
+
+          <ZodInputField
             label="Subject*"
             placeholder="Enter Subject"
             type="text"
-            name="subject"
-            value={formData.subject}
-            onChange={handleOnChange}
+            error={errors.subject?.message}
+            value={register("subject")}
           />
 
-          <TextAreaField
+          <ZodTextAreaField
             label="message"
             placeholder="Enter message"
-            name="message"
             className="font-semibold"
-            value={formData.message}
-            onChange={handleOnChange}
+            error={errors.message?.message!}
+            value={register("message")}
           />
           <div>
             <button
-              disabled={loading}
+              disabled={isSubmitting}
               type="submit"
               className=" px-5 rounded-2xl disabled:opacity-85 hover:rounded-full py-4 dark:bg-yellow-800 bg-secondary text-primary1 font-semibold text-base hover:font-bold"
             >
-              {loading ? (
+              {isSubmitting ? (
                 <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
               ) : (
                 <p>Send Message</p>

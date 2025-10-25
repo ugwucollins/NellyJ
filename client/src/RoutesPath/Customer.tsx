@@ -24,6 +24,7 @@ import PrivateRoute from "../component/auth/PrivateRoute";
 import { PersonalRoles } from "../RolesControlle/RolesValue";
 import Event from "../component/pages/Event";
 import EventHistory from "../component/pages/EventHistory";
+import CompletePage from "../component/auth/Customer/SignUp/CompletePage";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
   const location = useLocation().pathname;
@@ -44,6 +45,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
           <Route
             element={<PrivateRoute allowedRoles={[PersonalRoles.USERS]} />}
           >
+            <Route path="/complete/:id" element={<CompletePage />} />
             <Route path="/event" element={<Event />} />
             <Route path="/event/history" element={<EventHistory />} />
             <Route path="/cart" element={<Cart />} />

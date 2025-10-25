@@ -138,6 +138,15 @@ export interface TextareaProp {
   className?: string;
   onChange: (e: any) => void;
 }
+export interface zodTextareaProp {
+  row?: number;
+  col?: number;
+  label: string;
+  placeholder: string;
+  value: string | any;
+  error: string | undefined;
+  className?: string;
+}
 
 export type OPTIONPROP = {
   title: string;
@@ -152,6 +161,13 @@ export interface SelectFieldProp {
   name: string;
   className?: string;
   onChange: (e: any) => void;
+}
+export interface ZodSelectFieldProp {
+  options: OPTIONPROP[];
+  label: string;
+  value: string | object | any;
+  error: string | object | any;
+  className?: string;
 }
 
 export type EventCardsProp = {

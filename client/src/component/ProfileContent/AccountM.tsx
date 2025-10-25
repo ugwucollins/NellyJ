@@ -123,11 +123,11 @@ export const genderValue = [
     value: "",
   },
   {
-    title: "Male",
+    title: "male",
     value: "male",
   },
   {
-    title: "Female",
+    title: "female",
     value: "female",
   },
   {

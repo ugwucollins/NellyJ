@@ -3,8 +3,11 @@ import { PiPencilLineBold } from "react-icons/pi";
 import { Assets } from "../component/assets";
 import { BiUser } from "react-icons/bi";
 import { UserAuth } from "./UserContext";
-
-const Avater = ({ setimageData }: any) => {
+type Avater = {
+  setimageData: any;
+  className?: string;
+};
+const Avater = ({ setimageData, className }: Avater) => {
   const { user }: any = UserAuth();
 
   const [imageUrl, setimageUrl] = useState("");
@@ -24,7 +27,9 @@ const Avater = ({ setimageData }: any) => {
   };
 
   return (
-    <div className="pb-5 relative w-full max-sm:flex max-sm:justify-center">
+    <div
+      className={`pb-5 relative w-full max-sm:flex max-sm:justify-center ${className}`}
+    >
       <div className="relative w-fit">
         <div
           className={`size-40 relative  rounded-full overflow-hidden ${
