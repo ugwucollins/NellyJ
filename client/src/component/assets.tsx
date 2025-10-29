@@ -527,8 +527,8 @@ export const FeatureArray: Features = [
   },
   {
     id: 4,
-    title: "Flexible payment",
-    text: `Multiple secure payment options`,
+    title: "Event Booking",
+    text: `Book your Events with Us (ceremony)`,
     icon: <CiWallet />,
   },
 ];

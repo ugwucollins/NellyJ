@@ -25,7 +25,7 @@ const InputField = ({
         type={type === "password" ? (show ? "text" : "password") : type}
         className={`py-2.5 text-black px-4 font-semibold rounded-full w-full text-sm outline-1 outline outline-gray-500 focus:font-bold placeholder:font-normal focus:text-base focus:outline-[1.5px] transition-all shadow-sm drop-shadow-sm focus:shadow-inner focus:drop-shadow-lg  ${className}`}
         placeholder={placeholder}
-        value={value && value}
+        value={value && value.toString()}
         name={name}
         id={name}
         onChange={(e) => onChange(e)}

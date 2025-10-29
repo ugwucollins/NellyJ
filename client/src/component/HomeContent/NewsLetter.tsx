@@ -1,8 +1,43 @@
 import { MdEmail } from "react-icons/md";
 import TextAnimation, { buttonClassName } from "../Animation";
 import { Link } from "react-router-dom";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserAuth } from "../../context/UserContext";
+import { NewsLetterSchema } from "../../Zod/Schema/Schemas";
+import type { NewsLetterField } from "../../Zod/typesField";
+import { BiLoaderCircle } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 const NewsLetter = () => {
+  const { user }: any = UserAuth();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      email: user ? user?.email : "",
+    },
+    resolver: zodResolver(NewsLetterSchema),
+  });
+
+  const OnSubmit: SubmitHandler<NewsLetterField> = (data) => {
+    try {
+      console.log(data);
+      setTimeout(() => {
+        setValue("email", "");
+        toast.success("NewsLetter Subscribed Successfully");
+      }, 1000);
+    } catch (error: any) {
+      setError("root", {
+        message: error.message,
+      });
+      toast.error(error.message || "NewsLetter Failed");
+    }
+  };
   return (
     <div className="w-full min-h-[90vh] flex flex-col justify-center items-center dark:bg-secondary bg-primary1">
       <div className="w-full  px-20 max-md:px-16 max-sm:px-5 max-[170px]:px-1">
@@ -36,23 +71,43 @@ const NewsLetter = () => {
             Get 20% off your first order just by subscribing to our newsletter
           </p>
 
-          <form className="relative flex flex-wrap gap-4 py-5 items-center">
-            <div className="relative shadow drop-shadow flex bg-white items-center px-2 max-[430px]:w-full py-2  max-[260px]:px-1.5  max-[260px]:py-4 rounded-full">
-              <div className="px-2 py-2  text-white text-xl rounded-full bg-yellow-800 ">
-                <MdEmail />
-              </div>
+          <form
+            onSubmit={handleSubmit(OnSubmit)}
+            className="relative flex flex-col text-start py-6 items-start"
+          >
+            <div className="relative flex flex-wrap gap-4 items-center">
+              <div className="relative shadow drop-shadow flex bg-white items-center px-2 max-[430px]:w-full py-2  max-[260px]:px-1.5  max-[260px]:py-4 rounded-full">
+                <div className="px-2 py-2  text-white text-xl rounded-full bg-yellow-800 ">
+                  <MdEmail />
+                </div>
 
-              <input
-                type="email"
-                className="outline-none px-2 w-full font-semibold"
-                placeholder="Enter Email Address"
-              />
+                <input
+                  type="email"
+                  {...register("email")}
+                  className="outline-none px-2 w-full font-semibold"
+                  placeholder="Enter Email Address"
+                />
+              </div>
+              <div className="max-[428px]:w-full max-[170px]:justify-center flex max-[428px]:justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-5 py-3 bg-yellow-800 hover:font-bold shadow-md rounded-full text-primary1 font-semibold"
+                >
+                  {isSubmitting ? (
+                    <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+                  ) : (
+                    <p>Subscribe</p>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="max-[428px]:w-full max-[170px]:justify-center flex max-[428px]:justify-end">
-              <button className="px-5 py-3 bg-yellow-800 hover:font-bold shadow-md rounded-full text-primary1 font-semibold">
-                <p>Subscribe</p>
-              </button>
-            </div>
+
+            {errors.email && (
+              <span className="text-red-500 pl-1 py-1 text-sm font-semibold">
+                {errors.email?.message?.toString()}
+              </span>
+            )}
           </form>
         </div>
       </div>

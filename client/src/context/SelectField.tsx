@@ -23,7 +23,7 @@ const SelectField = ({
         {options.map((list: OPTIONPROP, index) => (
           <option
             key={index}
-            value={list.value && list.value}
+            value={list ? list.value.toString() : ""}
             className="capitalize dark:text-black"
           >
             {list.title}
@@ -33,6 +33,7 @@ const SelectField = ({
     </div>
   );
 };
+
 export const ZodSelectField = ({
   className,
   value,
@@ -47,7 +48,7 @@ export const ZodSelectField = ({
       </label>
       <select
         {...value}
-        className={`w-full py-2 max-sm:text-black  mt-1.5 dark:text-black text-base font-semibold outline-neutral-400 shadow rounded-2xl px-2 focus:shadow-md outline outline-1 ${className}`}
+        className={`w-full py-2 text-black max-sm:text-black  mt-1.5 dark:text-black text-base font-semibold outline-neutral-400 shadow rounded-2xl px-2 focus:shadow-md outline outline-1 ${className}`}
       >
         {options.map((list: OPTIONPROP, index) => (
           <option

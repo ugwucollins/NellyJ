@@ -11,7 +11,7 @@ const PrivateRoute = ({ allowedRoles }: any) => {
     <Outlet />
   ) : user ? (
     <Unauthorize />
-  ) : user === null ? (
+  ) : !user && user === null ? (
     <NavLink to={"/auth/signin"} state={{ from: location }} replace />
   ) : (
     <NavLink to={"/auth/signin"} state={{ from: location }} replace />

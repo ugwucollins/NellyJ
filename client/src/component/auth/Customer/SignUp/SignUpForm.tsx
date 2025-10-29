@@ -11,9 +11,8 @@ import { RegisterSchema } from "../../../../Zod/Schema/RegisterSchema";
 import type { RegisterField } from "../../../../Zod/typesField";
 
 const SignUpForm = () => {
-  // const navigate = useNavigate();
   const { user, setuser }: any = UserAuth();
-  const from = `/complete/${user.length ? user._id : 1}`;
+  const from = `/complete/${user ? user._id : 1}`;
   const {
     register,
     handleSubmit,
@@ -24,7 +23,7 @@ const SignUpForm = () => {
     resolver: zodResolver(RegisterSchema),
   });
 
-  const OnSubumit: SubmitHandler<RegisterField> = async (data) => {
+  const OnSubmit: SubmitHandler<RegisterField> = async (data) => {
     const { firstName, lastName, password, email } = data;
     const UserData = {
       email: email,
@@ -64,7 +63,7 @@ const SignUpForm = () => {
         fill your information below correctly
       </p>
 
-      <form onSubmit={handleSubmit(OnSubumit)} className="max-sm:w-full">
+      <form onSubmit={handleSubmit(OnSubmit)} className="max-sm:w-full">
         <div className="w-full flex flex-row gap-4 max-[400px]:flex-col">
           <ZodInputField
             label="FirstName*"

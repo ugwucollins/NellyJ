@@ -6,8 +6,9 @@ import { UserAuth } from "./UserContext";
 type Avater = {
   setimageData: any;
   className?: string;
+  setImg?: string | any;
 };
-const Avater = ({ setimageData, className }: Avater) => {
+const Avater = ({ setimageData, className, setImg }: Avater) => {
   const { user }: any = UserAuth();
 
   const [imageUrl, setimageUrl] = useState("");
@@ -23,6 +24,7 @@ const Avater = ({ setimageData, className }: Avater) => {
     setTimeout(() => {
       setloading(false);
       setimageData(imageUrl ? imageUrl : file);
+      setImg(image);
     }, 1000);
   };
 
@@ -48,7 +50,7 @@ const Avater = ({ setimageData, className }: Avater) => {
                 imageUrl.length
                   ? image
                   : user && user
-                  ? user.image
+                  ? user.imageUrl
                   : Assets.Avater
               }
               className="object-cover size-full rounded-full"

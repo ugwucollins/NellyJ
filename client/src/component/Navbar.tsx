@@ -34,6 +34,9 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
     handleClose();
     LogOut();
   };
+  useEffect(() => {
+    console.log(user && user);
+  }, [user]);
 
   return (
     <div>
