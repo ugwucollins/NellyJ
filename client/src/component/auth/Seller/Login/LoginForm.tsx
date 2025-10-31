@@ -32,19 +32,19 @@ const LoginForm = () => {
           resolve;
           localStorage.setItem("seller", JSON.stringify(data));
           localStorage.setItem("index", JSON.stringify(0));
-          toast.success("Login Successfully");
+          toast.success("Login Successfully", { id: "loginS" });
           window.location.replace(from);
           setValue("email", "");
           setValue("password", "");
           router(from);
-        }, 1000)
+        }, 500)
       );
     } catch (error: any) {
       const message =
         error.message ||
         "Server Error Pls try Again" ||
         "Please Provide the Correct Details";
-      toast.error(message);
+      toast.error(message, { id: "loginSError" });
       setError("root", {
         message: message,
       });

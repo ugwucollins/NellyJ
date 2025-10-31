@@ -1,14 +1,19 @@
-import { useState } from "react";
 import { LogoIcon } from "../../Navbar";
-import { Link } from "react-router-dom";
-import InputField from "../../../context/InputField";
+import { Link, useNavigate } from "react-router-dom";
+import { ZodInputField } from "../../../context/InputField";
 import { ImageSection } from "./SignIn/SignIn";
 import { Assets } from "../../assets";
 import { buttonClassName } from "../../Animation";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import type { NewsLetterField } from "../../../Zod/typesField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { NewsLetterSchema } from "../../../Zod/Schema/Schemas";
+import { BiLoaderCircle } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 const ForgetPassword = () => {
   return (
-    <div className="w-full flex max-sm:bg-white bg-neutral-50 flex-col justify-center min-h-screen items-center max-sm:px-1">
+    <div className="w-full h-[90vh] overflow-hidden flex max-sm:bg-white bg-neutral-50 flex-col justify-center min-h-screen items-center max-sm:px-1">
       <div className="w-full max-w-5xl gap-x-5 px-10 max-sm:px-6 max-[170px]:px-2  flex bg-white justify-center items-center py-12 rounded-xl shadow-xl max-sm:shadow-slate-50 drop-shadow-md max-sm:bg-[url('/food_images/bg-a.jpg')] max-sm:object-cover max-sm:relative z-0">
         <div className="w-full hidden max-sm:block h-full absolute top-0 left-0 bg-black/30 max-sm:text-white rounded-xl backdrop-blur-sm " />
         <ForgetPasswordForm />
@@ -21,11 +26,31 @@ const ForgetPassword = () => {
 export default ForgetPassword;
 
 export const ForgetPasswordForm = () => {
-  const [email, setemail] = useState("");
-
-  const handleSubumit = (e: any) => {
-    e.preventDefault();
-    setemail("");
+  const {
+    register,
+    handleSubmit,
+    setError,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(NewsLetterSchema),
+  });
+  const router = useNavigate();
+  const onSubmit: SubmitHandler<NewsLetterField> = (data) => {
+    try {
+      toast.success("Please check your email", {
+        id: "password",
+      });
+      setTimeout(() => {
+        setValue("email", "");
+        console.log(data);
+        router(-1);
+      }, 1000);
+    } catch (error: any) {
+      setError("root", {
+        message: error.message,
+      });
+    }
   };
 
   return (
@@ -37,20 +62,29 @@ export const ForgetPasswordForm = () => {
         Please fill your details to access your account
       </p>
 
-      <form onSubmit={handleSubumit} className="max-sm:w-full py-1">
-        <InputField
+      <form onSubmit={handleSubmit(onSubmit)} className="max-sm:w-full py-1">
+        <ZodInputField
           label="email*"
           type="email"
-          onChange={(e) => setemail(e.target.value)}
-          name="email"
+          error={errors.email?.message}
           placeholder="Enter email Address"
-          value={email}
+          value={register("email")}
         />
+
+        {errors.root && (
+          <span className="text-left text-base text-red-600">
+            {errors.root.message}
+          </span>
+        )}
 
         <button
           className={`outline-1 mt-6 hover:shadow-xl transition-all duration-150 max-sm:hover:text-white max-sm:hover:outline-white hover:drop-shadow w-full ${buttonClassName}`}
         >
-          <p>Forget Password</p>
+          {isSubmitting ? (
+            <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+          ) : (
+            <p>Forget Password</p>
+          )}
         </button>
       </form>
 

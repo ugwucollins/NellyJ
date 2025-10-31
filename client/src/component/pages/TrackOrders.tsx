@@ -1,13 +1,18 @@
-import { useState } from "react";
 import HeaderProp from "../../context/HeaderProp";
-import InputField from "../../context/InputField";
+import { ZodInputField } from "../../context/InputField";
 import {
   DarkModeClass,
   FeatureArryMap as FeatureArrayMap,
 } from "../HomeContent/HomeExportComponent";
 import { buttonClassName } from "../Animation";
-import { useNavigate } from "react-router-dom";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
+import { UserProduct } from "../../context/ProductContext";
+import type { TrackOrderField } from "../../Zod/typesField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TrackOrderSchema } from "../../Zod/Schema/Schemas";
+import { useNavigate } from "react-router-dom";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const TrackOrders = () => {
   return (
@@ -29,28 +34,38 @@ const TrackOrders = () => {
 };
 
 export function TrackOrderForm() {
-  const [formData, setFormData] = useState({
-    orderId: "",
-    email: "",
+  const { orders }: any = UserProduct();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(TrackOrderSchema),
   });
-
   const router = useNavigate();
-  const HandleChange = (e: any) => {
-    const { value, name } = e.target;
-    // setFormData({ ...formData, [name]: value });
-    setFormData((per) => ({ ...per, [name]: value }));
-  };
 
-  const HandleSubmit = (e: any) => {
-    e.preventDefault();
-    toast.error("Please Enter the Orders Details");
-    if (formData.email.trim() && formData.orderId.trim()) {
-      router("/Track-order/" + formData.orderId);
-      setFormData({
-        orderId: "",
-        email: "",
+  const onSubmit: SubmitHandler<TrackOrderField> = (data) => {
+    const findOrder = orders.filter((order: any) => order._id === data.orderID);
+
+    try {
+      if (findOrder.length) {
+        router("/Track-order/" + data.orderID);
+        setValue("email", "");
+        setValue("orderID", "");
+        toast.success("Order is Confirmed", { id: "order" });
+      } else {
+        const message = "Invalid OrderID Pls,Check";
+        toast.error(message, { id: "orderError" });
+        setError("orderID", {
+          message: message,
+        });
+      }
+    } catch (error: any) {
+      setError("root", {
+        message: error.message,
       });
-      toast.success("Order is Confirmed");
     }
   };
 
@@ -64,30 +79,41 @@ export function TrackOrderForm() {
         </p>
       </div>
 
-      <form onSubmit={HandleSubmit} className="pt-8 flex flex-col gap-y-5">
-        <InputField
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="pt-8 flex flex-col gap-y-5"
+      >
+        <ZodInputField
           type="text"
-          name="orderId"
-          label="Order iD*"
+          label="Order ID*"
           placeholder="Enter your Order ID"
-          value={formData.orderId}
-          onChange={HandleChange}
+          value={register("orderID")}
+          error={errors.orderID?.message}
         />
-        <InputField
+        <ZodInputField
           type="email"
-          name="email"
           label="email*"
           placeholder="Enter your Email"
-          value={formData.email}
-          onChange={HandleChange}
+          value={register("email")}
+          error={errors.email?.message}
         />
         <div className="max-[300px]:flex max-[300px]:flex-col">
           <button className={`${buttonClassName}`}>
-            <p>Track Order</p>
+            {isSubmitting ? (
+              <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+            ) : (
+              <p>Track Order</p>
+            )}
           </button>
         </div>
+        {errors.root && (
+          <span className="text-base text-red-500 font-semibold">
+            {errors.root.message}
+          </span>
+        )}
       </form>
     </div>
   );
 }
+
 export default TrackOrders;

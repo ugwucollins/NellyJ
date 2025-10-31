@@ -113,3 +113,8 @@ export const PasswordUpdateSchema = z
       .regex(PassWordRegex, PasswordRegex),
   })
   .strict();
+
+export const TrackOrderSchema = z.object({
+  orderID: z.string().min(5, "please enter a valid OrderID").trim(),
+  email: z.string().email(),
+});

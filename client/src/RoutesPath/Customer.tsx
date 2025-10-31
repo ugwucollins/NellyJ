@@ -14,7 +14,7 @@ import Profile from "../component/pages/Profile";
 import SignIn from "../component/auth/Customer/SignIn/SignIn";
 import SignUp from "../component/auth/Customer/SignUp/SignUp";
 import Address from "../component/pages/Address";
-import { loginPath } from "../context/UserContext";
+import { forgetPath, loginPath } from "../context/UserContext";
 import WishList from "../component/pages/WishList";
 import ForgetPassword from "../component/auth/Customer/Forget-Password";
 import Orders from "../component/pages/Orders";
@@ -28,12 +28,15 @@ import CompletePage from "../component/auth/Customer/SignUp/CompletePage";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
   const location = useLocation().pathname;
+  const forget = location.match(forgetPath) && location.includes(forgetPath);
   const isLogin = location.match(loginPath) && location.includes(loginPath);
 
   return (
     <div>
-      {!isLogin && <Navbar HandleTheme={HandleTheme} darkMode={darkMode} />}
-      <div className={`w-full ${isLogin ? "p-0" : "pt-20"}`}>
+      {!isLogin && !forget && (
+        <Navbar HandleTheme={HandleTheme} darkMode={darkMode} />
+      )}
+      <div className={`w-full ${isLogin || forget ? "p-0" : "pt-20"}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<Products />} />
@@ -63,7 +66,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
           <Route path="/auth/forget-password" element={<ForgetPassword />} />
           <Route path="*" element={<NotFound Link="/" />} />
         </Routes>
-        {!isLogin && <Footer />}
+        {!isLogin && !forget && <Footer />}
       </div>
     </div>
   );

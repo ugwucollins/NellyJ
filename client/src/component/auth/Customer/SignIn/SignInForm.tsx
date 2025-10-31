@@ -35,12 +35,12 @@ const SignInForm = () => {
           navigate(from, { replace: true });
         }, 1000);
         setuser(data);
-        toast.success("SignIn Successfully");
+        toast.success("SignIn Successfully", { id: "signIn" });
       });
       console.log(data);
     } catch (error: any) {
       const message = error.message || "Server Error Pls try Again";
-      toast.error(message);
+      toast.error(message, { id: "signInError" });
       setError("root", {
         message: message,
       });

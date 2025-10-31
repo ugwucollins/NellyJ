@@ -35,7 +35,7 @@ const SignUpForm = () => {
     try {
       setTimeout(() => {
         setuser(UserData);
-        toast.success("Created Account Successfully");
+        toast.success("Created Account Successfully", { id: "signUp" });
         window.location.replace(
           from ? from : `/complete/${user.length ? user._id : 1}`
         );
@@ -47,7 +47,7 @@ const SignUpForm = () => {
       }, 100);
     } catch (error: any) {
       const message = error.message || "Internal Server Error";
-      toast.error(message);
+      toast.error(message, { id: "signUpError" });
       setError("root", {
         message: message,
       });

@@ -48,9 +48,6 @@ const App = () => {
     };
   }, []);
 
-  isOnline && console.log("yes");
-  production ? console.log("yes") : console.log("no");
-
   useEffect(() => {
     if (darkMode === true || (!(`theme` in localStorage) && media.matches)) {
       document.body.classList.add("dark");

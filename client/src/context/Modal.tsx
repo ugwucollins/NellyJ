@@ -22,7 +22,7 @@ const Modal = ({
   CancelBtn,
 }: ModalProp) => {
   return (
-    <div className="w-full h-screen dark:text-black bg-black/20 fixed top-0 left-0 z-10">
+    <div className="w-full h-screen dark:text-black bg-black/20 fixed top-0 left-0 z-[12]">
       <div className="flex min-h-screen justify-center items-center text-center w-full  pr-8 pl-4">
         <motion.div
           variants={YSlideIn(100, 0.5, 0.5, 0.5)}
@@ -39,7 +39,7 @@ const Modal = ({
               {Icon ? Icon : <LuTriangleAlert />}
             </h1>
             <p className="font-semibold text-base">{Title}</p>
-            <div className="w-full flex gap-4 justify-end pt-6">
+            <div className="w-full flex max-[300px]:flex-col gap-4 justify-end pt-6">
               <button
                 onClick={Progress}
                 className=" bg-yellow-800 w-full text-white px-5 rounded-full  hover:shadow-md hover:drop-shadow  font-semibold hover:font-bold transition-all duration-150 py-3"

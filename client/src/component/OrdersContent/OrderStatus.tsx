@@ -92,7 +92,6 @@ const OrderStatus = ({ orderID }: any | string) => {
   };
   useEffect(() => {
     handleOrdersChange();
-    // , width, active/
   }, [OrderStatus]);
 
   return (
