@@ -53,7 +53,7 @@ export const ZodSelectField = ({
         {options.map((list: OPTIONPROP, index) => (
           <option
             key={index}
-            value={list.value && list.value}
+            value={list.value.toString()}
             className="capitalize dark:text-black"
           >
             {list.title}

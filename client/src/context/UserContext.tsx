@@ -20,6 +20,7 @@ const UserContext = ({ children }: any) => {
       email: "collins@gmail.com",
       imageUrl: Assets.Client2,
       phoneNumber: 8101245121,
+      password: "12345678",
     }
     // null
   );

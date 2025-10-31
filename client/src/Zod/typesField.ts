@@ -7,6 +7,9 @@ import type {
   NewsLetterSchema,
   AddressSchema,
   ProfileSchema,
+  CardSchema,
+  PasswordUpdateSchema,
+  EventSchema,
 } from "./Schema/Schemas";
 export type LoginField = z.infer<typeof LoginSchema>;
 export type RegisterField = z.infer<typeof RegisterSchema>;
@@ -16,3 +19,6 @@ export type ProfileField = z.infer<typeof ProfileSchema>;
 
 export type NewsLetterField = z.infer<typeof NewsLetterSchema>;
 export type AddressField = z.infer<typeof AddressSchema>;
+export type CardField = z.infer<typeof CardSchema>;
+export type PasswordUpdateField = z.infer<typeof PasswordUpdateSchema>;
+export type EventField = z.infer<typeof EventSchema>;

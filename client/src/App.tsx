@@ -1,6 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import UserContext, { adminPath, sellerPath } from "./context/UserContext";
+import UserContext, {
+  adminPath,
+  production,
+  sellerPath,
+} from "./context/UserContext";
 import ProductContext from "./context/ProductContext";
 import Customer from "./RoutesPath/Customer";
 import Seller from "./RoutesPath/Seller";
@@ -9,6 +13,8 @@ import SellersContext from "./seller/Context/SellersContext";
 import Admin from "./RoutesPath/Admin";
 import AdminContext from "./Admin/context/AdminContext";
 import RoleContext from "./RolesControlle/RoleContext";
+import Modal from "./context/Modal";
+import { BiWifiOff } from "react-icons/bi";
 
 const localTheme: any = localStorage.getItem("theme");
 export const ThemeContext = createContext(JSON.parse(localTheme) || "system");
@@ -43,6 +49,7 @@ const App = () => {
   }, []);
 
   isOnline && console.log("yes");
+  production ? console.log("yes") : console.log("no");
 
   useEffect(() => {
     if (darkMode === true || (!(`theme` in localStorage) && media.matches)) {
@@ -59,7 +66,9 @@ const App = () => {
     setdarkMode,
     HandleTheme,
   };
-
+  const handleP = () => {
+    window.location.reload();
+  };
   return (
     <ThemeContext value={Values}>
       <RoleContext>
@@ -68,13 +77,18 @@ const App = () => {
             darkMode === true && "dark"
           }`}
         >
-          {/* {!isOnline && (
-        <div className="w-full z-20 h-full absolute top-0 left-0 bg-secondary/50">
-          <div className="flex text-center justify-center items-center min-h-screen font-bold text-primary text-5xl">
-            no please
-          </div>
-        </div>
-      )} */}
+          {!isOnline && production && (
+            <div>
+              <Modal
+                Title="No Internet Connection, Please Check Your Internet Connection"
+                Icon={<BiWifiOff />}
+                CancelBtn="No"
+                Progress={handleP}
+                OkayBtn="Try Again"
+                Cancel={() => alert("Please Check Your Connection")}
+              />
+            </div>
+          )}
           <UserContext>
             <SellersContext>
               <AdminContext>
