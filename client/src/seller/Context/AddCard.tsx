@@ -11,6 +11,7 @@ const AddCard = ({
   color,
   path,
   index,
+  className,
 }: AddCardProp) => {
   return (
     Title && (
@@ -35,19 +36,21 @@ const AddCard = ({
 
           <p className="text-sm opacity-85 font-medium py-3">{text}</p>
 
-          <button
-            className="PX-8 transition-all duration-200 py-3 rounded-md hover:rounded-full text-white w-52 max-w-full font-semibold text-base hover:font-bold"
-            style={{ backgroundColor: color, border: `2px solid ${color}` }}
-          >
-            <Link
-              to={path ? path : ""}
-              onClick={() => {
-                path && localStorage.setItem("path", JSON.stringify(path));
-              }}
+          <div className={className}>
+            <button
+              className="PX-8 transition-all duration-200 py-3 rounded-md hover:rounded-full text-white w-52 max-w-full font-semibold text-base hover:font-bold"
+              style={{ backgroundColor: color, border: `2px solid ${color}` }}
             >
-              <p>{btnText}</p>
-            </Link>
-          </button>
+              <Link
+                to={path ? path : ""}
+                onClick={() => {
+                  path && localStorage.setItem("path", JSON.stringify(path));
+                }}
+              >
+                <p>{btnText}</p>
+              </Link>
+            </button>
+          </div>
         </div>
       </motion.div>
     )

@@ -118,3 +118,20 @@ export const TrackOrderSchema = z.object({
   orderID: z.string().min(5, "please enter a valid OrderID").trim(),
   email: z.string().email(),
 });
+export const ProductSchema = z.object({
+  name: z.string().min(5).trim(),
+  description: z.string().or(z.array(z.string())),
+  category: z.string().min(5, "Please Select the category").trim(),
+  deliveryFee: z
+    .number()
+    .min(2, "Please enter the amount")
+    .or(z.string().min(2, "Please enter the amount")),
+  price: z
+    .number()
+    .min(2, "Please enter the amount")
+    .or(z.string().min(2, "Please enter the amount")),
+  offerPrice: z
+    .number()
+    .min(2, "Please enter the amount")
+    .or(z.string().min(2, "Please enter the amount")),
+});

@@ -139,7 +139,7 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
                           <hr className="bg-secondary mt-2 h-[2px]" />
                           <NavLink
                             to={"/Track-orders"}
-                            className="py-2 px-8 font-bold text-sm"
+                            className="py-2 px-8 whitespace-nowrap font-bold text-sm"
                           >
                             Track-orders
                           </NavLink>
@@ -359,7 +359,7 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
                               <NavLink
                                 to={"/Track-orders"}
                                 onClick={handleClose}
-                                className="py-2 px-8 font-bold text-sm"
+                                className="py-2 whitespace-nowrap px-8 font-bold text-sm"
                               >
                                 Track-orders
                               </NavLink>

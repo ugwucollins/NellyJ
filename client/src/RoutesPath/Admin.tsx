@@ -7,6 +7,16 @@ import { adminPath } from "../context/UserContext";
 import { PersonalRoles } from "../RolesControlle/RolesValue";
 import { UserAdminAuth } from "../Admin/context/AdminContext";
 import { useEffect } from "react";
+import CreateProduct from "../Admin/pages/CreateProduct";
+import AllProducts from "../Admin/pages/AllProducts";
+import Orders from "../Admin/pages/Orders";
+import OrdersDetails from "../Admin/orders/OrdersDetails";
+import Contact from "../Admin/pages/Contact";
+import ContactID from "../Admin/contacts/ContactID";
+import Events from "../Admin/pages/Events";
+import Users from "../Admin/pages/Users";
+import Settings from "../Admin/pages/Settings";
+import EventsDetails from "../Admin/events/EventsDetails";
 
 const Admin = () => {
   const { admin }: any = UserAdminAuth();
@@ -26,6 +36,16 @@ const Admin = () => {
             element={<PrivateRoute allowedRoles={[PersonalRoles.ADMIN]} />}
           >
             <Route index element={<Dashboard />} />
+            <Route path="addproduct" element={<CreateProduct />} />
+            <Route path="listproduct" element={<AllProducts />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="events" element={<Events />} />
+            <Route path="users" element={<Users />} />
+            <Route path="orders/:orderID" element={<OrdersDetails />} />
+            <Route path={"contact/:id"} element={<ContactID />} />
+            <Route path={"events/:id"} element={<EventsDetails />} />
+            <Route path={"settings"} element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound Link="/" />} />
         </Route>

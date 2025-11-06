@@ -22,5 +22,6 @@ export type AddCardProp = {
   icon: ReactElement;
   color: string;
   path?: string;
+  className?: string;
   index?: number;
 };

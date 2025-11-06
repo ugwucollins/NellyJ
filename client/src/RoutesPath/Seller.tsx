@@ -16,6 +16,7 @@ import ContactID from "../seller/Contact/ContactID";
 
 const Seller = () => {
   const { seller }: any = UserSellerAuth();
+
   const router = useNavigate();
 
   useEffect(() => {

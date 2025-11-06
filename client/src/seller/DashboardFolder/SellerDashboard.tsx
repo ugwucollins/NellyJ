@@ -9,6 +9,7 @@ import { MdProductionQuantityLimits } from "react-icons/md";
 import AddCard from "../Context/AddCard";
 import { PiPlus } from "react-icons/pi";
 import { RealValues } from "../Context/RealValues";
+import CustomContentOfTooltip from "../../Admin/charts/BarChart";
 
 const SellerDashboard = () => {
   return (
@@ -57,19 +58,30 @@ export const SellerDashboardContent = () => {
           />
         ))}
       </div>
+      <div className="w-full flex justify-center max-[1100px]:flex-col items-center max-[1100px]:gap-6 pb-5 pt-2">
+        <CustomContentOfTooltip />
+      </div>
       <div className="flex pb-4 flex-wrap gap-4 justify-center px-4">
-        {CardArrayLong.map((item: AddCardProp, index) => (
-          <AddCard
-            index={index}
-            key={item.Title}
-            Title={item.Title}
-            icon={item.icon}
-            text={item.text}
-            color={item.color}
-            path={item.path}
-            btnText={item.btnText}
-          />
-        ))}
+        {CardArrayLong.map((item: AddCardProp, index) => {
+          const even = index % 2 === 0;
+          return (
+            <AddCard
+              index={index}
+              className={
+                even
+                  ? "w-full flex justify-end py-1"
+                  : "w-full flex justify-start py-1"
+              }
+              key={item.Title}
+              Title={item.Title}
+              icon={item.icon}
+              text={item.text}
+              color={item.color}
+              path={item.path}
+              btnText={item.btnText}
+            />
+          );
+        })}
       </div>
     </div>
   );

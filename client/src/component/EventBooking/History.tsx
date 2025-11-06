@@ -27,7 +27,9 @@ export default History;
 export const HistoryCard = () => {
   const { events }: any = UserAuth();
 
-  const [allEvents, setAllEvents] = useState((events && events) || []);
+  const [allEvents, setAllEvents] = useState(
+    (events && events.reverse()) || []
+  );
 
   useEffect(() => {
     setAllEvents;
@@ -37,7 +39,7 @@ export const HistoryCard = () => {
   return (
     <div className="w-full flex flex-row gap-5 justify-center items-center flex-wrap">
       {allEvents &&
-        allEvents.reverse().map((event: any, index: number) => (
+        allEvents.map((event: any, index: number) => (
           <motion.div
             key={index}
             variants={YSlideIn(150, 1, index ? index : 0.5, 0.5)}

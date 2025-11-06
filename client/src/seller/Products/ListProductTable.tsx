@@ -130,7 +130,10 @@ export const Table = () => {
 
                         <td className="pr-4 pl-2">
                           <div className=" opacity-80 capitalize font-semibold text-base whitespace-nowrap">
-                            {DateFormater(item && item.createdAt, "short")}
+                            {DateFormater({
+                              date: item && item.createdAt,
+                              monthType: "short",
+                            })}
                           </div>
                         </td>
 

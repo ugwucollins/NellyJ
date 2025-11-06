@@ -59,7 +59,11 @@ const OrdersTable = () => {
                       Estimated Delivery Date
                     </span>
                     <p className="font-bold text-base">
-                      {DateFormater(item.createdAt, "short")}
+                      {/* {DateFormater(item.createdAt, "short")} */}
+                      {DateFormater({
+                        date: item && item.createdAt,
+                        monthType: "short",
+                      })}
                     </p>
                   </div>
                 </div>

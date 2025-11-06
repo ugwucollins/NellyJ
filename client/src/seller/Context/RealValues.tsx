@@ -5,6 +5,8 @@ export const RealValues = () => {
 
   const Sales = 20000;
   const customers = 200;
+  const sellers = 5;
+  const events = 300;
   const product = products && products.length;
   const order = orders && orders.length;
   return {
@@ -12,5 +14,7 @@ export const RealValues = () => {
     orders: order,
     sales: `${currency} ${Sales}`,
     customers: customers,
+    sellers: sellers,
+    events: events,
   };
 };

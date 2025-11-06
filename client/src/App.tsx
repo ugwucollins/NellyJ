@@ -23,13 +23,13 @@ const App = () => {
   const [darkMode, setdarkMode] = useState(JSON.parse(localTheme) || "system");
   const media = window.matchMedia("(prefers-color-scheme:dark)");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
   const isSeller = location.match(sellerPath) && location.includes(sellerPath);
   const isAdmin = location.match(adminPath) && location.includes(adminPath);
 
   const HandleTheme = () => {
     setdarkMode(!darkMode);
   };
+
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
@@ -56,7 +56,10 @@ const App = () => {
       document.body.classList.remove("dark");
       localStorage.removeItem("theme");
     }
-  }, [darkMode, media]);
+  }, [
+    darkMode,
+    // media
+  ]);
 
   const Values = {
     darkMode,

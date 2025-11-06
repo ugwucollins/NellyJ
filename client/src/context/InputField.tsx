@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { InputProp, ZodInputProp } from "./Types";
+import type { InputProp, ZodInputProp, ZodInputPropNumber } from "./Types";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const InputField = ({
@@ -76,6 +76,29 @@ export const ZodInputField = ({
           )}
         </span>
       )}
+      {error && (
+        <p className="text-red-600 text-sm font-semibold pl-2">{error}</p>
+      )}
+    </div>
+  );
+};
+export const ZodInputFieldNumber = ({
+  value,
+  className,
+  label,
+  error,
+  placeholder,
+}: ZodInputPropNumber) => {
+  return (
+    <div className="w-full flex relative gap-2 flex-col text-left">
+      <label className="text-sm font-bold capitalize">{label}</label>
+      <input
+        type="number"
+        className={`py-2.5 text-black px-4 font-semibold rounded-full w-full text-sm outline-1 outline outline-gray-500 focus:font-bold placeholder:font-normal focus:text-base focus:outline-[1.5px] transition-all shadow-sm drop-shadow-sm focus:shadow-inner focus:drop-shadow-lg  ${className}`}
+        placeholder={placeholder}
+        {...value}
+      />
+
       {error && (
         <p className="text-red-600 text-sm font-semibold pl-2">{error}</p>
       )}

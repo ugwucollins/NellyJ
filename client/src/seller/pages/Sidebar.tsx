@@ -1,14 +1,28 @@
 import { useState } from "react";
 import { Assets } from "../../component/assets";
-import { SideBarMenu } from "../Context/SellerAssests";
-import { Link } from "react-router-dom";
-import { BiLogOut, BiSolidArrowFromRight, BiX } from "react-icons/bi";
+import { Link, useLocation } from "react-router-dom";
+import {
+  BiLogOut,
+  BiPhoneCall,
+  BiSolidArrowFromRight,
+  BiX,
+} from "react-icons/bi";
 import Modal from "../../context/Modal";
 import { UserSellerAuth } from "../Context/SellersContext";
 import { UseTheme } from "../../App";
 import { BsMoonFill } from "react-icons/bs";
 import { LuSun } from "react-icons/lu";
-import { MdMenu } from "react-icons/md";
+import {
+  MdDashboard,
+  MdMenu,
+  MdOutlineAdminPanelSettings,
+  MdProductionQuantityLimits,
+} from "react-icons/md";
+import { UserAdminAuth } from "../../Admin/context/AdminContext";
+import { adminPath, sellerPath } from "../../context/UserContext";
+import { RiProductHuntFill } from "react-icons/ri";
+import { GrDeliver } from "react-icons/gr";
+import type { SidebarProp } from "../Context/Types";
 
 const Sidebar = () => {
   const { HandleLogOut }: any = UserSellerAuth();
@@ -17,8 +31,6 @@ const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const JsonValue: any = localStorage.getItem("path");
-  const [selectedIndex, setSelectedIndex] = useState(JSON.parse(JsonValue));
 
   const handleClose = () => {
     setOpen(!open);
@@ -63,44 +75,7 @@ const Sidebar = () => {
           </div>
 
           <hr className="h-[1.5px] w-full bg-neutral-400/90 mt-2 mb-5" />
-          <div className="flex gap-y-4 flex-col max-sm:mt-0 mt-5 overflow-hidden">
-            {SideBarMenu.map((item, index: number) => {
-              return (
-                <Link to={item.path} key={index}>
-                  <div
-                    onClick={() => {
-                      localStorage.setItem("path", JSON.stringify(item.path));
-                      setSelectedIndex(item.path);
-                    }}
-                    className={`py-3.5 transition-all duration-200 flex items-center relative dark:text-black gap-1 cursor-pointer  rounded-lg ${
-                      selectedIndex === item.path
-                        ? "bg-gray-100"
-                        : "bg-white dark:bg-gray-200/60"
-                    } ${open ? "px-12" : "px-6"}`}
-                  >
-                    <span className="text-2xl">{item.icon}</span>
-                    {open && (
-                      <p
-                        className={`text-base whitespace-nowrap hover:font-bold ${
-                          selectedIndex === item.path
-                            ? "font-bold"
-                            : "font-semibold"
-                        }`}
-                      >
-                        {item.Title}
-                      </p>
-                    )}
-                    {selectedIndex === item.path && open && (
-                      <div>
-                        <div className=" w-[5px] h-full rounded-2xl bg-yellow-800 top-0 absolute right-0" />
-                        <div className="size-5 rounded-full bg-white shadow-xl drop-shadow-md top-1 absolute left-1" />
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <SidebarMenuCom open={open} />
         </div>
 
         <div className="w-full absolute bottom-3 max-sm:bottom-8 left-0">
@@ -177,44 +152,7 @@ const Sidebar = () => {
 
             <hr className="h-[1.5px] w-full bg-neutral-400/90 mt-2 mb-5" />
 
-            <div className="flex gap-y-4 flex-col max-sm:mt-0 mt-5 overflow-hidden">
-              {SideBarMenu.map((item, index: number) => {
-                return (
-                  <Link to={item.path} key={index}>
-                    <div
-                      onClick={() => {
-                        localStorage.setItem("path", JSON.stringify(item.path));
-                        setSelectedIndex(item.path);
-                      }}
-                      className={`py-3.5 transition-all duration-200 flex items-center relative dark:text-black gap-1 cursor-pointer  rounded-lg ${
-                        selectedIndex === item.path
-                          ? "bg-gray-100"
-                          : "bg-white dark:bg-gray-200/60"
-                      } ${open ? "px-12" : "px-6"}`}
-                    >
-                      <span className="text-2xl">{item.icon}</span>
-                      {open && (
-                        <p
-                          className={`text-base whitespace-nowrap hover:font-bold ${
-                            selectedIndex === item.path
-                              ? "font-bold"
-                              : "font-semibold"
-                          }`}
-                        >
-                          {item.Title}
-                        </p>
-                      )}
-                      {selectedIndex === item.path && open && (
-                        <>
-                          <div className=" w-[5px] h-full rounded-2xl bg-yellow-800 top-0 absolute right-0" />
-                          <div className="size-5 rounded-full bg-white shadow-xl drop-shadow-md top-1 absolute left-1" />
-                        </>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+            <SidebarMenuCom open={open} />
           </div>
 
           <div className="w-full absolute bottom-3 max-sm:bottom-8 left-0">
@@ -295,3 +233,81 @@ export function SellerLogo({ action }: any | boolean) {
     </div>
   );
 }
+
+type SidebarMenuComProp = {
+  open: boolean;
+  pathName?: string;
+};
+
+const SidebarMenuCom = ({ open }: SidebarMenuComProp) => {
+  const pathName = useLocation().pathname;
+  const { admin }: any = UserAdminAuth();
+
+  const SideBarMenu: SidebarProp[] = [
+    {
+      icon: <MdDashboard />,
+      path: sellerPath,
+      Title: "Dashboard",
+    },
+    {
+      icon: <RiProductHuntFill />,
+      path: sellerPath + "/addproduct",
+      Title: "Add Product",
+    },
+    {
+      icon: <MdProductionQuantityLimits />,
+      path: sellerPath + "/listproduct",
+      Title: "List Product",
+    },
+    {
+      icon: <GrDeliver />,
+      path: sellerPath + "/orders",
+      Title: "Orders",
+    },
+    {
+      icon: <BiPhoneCall />,
+      path: sellerPath + "/contact",
+      Title: "Contact",
+    },
+    {
+      icon: admin && <MdOutlineAdminPanelSettings />,
+      path: admin && adminPath,
+      Title: admin && "Admin",
+    },
+  ];
+
+  return (
+    <div className="flex gap-y-4 flex-col max-sm:mt-0 mt-5 overflow-hidden">
+      {SideBarMenu.map((item, index: number) => {
+        return (
+          <Link to={item.path} key={index}>
+            <div
+              className={`py-3.5 transition-all duration-200 flex items-center relative dark:text-black gap-1 cursor-pointer  rounded-lg ${
+                pathName === item.path
+                  ? "bg-gray-100"
+                  : "bg-white dark:bg-gray-200/60"
+              } ${open ? "px-12" : "px-6"}`}
+            >
+              <span className="text-2xl">{item.icon}</span>
+              {open && (
+                <p
+                  className={`text-base whitespace-nowrap hover:font-bold ${
+                    pathName === item.path ? "font-bold" : "font-semibold"
+                  }`}
+                >
+                  {item.Title}
+                </p>
+              )}
+              {pathName === item.path && open && (
+                <div>
+                  <div className=" w-[5px] h-full rounded-2xl bg-yellow-800 top-0 absolute right-0" />
+                  <div className="size-5 rounded-full bg-white shadow-xl drop-shadow-md top-1 absolute left-1" />
+                </div>
+              )}
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+  );
+};

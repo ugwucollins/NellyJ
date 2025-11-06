@@ -1,7 +1,9 @@
-type monthTypeProp = {
+type DateProp = {
+  date: Date | any;
+  pro?: boolean;
   monthType: "long" | "short" | "numeric" | "2-digit" | "narrow" | undefined;
 };
-const DateFormater = (date: Date | any, monthType: monthTypeProp | any) => {
+const DateFormater = ({ date, monthType, pro }: DateProp) => {
   const ActualDate = new Date(date);
   const day = ActualDate.getDate();
   const month = ActualDate.toLocaleString("default", {
@@ -23,7 +25,7 @@ const DateFormater = (date: Date | any, monthType: monthTypeProp | any) => {
         return "th";
     }
   }
-  const dayWithSuffix = `${day}${getOrandinal(day)}`;
+  const dayWithSuffix = pro ? `${day}` : `${day}${getOrandinal(day)}`;
 
   return `${dayWithSuffix}, ${month} ${year}`;
 };

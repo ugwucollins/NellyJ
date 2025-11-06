@@ -11,6 +11,7 @@ import type {
   PasswordUpdateSchema,
   EventSchema,
   TrackOrderSchema,
+  ProductSchema,
 } from "./Schema/Schemas";
 export type LoginField = z.infer<typeof LoginSchema>;
 export type RegisterField = z.infer<typeof RegisterSchema>;
@@ -24,3 +25,4 @@ export type CardField = z.infer<typeof CardSchema>;
 export type PasswordUpdateField = z.infer<typeof PasswordUpdateSchema>;
 export type EventField = z.infer<typeof EventSchema>;
 export type TrackOrderField = z.infer<typeof TrackOrderSchema>;
+export type ProductField = z.infer<typeof ProductSchema>;

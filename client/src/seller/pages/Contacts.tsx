@@ -39,6 +39,7 @@ export const ListContacts = () => {
       {/* <ContactCard /> */}
       {ContactArray.map((user, index) => (
         <motion.div
+          key={index}
           variants={YSlideIn(100, index, 0.6, 0.8)}
           initial={"hidden"}
           whileInView={"show"}

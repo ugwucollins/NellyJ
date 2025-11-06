@@ -91,7 +91,12 @@ export const OrdersTable = () => {
                 Method: {order.paymentMethod}
               </p>
               <p className="text-base whitespace-nowrap font-medium opacity-80 pl-2 wh">
-                Date: {DateFormater(order.createdAt, "short")}
+                Date:
+                {/* {DateFormater(order.createdAt, "short")} */}
+                {DateFormater({
+                  date: order && order.createdAt,
+                  monthType: "short",
+                })}
               </p>
               <p className="text-base whitespace-nowrap font-medium opacity-80 pl-2 wh">
                 Payment: {order.isPaid ? "Paid" : "No"}

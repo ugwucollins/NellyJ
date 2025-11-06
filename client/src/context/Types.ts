@@ -109,6 +109,13 @@ export interface ZodInputProp {
   className?: string;
   error: string | undefined;
 }
+export interface ZodInputPropNumber {
+  label: string;
+  placeholder: string;
+  value: any;
+  className?: string;
+  error: string | undefined;
+}
 export interface OrdersProp {
   _id: string;
   userId: string;

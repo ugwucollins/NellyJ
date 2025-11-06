@@ -36,7 +36,7 @@ const ContactCard = ({
                 : name && name.slice(0, 12) + ".."}
             </h1>
             <p className="text-sm font-semibold opacity-75">
-              {DateFormater(date && date, "short")}
+              {DateFormater({ date: date && date, monthType: "short" })}
             </p>
           </div>
         </div>
