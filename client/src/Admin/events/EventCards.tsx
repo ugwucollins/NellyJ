@@ -1,9 +1,15 @@
-import { BiCake } from "react-icons/bi";
 import DateFormater from "../../context/DateFormat";
 import { Link } from "react-router-dom";
 import AvaterImage from "../../context/AvaterImage";
-import { Assets } from "../../component/assets";
+import { Assets, EventsCheck } from "../../component/assets";
 import { buttonClassName } from "../../component/Animation";
+import { BsCakeFill } from "react-icons/bs";
+import { FaBaby, FaGraduationCap } from "react-icons/fa";
+import { RiHeartsFill } from "react-icons/ri";
+import { GiCoffin } from "react-icons/gi";
+import { PiFlowerLotusFill } from "react-icons/pi";
+import { IoRoseSharp } from "react-icons/io5";
+import { TbTransactionDollar } from "react-icons/tb";
 
 const EventCards = ({ event }: any) => {
   return (
@@ -54,7 +60,23 @@ const EventCards = ({ event }: any) => {
       <div className="flex flex-col gap-y-2 pt-2">
         <div className="flex gap-2 items-center pb-2">
           <div className="w-auto p-4 text-black text-2xl bg-slate-50 shadow rounded-full">
-            <BiCake />
+            {event && event.event === EventsCheck.Birthday ? (
+              <BsCakeFill />
+            ) : event && event.event === EventsCheck.Baby_Shower ? (
+              <FaBaby />
+            ) : event && event.event === EventsCheck.Wedding ? (
+              <RiHeartsFill />
+            ) : event && event.event === EventsCheck.Burial ? (
+              <GiCoffin />
+            ) : event && event.event === EventsCheck.Graduation ? (
+              <FaGraduationCap />
+            ) : event && event.event === EventsCheck.Anniversary ? (
+              <PiFlowerLotusFill />
+            ) : event && event.event === EventsCheck.Get_Together ? (
+              <IoRoseSharp />
+            ) : (
+              <TbTransactionDollar />
+            )}
           </div>
           <div className="flex flex-col">
             <h1 className="font-bold">{event && event.event}</h1>

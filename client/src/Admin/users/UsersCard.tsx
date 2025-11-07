@@ -1,20 +1,21 @@
 import { BiDotsHorizontal, BiPhone } from "react-icons/bi";
+import { Assets } from "../../component/assets";
 import AvaterImage from "../../context/AvaterImage";
 import DateFormater from "../../context/DateFormat";
+import { Link } from "react-router-dom";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { FaPersonMilitaryToPerson } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { Assets } from "../../component/assets";
-const ContactCard = ({
+
+const UsersCard = ({
   imageUrl,
   linkPath,
   email,
-  date,
+  createdAt,
   number,
   status,
   name,
   Path,
-}: ContactCardProp) => {
+}: UserCardProp) => {
   return (
     <div className="w-full dark:bg-slate-800/60 outline-none dark:outline-1 dark:outline dark:outline-slate-600/70 dark:text-white max-w-xl shadow-md drop-shadow p-6 rounded-2xl">
       <div className="flex w-full gap-1 justify-between items-center">
@@ -35,12 +36,15 @@ const ContactCard = ({
                 : name && name.slice(0, 12) + ".."}
             </h1>
             <p className="text-sm font-semibold opacity-75">
-              {DateFormater({ date: date && date, monthType: "short" })}
+              {DateFormater({
+                date: createdAt && createdAt,
+                monthType: "short",
+              })}
             </p>
           </div>
         </div>
         <div className="group relative">
-          <Link to={Path + `/contact/${linkPath ? linkPath : ""}`}>
+          <Link to={Path + `/users/${linkPath ? linkPath : ""}`}>
             <div className=" w-auto p-2 bg-slate-100 text-black text-xl rounded-md cursor-pointer">
               <BiDotsHorizontal />
             </div>
@@ -81,11 +85,11 @@ const ContactCard = ({
   );
 };
 
-export default ContactCard;
+export default UsersCard;
 
-export type ContactCardProp = {
+export type UserCardProp = {
   imageUrl?: string | null;
-  date: string | Date;
+  createdAt: string | Date;
   linkPath: string;
   email: string;
   number: string | number;

@@ -46,6 +46,7 @@ export const ListContacts = () => {
           className="w-full max-w-xl rounded-xl"
         >
           <ContactCard
+            Path={sellerPath}
             imageUrl={user.userId && user.userId?.image}
             linkPath={user._id}
             name={user.name}

@@ -17,6 +17,7 @@ import Events from "../Admin/pages/Events";
 import Users from "../Admin/pages/Users";
 import Settings from "../Admin/pages/Settings";
 import EventsDetails from "../Admin/events/EventsDetails";
+import UsersDetails from "../Admin/users/UsersDetails";
 
 const Admin = () => {
   const { admin }: any = UserAdminAuth();
@@ -45,6 +46,7 @@ const Admin = () => {
             <Route path="orders/:orderID" element={<OrdersDetails />} />
             <Route path={"contact/:id"} element={<ContactID />} />
             <Route path={"events/:id"} element={<EventsDetails />} />
+            <Route path={"users/:id"} element={<UsersDetails />} />
             <Route path={"settings"} element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound Link="/" />} />

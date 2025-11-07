@@ -1,14 +1,16 @@
+import { UsersArray } from "../../Admin/users/UsersPage";
 import { currency, UserProduct } from "../../context/ProductContext";
 
 export const RealValues = () => {
   const { orders, products }: any = UserProduct();
 
   const Sales = 20000;
-  const customers = 200;
-  const sellers = 5;
-  const events = 300;
+  const customers = UsersArray.length;
+  const sellers = 15;
+  const events = 30;
   const product = products && products.length;
   const order = orders && orders.length;
+  const contacts = 100;
   return {
     product: product,
     orders: order,
@@ -16,5 +18,6 @@ export const RealValues = () => {
     customers: customers,
     sellers: sellers,
     events: events,
+    contacts: contacts,
   };
 };

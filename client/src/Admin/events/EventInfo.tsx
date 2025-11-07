@@ -1,10 +1,45 @@
 import { useEffect, useState } from "react";
 import AvaterImage from "../../context/AvaterImage";
-import { BiCake } from "react-icons/bi";
+import { BiLoaderCircle } from "react-icons/bi";
 import DateFormater from "../../context/DateFormat";
+import { EventStatus } from "./EventCards";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { ZodSelectField } from "../../context/SelectField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
+import { buttonClassName } from "../../component/Animation";
+import { EventsCheck } from "../../component/assets";
+import { BsCakeFill } from "react-icons/bs";
+import { FaBaby, FaGraduationCap } from "react-icons/fa";
+import { RiHeartsFill } from "react-icons/ri";
+import { GiCoffin } from "react-icons/gi";
+import { PiFlowerLotusFill } from "react-icons/pi";
+import { IoRoseSharp } from "react-icons/io5";
+import { TbTransactionDollar } from "react-icons/tb";
+import toast from "react-hot-toast";
 
+const statusSchema = z.object({
+  status: z.enum([
+    EventStatus.Active,
+    EventStatus.Pending,
+    EventStatus.completed,
+  ]),
+});
+type StatusField = z.infer<typeof statusSchema>;
 const EventInfo = ({ id: _id }: string | any) => {
   const [EventInfo, setEventInfo]: any = useState({});
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      status: EventInfo.status,
+    },
+    resolver: zodResolver(statusSchema),
+  });
+
   const jsonValue: any = localStorage.getItem("event");
   const EventArray = JSON.parse(jsonValue ? jsonValue : []);
 
@@ -13,12 +48,32 @@ const EventInfo = ({ id: _id }: string | any) => {
       EventArray &&
       EventArray.find((item: any) => item._id.toString() === _id.toString());
     setEventInfo(filter);
-    console.log(filter);
+    setValue("status", EventInfo.status && EventInfo.status.toString());
   };
 
   useEffect(() => {
     FetchContactInfo();
   }, []);
+
+  const onSubmit: SubmitHandler<StatusField> = (data) => {
+    const Update =
+      EventArray &&
+      EventArray.map((item: any) =>
+        item._id.toString() === _id.toString()
+          ? {
+              ...item,
+              status: data.status,
+            }
+          : item
+      );
+
+    setTimeout(() => {
+      setEventInfo({ ...EventInfo, status: data.status });
+      localStorage.setItem("event", JSON.stringify(Update));
+      toast.success("Updated changes Successfully");
+      console.log(Update);
+    }, 1000);
+  };
 
   return (
     <div className="w-full flex justify-center items-center flex-col px-2 py-8">
@@ -45,16 +100,32 @@ const EventInfo = ({ id: _id }: string | any) => {
               {EventInfo && EventInfo.name}
             </p>
             <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
-              {EventInfo && EventInfo?.userId?.email}
+              {EventInfo ? EventInfo.email : EventInfo?.userId?.email}
             </span>
           </div>
         </div>
-
         <div className="flex flex-col gap-y-4 w-full">
           <div className="flex gap-2 items-center pb-2">
             <div className="w-auto p-4 text-black text-2xl bg-slate-50 shadow rounded-full">
-              <BiCake />
+              {EventInfo && EventInfo.event === EventsCheck.Birthday ? (
+                <BsCakeFill />
+              ) : EventInfo && EventInfo.event === EventsCheck.Baby_Shower ? (
+                <FaBaby />
+              ) : EventInfo && EventInfo.event === EventsCheck.Wedding ? (
+                <RiHeartsFill />
+              ) : EventInfo && EventInfo.event === EventsCheck.Burial ? (
+                <GiCoffin />
+              ) : EventInfo && EventInfo.event === EventsCheck.Graduation ? (
+                <FaGraduationCap />
+              ) : EventInfo && EventInfo.event === EventsCheck.Anniversary ? (
+                <PiFlowerLotusFill />
+              ) : EventInfo && EventInfo.event === EventsCheck.Get_Together ? (
+                <IoRoseSharp />
+              ) : (
+                <TbTransactionDollar />
+              )}
             </div>
+
             <div className="flex flex-col">
               <h1 className="font-bold">{EventInfo && EventInfo.event}</h1>
               <p className="text-sm font-semibold opacity-75">
@@ -76,6 +147,32 @@ const EventInfo = ({ id: _id }: string | any) => {
           </div>
 
           <div>
+            <span className="font-bold mr-4 font-serif opacity-85 underline">
+              Foods:
+            </span>
+
+            <div>
+              {EventInfo.foods &&
+                EventInfo.foods.map((food: any, index: number) => (
+                  <div
+                    key={index}
+                    className="text-left font-semibold capitalize dark:text-gray-400 pl-4"
+                  >
+                    <li>{food}</li>
+                  </div>
+                ))}
+            </div>
+          </div>
+          <div className="flex items-center">
+            <span className="font-semibold mr-4 font-serif opacity-85 ">
+              Number OF Guest:
+            </span>
+
+            <div className="text-left font-bold capitalize dark:text-gray-400 pl-4 underline">
+              {EventInfo.person && +EventInfo.person} people
+            </div>
+          </div>
+          <div>
             <span className="font-semibold mr-4 font-serif opacity-85">
               Address:
             </span>
@@ -85,21 +182,53 @@ const EventInfo = ({ id: _id }: string | any) => {
             </address>
           </div>
         </div>
-
         <div className="flex items-center w-full justify-end pt-4">
-          <p
-            className={`text-sm font-semibold capitalize w-auto p-2  rounded-full outline outline-1 text-black
-               ${
-                 EventInfo && EventInfo?.userId
-                   ? "bg-green-300  outline-green-800"
-                   : "bg-yellow-200  outline-yellow-800"
-               }
-                 `}
+          <div
+            className={` capitalize outline outline-1 cursor-pointer w-auto px-3.5 rounded-full py-2 font-semibold ${
+              EventInfo.status === EventStatus.Pending
+                ? "bg-red-400/70 outline-red-700"
+                : EventInfo.status === EventStatus.Active
+                ? "bg-yellow-400/70 outline-yellow-700"
+                : "bg-green-400/70 outline-green-700"
+            }`}
           >
-            {EventInfo && EventInfo?.userId
-              ? "Active customer"
-              : "guest Visitor"}
-          </p>
+            {EventInfo.status === EventStatus.Pending
+              ? EventStatus.Pending
+              : EventInfo.status === EventStatus.Active
+              ? EventStatus.Active
+              : EventStatus.completed}
+          </div>
+        </div>
+
+        <div>
+          {EventInfo.status !== EventStatus.completed && (
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex w-full flex-col gap-y-4"
+            >
+              <ZodSelectField
+                value={register("status")}
+                error={errors.status?.message}
+                label="Event Status"
+                options={EventStatusOptions}
+              />
+              {errors.root && (
+                <span className="text-base text-red-600 font-semibold">
+                  {errors.root.message}
+                </span>
+              )}
+              <button
+                disabled={isSubmitting}
+                className={`${buttonClassName} disabled:opacity-80`}
+              >
+                {isSubmitting ? (
+                  <BiLoaderCircle className="text-2xl disabled:line-through w-full animate-spin transition-all duration-150" />
+                ) : (
+                  <p>Save Changes</p>
+                )}
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
@@ -107,3 +236,17 @@ const EventInfo = ({ id: _id }: string | any) => {
 };
 
 export default EventInfo;
+export const EventStatusOptions = [
+  {
+    title: "Pending",
+    value: "pending",
+  },
+  {
+    title: "active",
+    value: "active",
+  },
+  {
+    title: "completed",
+    value: "completed",
+  },
+];

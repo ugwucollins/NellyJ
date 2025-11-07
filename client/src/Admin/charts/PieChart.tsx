@@ -1,13 +1,7 @@
 import { Pie, PieChart, Tooltip } from "recharts";
+import { RealValues } from "../../seller/Context/RealValues";
 
 // #region Sample data
-const data01 = [
-  { name: "Total Customer", value: 20 },
-  { name: "Total Orders", value: 300 },
-  { name: "Total Booked Events", value: 300 },
-  { name: "Total Products", value: 200 },
-  { name: "Total Contacts", value: 100 },
-];
 
 // #endregion
 export default function TwoLevelPieChart({
@@ -15,6 +9,17 @@ export default function TwoLevelPieChart({
 }: {
   isAnimationActive?: boolean;
 }) {
+  const { product, orders, sellers, customers, events, contacts } =
+    RealValues();
+
+  const data01 = [
+    { name: "Total Customer", value: customers },
+    { name: "Total Orders", value: orders },
+    { name: "Total sellers", value: sellers },
+    { name: "Total Booked Events", value: events },
+    { name: "Total Products", value: product },
+    { name: "Total Contacts", value: contacts },
+  ];
   return (
     <PieChart
       style={{
@@ -34,9 +39,7 @@ export default function TwoLevelPieChart({
         cx="50%"
         cy="50%"
         outerRadius="50%"
-        // fill="#8884d8"
         fill="#1e40af"
-        // fill="#1e3a8a"
         label
         isAnimationActive={isAnimationActive}
       />

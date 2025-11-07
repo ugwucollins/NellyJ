@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Assets, DummyAddress } from "../component/assets";
+import { DummyAddress } from "../component/assets";
 import toast from "react-hot-toast";
 
 export const UserProvider = createContext({});
@@ -13,17 +13,17 @@ export const NotAuth: string = "/auth/signin";
 
 const UserContext = ({ children }: any) => {
   const [user, setuser] = useState<null | Object>(
-    {
-      firstName: "collins",
-      _id: "collins",
-      gender: "male",
-      lastName: "ugwu",
-      email: "collins@gmail.com",
-      imageUrl: Assets.Client2,
-      phoneNumber: 8101245121,
-      password: "12345678",
-    }
-    // null
+    // {
+    //   firstName: "collins",
+    //   _id: "collins",
+    //   gender: "male",
+    //   lastName: "ugwu",
+    //   email: "collins@gmail.com",
+    //   imageUrl: Assets.Client2,
+    //   phoneNumber: 8101245121,
+    //   password: "12345678",
+    // }
+    null
   );
   const [isLogIn, setisLogIn] = useState(false);
   const [UsersAddress, setUsersAddress] = useState(DummyAddress);

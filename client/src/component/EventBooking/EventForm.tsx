@@ -100,7 +100,10 @@ export function EventFormField() {
       busTop: data.busTop,
       event: data.event,
       date: data.date,
+      email: data.email,
       foods: data.foods,
+      status: "pending",
+      createdAt: new Date(),
     };
     const allInfo = info;
     const EventArray = [...events, allInfo ? allInfo : data];

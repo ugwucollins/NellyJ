@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { YSlideIn } from "../../component/Animation";
 import ContactCard from "../../seller/Contact/ContactCard";
 import { Assets } from "../../component/assets";
+import { adminPath } from "../../context/UserContext";
 
 const ListContact = () => {
   return (
@@ -18,6 +19,7 @@ const ListContact = () => {
           <ContactCard
             imageUrl={user.userId && user.userId?.image}
             linkPath={user._id}
+            Path={adminPath}
             name={user.name}
             number={user.number}
             date={user.createdAt}
