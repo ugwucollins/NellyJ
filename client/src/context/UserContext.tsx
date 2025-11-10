@@ -35,6 +35,7 @@ const UserContext = ({ children }: any) => {
   const LogOut = () => {
     window.location.replace(NotAuth);
     setuser(null);
+    localStorage.removeItem("token");
   };
   const Addaddress = (formData: any) => {
     const _id = Date.now();
@@ -80,6 +81,7 @@ const UserContext = ({ children }: any) => {
     setUsersAddress(Address);
     toast.success(`Deleted the ${Address[0].title}`);
   };
+
   useEffect(() => {
     if (user) {
       setUsersAddress(DummyAddress);

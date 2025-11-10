@@ -3,7 +3,7 @@ import z from "zod";
 export const NameRegex = /^[a-z0-9]{4,30}$/i;
 export const MinPassword = "Password must be more that 8 characters";
 export const EmailM = "Enter a valid Email Address";
-export const PasswordRegex =
+export const PasswordRegexM =
   "Password must contain 1 Upper Case, 1 Lower Case, 1 Special Char, and at least 1 Number";
 
 export const ContactSchema = z
@@ -18,7 +18,6 @@ export const ContactSchema = z
 
 export const CompleteProfileSchema = z
   .object({
-    email: z.string().email().trim(),
     imageUrl: z.string().trim().optional(),
     phoneNumber: z.string().min(10).or(z.number().min(10)),
     gender: z.enum(["male", "female", "others"]),
@@ -105,12 +104,12 @@ export const PasswordUpdateSchema = z
       .string()
       .trim()
       .min(8, MinPassword)
-      .regex(PassWordRegex, PasswordRegex),
+      .regex(PassWordRegex, PasswordRegexM),
     confirmPassword: z
       .string()
       .trim()
       .min(8, MinPassword)
-      .regex(PassWordRegex, PasswordRegex),
+      .regex(PassWordRegex, PasswordRegexM),
   })
   .strict();
 

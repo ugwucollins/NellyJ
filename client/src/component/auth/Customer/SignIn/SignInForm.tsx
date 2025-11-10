@@ -2,13 +2,13 @@ import { ZodInputField } from "../../../../context/InputField";
 import { buttonClassName } from "../../../Animation";
 import { LogoIcon } from "../../../Navbar";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { UserAuth } from "../../../../context/UserContext";
 import { BiLoaderCircle } from "react-icons/bi";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { LoginSchema } from "../../../../Zod/Schema/LoginSchema";
 import type { LoginField } from "../../../../Zod/typesField";
+import ApiURL from "../../../../context/Api";
 
 const SignInForm = () => {
   const {
@@ -22,22 +22,27 @@ const SignInForm = () => {
   });
   const navigate = useNavigate();
   const location = useLocation();
-  const { setuser }: any = UserAuth();
   const from = location.state?.from?.pathname || -1;
 
   const OnSubmit: SubmitHandler<LoginField> = async (data) => {
     try {
-      await new Promise((resolve) => {
+      const UserInfo = {
+        email: data.email,
+        password: data.password,
+      };
+      const res = await ApiURL.post("/login", UserInfo);
+      const UserDetails = res.data;
+      if (UserDetails.success) {
+        localStorage.setItem("token", JSON.stringify(UserDetails.token));
         setTimeout(() => {
-          resolve;
           setValue("email", "");
           setValue("password", "");
           navigate(from, { replace: true });
         }, 1000);
-        setuser(data);
         toast.success("SignIn Successfully", { id: "signIn" });
-      });
-      console.log(data);
+      } else {
+        toast.error(UserDetails.message);
+      }
     } catch (error: any) {
       const message = error.message || "Server Error Pls try Again";
       toast.error(message, { id: "signInError" });

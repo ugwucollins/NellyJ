@@ -10,6 +10,7 @@ import type { ProfileField } from "../../Zod/typesField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileSchema } from "../../Zod/Schema/Schemas";
 import { BiLoaderCircle } from "react-icons/bi";
+import ApiURL from "../../context/Api";
 const AccountM = () => {
   const { user, setuser }: any = UserAuth();
   const [imageData, setimageData] = React.useState(null);
@@ -41,15 +42,21 @@ const AccountM = () => {
       gender,
       phoneNumber,
       email,
-      imageUrl: img ? img : user ? user.imageUrl : "",
+      imageUrl: img ? JSON.stringify(img) : user ? user.imageUrl : "",
     };
     try {
-      console.log(data);
-      toast.success("Edited Successfully");
-      console.log(PersonalInfo);
-      setuser(PersonalInfo);
-      setValue("imageUrl", imageData!);
+      const res = await ApiURL.put(`/user/update/${user._id}`, PersonalInfo);
+      const info = res.data;
+      if (info.success) {
+        toast.success(info.message || "User Update Successfully");
+        setuser(info.data);
+        setValue("imageUrl", imageData!);
+      } else {
+        toast.error(info.message);
+      }
     } catch (error: any) {
+      console.log(error);
+
       setError("imageUrl", {
         message: "No Image Provided",
       });

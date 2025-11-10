@@ -9,10 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { RegisterSchema } from "../../../../Zod/Schema/RegisterSchema";
 import type { RegisterField } from "../../../../Zod/typesField";
+import ApiURL from "../../../../context/Api";
 
 const SignUpForm = () => {
-  const { user, setuser }: any = UserAuth();
-  const from = `/complete/${user ? user._id : 1}`;
+  const { setuser }: any = UserAuth();
   const {
     register,
     handleSubmit,
@@ -33,20 +33,28 @@ const SignUpForm = () => {
     };
 
     try {
-      setTimeout(() => {
-        setuser(UserData);
-        toast.success("Created Account Successfully", { id: "signUp" });
-        window.location.replace(
-          from ? from : `/complete/${user.length ? user._id : 1}`
-        );
-        // navigate();
-        setValue("firstName", "");
-        setValue("lastName", "");
-        setValue("email", "");
-        setValue("password", "");
-      }, 100);
+      const res = await ApiURL.post("/register", UserData);
+      const data = res.data;
+      if (data.success) {
+        localStorage.setItem("id", JSON.stringify(data.data._id));
+        const localJson: any = localStorage.getItem("id");
+        setTimeout(() => {
+          setuser(UserData);
+          toast.success(data.message, { id: "signUp" });
+          window.location.replace(
+            `/complete/${data.data._id || JSON.parse(localJson)}`
+          );
+          setValue("firstName", "");
+          setValue("lastName", "");
+          setValue("email", "");
+          setValue("password", "");
+        }, 100);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error: any) {
-      const message = error.message || "Internal Server Error";
+      const message =
+        error.response.data.message || error.message || "Internal Server Error";
       toast.error(message, { id: "signUpError" });
       setError("root", {
         message: message,

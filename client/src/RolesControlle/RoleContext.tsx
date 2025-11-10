@@ -5,17 +5,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { UserAuth } from "../context/UserContext";
 
 export const createRoleContext = createContext({});
 const RoleContext = ({ children }: { children: ReactNode }) => {
-  const [roles, setRoles] = useState(["2013", "1948", "1988"]);
+  const [roles, setRoles]: any = useState();
+  const { user }: any = UserAuth();
   const Values = {
     roles,
     setRoles,
   };
+
   useEffect(() => {
-    setRoles;
-  }, []);
+    setRoles(user?.roles);
+  }, [user]);
 
   return (
     <createRoleContext.Provider value={Values}>

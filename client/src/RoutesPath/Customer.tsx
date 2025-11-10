@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Footer from "../component/Footer";
 const Navbar = lazy(() => import("../component/Navbar"));
@@ -14,7 +14,7 @@ import Profile from "../component/pages/Profile";
 import SignIn from "../component/auth/Customer/SignIn/SignIn";
 import SignUp from "../component/auth/Customer/SignUp/SignUp";
 import Address from "../component/pages/Address";
-import { forgetPath, loginPath } from "../context/UserContext";
+import { forgetPath, loginPath, UserAuth } from "../context/UserContext";
 import WishList from "../component/pages/WishList";
 import ForgetPassword from "../component/auth/Customer/Forget-Password";
 import Orders from "../component/pages/Orders";
@@ -25,12 +25,33 @@ import { PersonalRoles } from "../RolesControlle/RolesValue";
 import Event from "../component/pages/Event";
 import EventHistory from "../component/pages/EventHistory";
 import CompletePage from "../component/auth/Customer/SignUp/CompletePage";
+import ApiURL from "../context/Api";
+import { UserRoleAuth } from "../RolesControlle/RoleContext";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
+  const { setuser }: any = UserAuth();
+  const { setRoles }: any = UserRoleAuth();
   const location = useLocation().pathname;
   const forget = location.match(forgetPath) && location.includes(forgetPath);
   const isLogin = location.match(loginPath) && location.includes(loginPath);
+  async function FetchUser() {
+    const authHeader = localStorage.getItem("token");
+    const token = JSON.parse(authHeader!);
+    const res = await ApiURL.get("/user/verify", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = res.data;
+    if (data.success) {
+      setuser(data?.data);
+      setRoles(data?.data?.roles);
+    }
+  }
 
+  useEffect(() => {
+    FetchUser();
+  }, []);
   return (
     <div>
       {!isLogin && !forget && (

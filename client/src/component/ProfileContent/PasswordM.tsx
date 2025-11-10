@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordUpdateSchema } from "../../Zod/Schema/Schemas";
 import { BiLoaderCircle } from "react-icons/bi";
 import { UserAuth } from "../../context/UserContext";
+import ApiURL from "../../context/Api";
 // const InputField = lazy(() => import("../../context/InputField"));
 
 const PasswordM = () => {
@@ -21,9 +22,9 @@ const PasswordM = () => {
   } = useForm({
     resolver: zodResolver(PasswordUpdateSchema),
   });
-  const onSubmit: SubmitHandler<PasswordUpdateField> = (data) => {
+  const onSubmit: SubmitHandler<PasswordUpdateField> = async (data) => {
     try {
-      if (user && user.password !== data.password) {
+      if (data.password.trim()) {
         const message = "Please put the correct password";
         setError("password", {
           message: message,
@@ -39,11 +40,20 @@ const PasswordM = () => {
           message: message,
         });
       } else {
-        console.log(data);
-        toast.success("Password Has been Updated");
-        setValue("confirmPassword", "");
-        setValue("password", "");
-        setValue("newPassword", "");
+        const info = {
+          password: data.confirmPassword,
+        };
+
+        const res = await ApiURL.post(`/user/password/${user._id}`, info);
+        const userInfo = res.data;
+        if (userInfo.success) {
+          toast.success(userInfo.message || "Password Has been Updated");
+          setValue("confirmPassword", "");
+          setValue("password", "");
+          setValue("newPassword", "");
+        } else {
+          toast.error(userInfo.message || "Password Update failed");
+        }
       }
     } catch (error: any) {
       setError("root", {

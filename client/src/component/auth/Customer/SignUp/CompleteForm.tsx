@@ -3,19 +3,31 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import type { CompleteProfileField } from "../../../../Zod/typesField";
 import { CompleteProfileSchema } from "../../../../Zod/Schema/Schemas";
 import Avater from "../../../../context/Avater";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiLoaderCircle } from "react-icons/bi";
-import { ZodInputField } from "../../../../context/InputField";
+import InputField, { ZodInputField } from "../../../../context/InputField";
 import { buttonClassName } from "../../../Animation";
 import { ZodSelectField } from "../../../../context/SelectField";
 import { genderValue } from "../../../ProfileContent/AccountM";
-import { UserAuth } from "../../../../context/UserContext";
 import toast from "react-hot-toast";
+import ApiURL from "../../../../context/Api";
+import { UserAuth } from "../../../../context/UserContext";
 
 const CompleteForm = ({ _id }: any | string) => {
-  const { user, setuser }: any = UserAuth();
+  const localJson: any = localStorage.getItem("id");
+  const [Id, setId] = useState(JSON.parse(localJson));
+  const { setuser }: any = UserAuth();
+  const [imageData, setImageData] = useState(null);
   const [img, setImg] = useState("");
-  console.log(_id);
+  const [email, setEmail] = useState("");
+
+  async function GetUserEmail() {
+    const Ids = _id.length <= 5 ? Id : _id;
+    const res = await ApiURL.get("/user/" + Ids);
+    const data = res.data;
+    setId;
+    setEmail(data.data.email);
+  }
 
   const {
     handleSubmit,
@@ -23,39 +35,45 @@ const CompleteForm = ({ _id }: any | string) => {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: {
-      email: user ? user.email : "",
-    },
     resolver: zodResolver(CompleteProfileSchema),
   });
-  const onSubmit: SubmitHandler<CompleteProfileField> = async (data) => {
-    setTimeout(() => {
-      const Info = {
-        email: data.email,
-        gender: data.gender,
-        phoneNumber: data.phoneNumber,
-        imageUrl: img,
-      };
-      const UserData = {
-        email: user && user.email,
-        firstName: user && user.firstName,
-        lastName: user && user.lastName,
-        gender: data.gender,
-        phoneNumber: data.phoneNumber,
-        imageUrl: img || data.imageUrl,
-      };
+  useEffect(() => {
+    GetUserEmail();
+  }, []);
 
-      if (img.length) {
-        console.log(data);
-        setuser(UserData);
-        setValue("imageUrl", img);
-        console.log(Info);
-        toast.success("Profile Completed Successfully");
-        window.location.replace("/");
+  const onSubmit: SubmitHandler<CompleteProfileField> = async (data) => {
+    const Info = {
+      email: email,
+      gender: data.gender,
+      phoneNumber: data.phoneNumber,
+      imageUrl: JSON.stringify(img),
+    };
+
+    try {
+      if (imageData && img.length && email.trim()) {
+        const res = await ApiURL.post("/completeProfile", Info);
+        const UserData = res.data;
+        console.log(UserData);
+
+        if (UserData.success) {
+          setValue("imageUrl", img);
+          toast.success("Profile Completed Successfully");
+          setuser(UserData.data);
+          setTimeout(() => {
+            localStorage.removeItem("id");
+            window.location.replace("/auth/signin");
+          }, 1000);
+        } else {
+          toast.error(UserData.message, { id: "UserData" });
+        }
       } else {
-        toast.error("No Valid Image!");
+        toast.error("Please Put an Image");
       }
-    }, 1000);
+    } catch (error: any) {
+      console.log(error);
+
+      toast.error(error.response.data.message || error.message);
+    }
   };
   return (
     <div className="w-full text-black dark:text-black max-sm:dark:text-white max-sm:flex max-sm:flex-col max-sm:justify-center max-sm:items-center max-sm:text-white z-[1] bg-transparent max-sm:py-4">
@@ -70,7 +88,8 @@ const CompleteForm = ({ _id }: any | string) => {
 
           <Avater
             className="justify-center items-center flex"
-            setimageData={setImg}
+            setimageData={setImageData}
+            setImg={setImg}
           />
           <div className="w-full flex flex-row gap-4 max-[500px]:flex-col">
             <ZodInputField
@@ -88,12 +107,13 @@ const CompleteForm = ({ _id }: any | string) => {
             />
           </div>
 
-          <ZodInputField
+          <InputField
             label="email*"
             type="email"
+            name="email"
+            onChange={() => console.log(email)}
             placeholder="Enter email Address"
-            value={register("email")}
-            error={errors.email?.message}
+            value={email}
           />
 
           <button
