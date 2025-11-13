@@ -16,8 +16,6 @@ const SignIn = () => {
 export default SignIn;
 
 export const ImageSection = ({ image }: string | any) => {
-  console.log(image);
-
   return (
     <div className="w-full max-[900px]:h-[70vh] h-full max-sm:hidden">
       <img

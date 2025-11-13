@@ -65,7 +65,9 @@ export const ProfileContent = () => {
           {CurrentIndex === AccountType.Personal_Account && <AccountM />}
         </div>
         <div>
-          {CurrentIndex === AccountType.Password_Manager && <PasswordM />}
+          {CurrentIndex === AccountType.Password_Manager && (
+            <PasswordM setCurrentIndex={setCurrentIndex} />
+          )}
         </div>
 
         <div>{CurrentIndex === AccountType.Manage_Address && <AddressM />}</div>

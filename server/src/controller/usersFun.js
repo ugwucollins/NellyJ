@@ -1,10 +1,10 @@
+import bcrypt from "bcryptjs";
 import UserModel from "../model/UserModel.js";
 
 export const GetAllUsers = async (req, res) => {
-  res.send("hello users");
   try {
     const users = await UserModel.find({});
-    if (!users) {
+    if (!users.length) {
       return res.status(404).json({
         success: false,
         message: "Empty Users Collection",
@@ -27,14 +27,13 @@ export const GetAllUsers = async (req, res) => {
 export const GetUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await UserModel.findById({ _id: id });
+    const user = await UserModel.findById({ _id: id }).select("-password");
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: " UserId Not Found",
+        message: "UserId Not Found",
       });
     }
-    console.log(user);
 
     return res.status(200).json({
       success: true,
@@ -50,27 +49,41 @@ export const GetUserById = async (req, res) => {
 };
 
 export const UpdateUserById = async (req, res) => {
-  const { id } = req.params;
+  const userId = req.userId;
+
   const { email, firstName, lastName, imageUrl, gender, phoneNumber } =
     req.body;
+
   try {
-    const user = await UserModel.findById({ _id: id });
+    const user = await UserModel.findById({ _id: userId });
     if (!user) {
       return res.status(404).json({
         success: false,
         message: " UserId Not Found",
       });
     }
+    if (!imageUrl) {
+      return res.status(404).json({
+        success: false,
+        message: " User Image Not Found",
+      });
+    }
     const data = {
       email: email,
       firstName: firstName,
       lastName: lastName,
-      imageUrl: JSON.parse(imageUrl),
+      imageUrl: imageUrl,
       gender: gender,
       phoneNumber: phoneNumber,
     };
 
-    const UpdatedUser = await UserModel.findByIdAndUpdate({ _id: id }, data);
+    const UpdatedUser = await UserModel.findByIdAndUpdate(
+      { _id: userId },
+      data,
+      {
+        new: true,
+      }
+    );
     return res.status(200).json({
       success: true,
       data: UpdatedUser,
@@ -83,28 +96,40 @@ export const UpdateUserById = async (req, res) => {
     });
   }
 };
+
 export const UpdateUserPassword = async (req, res) => {
   const { id } = req.params;
-  const { password } = req.body;
+  const { password, newPassword } = req.body;
   try {
-    const user = await UserModel.findById({ _id: id });
+    const user = await UserModel.findById({ _id: id }).select("+password");
     if (!user) {
       return res.status(404).json({
         success: false,
         message: " UserId Not Found",
       });
     }
+    const IsOldPassword = await bcrypt.compare(password, user.password);
 
-    const data = {
-      password: password,
-    };
+    if (IsOldPassword) {
+      const hashPassword = await bcrypt.hash(newPassword, 10);
+      const data = {
+        password: hashPassword,
+      };
+      const UpdatedUser = await UserModel.findByIdAndUpdate({ _id: id }, data, {
+        new: true,
+      });
 
-    const UpdatedUser = await UserModel.findByIdAndUpdate({ _id: id }, data);
-    return res.status(200).json({
-      success: true,
-      data: UpdatedUser,
-      message: "User password has been Updated",
-    });
+      return res.status(200).json({
+        success: true,
+        data: UpdatedUser,
+        message: "User password has been Updated",
+      });
+    } else {
+      return res.status(403).json({
+        success: false,
+        message: "Old password did not match",
+      });
+    }
   } catch (error) {
     return res.status(501).json({
       message: error.message,
@@ -112,10 +137,11 @@ export const UpdateUserPassword = async (req, res) => {
     });
   }
 };
+
 export const verifyUser = async (req, res) => {
-  const userId = req.userId;
+  const { userId } = req;
   try {
-    const users = await UserModel.findById({ _id: userId });
+    const users = await UserModel.findById({ _id: userId }).select("-password");
     if (!users) {
       return res.status(404).json({
         message: "User not Found",

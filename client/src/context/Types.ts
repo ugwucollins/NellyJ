@@ -90,6 +90,8 @@ export type AddressProp = {
   address: string;
   phone: number | string;
   email: string;
+  nearestBusTop: string;
+  createdBy: string;
 };
 
 export interface InputProp {

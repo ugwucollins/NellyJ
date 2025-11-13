@@ -14,7 +14,14 @@ export const protectedAuth = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.userId = decoded.id;
+    if (decoded.id) {
+      req.userId = decoded.id;
+    } else {
+      res.status(401).json({
+        message: "No token provided",
+        success: false,
+      });
+    }
     next();
   } catch (error) {
     return res.status(401).json({

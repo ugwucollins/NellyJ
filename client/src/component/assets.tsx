@@ -363,9 +363,11 @@ export const DummyAddress: AddressProp[] = [
     country: "Nigeria",
     city: "Owerri",
     state: "Imo State",
+    nearestBusTop: "Mcc Junction",
     address: "No 6,Dr sorebe Street",
     phone: "08101245121",
     email: "ugwucollins07@gmail.com",
+    createdBy: "5f81b3d6c4b0c1d5b5c3a5d1",
   },
   {
     _id: 1,
@@ -375,9 +377,11 @@ export const DummyAddress: AddressProp[] = [
     country: "Nigeria",
     city: "Owerri",
     state: "Imo State",
+    nearestBusTop: "Mcc Junction",
     address: "No 6,Dr sorebe Street",
     phone: "08101245121",
     email: "ugwucollins07@gmail.com",
+    createdBy: "5f81b3d6c4b0c1d5b5c3a5d1",
   },
 ];
 

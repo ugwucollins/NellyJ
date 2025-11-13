@@ -52,14 +52,14 @@ export const Login = async (req, res) => {
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(404).json({
-        message: "User Not Found",
+        message: "User Email Not Found",
         success: false,
       });
     }
     const isPasswordMatched = await bcrypt.compare(password, user.password);
     if (!isPasswordMatched) {
       return res.status(404).json({
-        message: "Password Does not Match",
+        message: "Incorrect Password",
         success: false,
       });
     }

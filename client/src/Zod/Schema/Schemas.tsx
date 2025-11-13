@@ -60,6 +60,7 @@ export const AddressSchema = z
     email: z.string().email().trim(),
     phoneNumber: z.string().min(10).max(12).or(z.number().min(10).max(12)),
     address: z.string().min(5),
+    nearestBusTop: z.string().min(5),
   })
   .strict();
 

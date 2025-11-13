@@ -2,11 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { DummyOrder, Products as ProductsArray } from "../component/assets";
 import type { ProductProps } from "./Types";
+import ApiURL from "./Api";
+import { UserAuth } from "./UserContext";
 
 export const ProductProvider = createContext({});
 export const currency = "₦";
 
 const ProductContext = ({ children }: any) => {
+  const { user, token, setuser }: any = UserAuth();
   const [products, setproducts] = useState<ProductProps>(ProductsArray || []);
   const [cartItem, setcartItem] = useState({});
   const [category, setcategory] = useState("");
@@ -108,6 +111,34 @@ const ProductContext = ({ children }: any) => {
     }
     getTotalCount();
   }, [duration, cartItem]);
+
+  useEffect(() => {
+    const info = {
+      cartItems: cartItem,
+    };
+
+    async function UpdateCart() {
+      try {
+        const res = await ApiURL.post("/user/cart/update", info, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = res.data;
+        if (data.success) {
+          setuser(data.data.cartItems);
+        } else {
+          toast.error(data.message, { id: "cart" });
+        }
+      } catch (error: any) {
+        toast.error(error.response.data.message, { id: "cart" });
+      }
+    }
+
+    if (user) {
+      UpdateCart();
+    }
+  }, [cartItem]);
 
   const Values = {
     getTotalDeliveryFee,

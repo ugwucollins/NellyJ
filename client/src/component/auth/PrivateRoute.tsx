@@ -6,12 +6,10 @@ import { useEffect } from "react";
 import ApiURL from "../../context/Api";
 
 const PrivateRoute = ({ allowedRoles }: any) => {
-  const { user, setuser }: any = UserAuth();
+  const { user, setuser, token }: any = UserAuth();
   const { roles, setRoles }: any = UserRoleAuth();
 
   async function FetchUser() {
-    const authHeader = localStorage.getItem("token");
-    const token = JSON.parse(authHeader!);
     const res = await ApiURL.get("/user/verify", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -25,7 +23,9 @@ const PrivateRoute = ({ allowedRoles }: any) => {
   }
 
   useEffect(() => {
-    FetchUser();
+    if (token) {
+      FetchUser();
+    }
   }, []);
 
   const location = useLocation();
@@ -34,7 +34,7 @@ const PrivateRoute = ({ allowedRoles }: any) => {
   ) : user ? (
     <Unauthorize />
   ) : !user && user === null ? (
-    <NavLink to={"/auth/signin"} state={{ from: location }} replace />
+    <Unauthorize />
   ) : (
     <NavLink to={"/auth/signin"} state={{ from: location }} replace />
   );

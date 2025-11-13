@@ -28,7 +28,7 @@ const ProductCards = ({ product, index }: any) => {
         className="w-full max-w-[18.5rem] max-sm:max-w-xs"
       >
         <div>
-          <NavLink to={`${open ? `/product/${product._id}` : ""}`}>
+          <NavLink to={`${open ? `/product/${product?._id}` : ""}`}>
             <div
               onClick={() => {
                 setopen(true);
@@ -38,16 +38,16 @@ const ProductCards = ({ product, index }: any) => {
               <div className="relative flex justify-center items-center w-full h-full max-w-[19rem] max-h-[14rem]">
                 <div
                   className={`absolute top-3 right-4 p-2 text-center w-fit  cursor-pointer m-0 rounded-full text-xl ${
-                    saveItem[product && product._id]
+                    saveItem[product && product?._id]
                       ? "bg-neutral-100 text-red-800"
                       : "bg-white text-black"
                   }`}
                 >
-                  {saveItem[product && product._id] ? (
+                  {saveItem[product && product?._id] ? (
                     <BsHeartFill
                       onClick={() =>
                         user
-                          ? RemovesavedItem(product._id)
+                          ? RemovesavedItem(product?._id)
                           : toast.error("Please Login and Continue")
                       }
                     />
@@ -55,7 +55,7 @@ const ProductCards = ({ product, index }: any) => {
                     <BsHeart
                       onClick={() =>
                         user
-                          ? AddsaveItem(product._id)
+                          ? AddsaveItem(product?._id)
                           : toast.error("Please Login and Continue")
                       }
                     />

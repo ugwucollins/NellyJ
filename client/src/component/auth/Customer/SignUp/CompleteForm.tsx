@@ -17,16 +17,19 @@ const CompleteForm = ({ _id }: any | string) => {
   const localJson: any = localStorage.getItem("id");
   const [Id, setId] = useState(JSON.parse(localJson));
   const { setuser }: any = UserAuth();
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData]: any = useState({});
   const [img, setImg] = useState("");
   const [email, setEmail] = useState("");
 
   async function GetUserEmail() {
     const Ids = _id.length <= 5 ? Id : _id;
-    const res = await ApiURL.get("/user/" + Ids);
+
+    const res = await ApiURL.get("/user/get/" + Ids);
     const data = res.data;
-    setId;
-    setEmail(data.data.email);
+    if (data.success) {
+      setId;
+      setEmail(data.data.email);
+    }
   }
 
   const {
@@ -46,14 +49,13 @@ const CompleteForm = ({ _id }: any | string) => {
       email: email,
       gender: data.gender,
       phoneNumber: data.phoneNumber,
-      imageUrl: JSON.stringify(img),
+      imageUrl: img ? img : imageData && imageData?.imageUrl,
     };
 
     try {
       if (imageData && img.length && email.trim()) {
         const res = await ApiURL.post("/completeProfile", Info);
         const UserData = res.data;
-        console.log(UserData);
 
         if (UserData.success) {
           setValue("imageUrl", img);

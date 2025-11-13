@@ -60,6 +60,7 @@ export const ShoppingCartItems = () => {
     cartArray,
   }: any = UserProduct();
 
+  
   const HandleCoupon = () => {
     if (text === coupon) {
       settext("");
@@ -102,7 +103,7 @@ export const ShoppingCartItems = () => {
                     <th />
                     <th>Product</th>
                     <th>price</th>
-                    <th className="pl-2.5">Quantiy</th>
+                    <th className="pl-2.5">Quantity</th>
                     <th>subtotal</th>
                   </tr>
                 </thead>

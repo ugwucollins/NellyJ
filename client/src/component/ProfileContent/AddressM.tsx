@@ -13,6 +13,7 @@ import { AddressSchema } from "../../Zod/Schema/Schemas";
 import type { AddressField } from "../../Zod/typesField";
 import { ZodInputField } from "../../context/InputField";
 import { BiLoaderCircle } from "react-icons/bi";
+import ApiURL from "../../context/Api";
 
 const AddressM = () => {
   const {
@@ -24,8 +25,14 @@ const AddressM = () => {
   } = useForm({
     resolver: zodResolver(AddressSchema),
   });
-  const { UsersAddress, Addaddress, DeleteAddress, EditAddress }: any =
-    UserAuth();
+  const {
+    UsersAddress,
+    user,
+    options,
+    Addaddress,
+    DeleteAddress,
+    EditAddress,
+  }: any = UserAuth();
   const [btnType, setbtnType] = useState("send");
   const [editForm, seteditForm]: any = useState();
 
@@ -40,8 +47,9 @@ const AddressM = () => {
     setValue("city", SelectedAddress.city);
     setValue("state", SelectedAddress.state);
     setValue("address", SelectedAddress.address);
-    setValue("phoneNumber", SelectedAddress.phone);
+    setValue("phoneNumber", SelectedAddress.phoneNumber);
     setValue("email", SelectedAddress.email);
+    setValue("nearestBusTop", SelectedAddress.nearestBusTop);
     setbtnType("Edit");
     seteditForm(SelectedAddress);
   };
@@ -56,28 +64,59 @@ const AddressM = () => {
     setValue("address", "");
     setValue("phoneNumber", "");
     setValue("email", "");
+    setValue("nearestBusTop", "");
   };
 
-  const onSubmit: SubmitHandler<AddressField> = (data) => {
+  const onSubmit: SubmitHandler<AddressField> = async (data) => {
+    const info = {
+      title: data.title,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      country: data.country,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      nearestBusTop: data.nearestBusTop,
+      createdBy: btnType === "send" && user && user._id,
+    };
+
     try {
       if (btnType === "send") {
-        console.log(data);
-        toast.success("Address Added Successfully");
-        Addaddress(data);
-        setTimeout(() => {
-          emptyForm();
-        }, 1000);
+        const res = await ApiURL.post("/v1/user/address/create", info, options);
+        const UserData = res.data;
+
+        if (UserData.success) {
+          toast.success(UserData.message || "Address Added Successfully");
+          Addaddress(data);
+          setTimeout(() => {
+            emptyForm();
+          }, 1000);
+        } else {
+          toast.error(UserData.message);
+        }
       } else {
         EditAddress(editForm && editForm._id, data);
-        setTimeout(() => {
-          emptyForm();
-          setbtnType("send");
-        }, 1000);
-        toast.success("Edited Address Successfully");
+        const res = await ApiURL.put(
+          `/v1/user/address/update/user/${editForm && editForm._id}`,
+          info,
+          options
+        );
+        const UserData = res.data;
+        if (UserData.success) {
+          setTimeout(() => {
+            emptyForm();
+            setbtnType("send");
+          }, 1000);
+          toast.success(UserData.message || "Edited Address Successfully");
+        } else {
+          toast.error(UserData.message);
+        }
       }
     } catch (error: any) {
       setError("root", {
-        message: error.message,
+        message: error.response.data.message || error.message,
       });
     }
   };
@@ -87,10 +126,9 @@ const AddressM = () => {
       <div className="flex hover:shadow-lg hover:rounded-xl transition-all duration-150 hover:drop-shadow flex-col outline-1 rounded-md shadow py-1.5 px-2 outline-slate-400 outline mb-4">
         {UsersAddress.sort((a: any, b: any) => b._id - a._id).map(
           (item: AddressProp, index: number) => {
-            // const even = index % 2 === 0;
             return (
               <div key={index}>
-                <div className="w-full flex justify-between items-center">
+                <div className="w-full flex last:hidden justify-between items-center">
                   <address>
                     <h1 className="text-base font-bold">{item.title}</h1>
                     <div className="pb-2">
@@ -114,7 +152,11 @@ const AddressM = () => {
                   </div>
                 </div>
 
-                <hr className="my-1.5 outline-1 outline outline-slate-300" />
+                <hr
+                  className={`my-1.5 outline-1 outline outline-slate-300  ${
+                    UsersAddress.length === 1 ? "last:hidden" : ""
+                  }`}
+                />
               </div>
             );
           }
@@ -177,6 +219,13 @@ const AddressM = () => {
               placeholder="owerri"
               value={register("city")}
             />
+            <ZodInputField
+              label="NearestBusTop*"
+              type="text"
+              error={errors.nearestBusTop?.message}
+              placeholder="MCC Junction"
+              value={register("nearestBusTop")}
+            />
 
             <ZodSelectField
               label="state"
@@ -200,6 +249,12 @@ const AddressM = () => {
             />
           </div>
 
+          {errors.root && (
+            <span className="text-base text-red-500 font-semibold">
+              {errors.root.message}
+            </span>
+          )}
+
           <div className="py-4">
             <button className={`outline-1 ${buttonClassName}`}>
               {isSubmitting ? (
@@ -209,242 +264,10 @@ const AddressM = () => {
               )}
             </button>
           </div>
-
-          {errors.root && (
-            <span className="text-base text-red-500 font-semibold">
-              {errors.root.message}
-            </span>
-          )}
         </form>
       </div>
     </div>
   );
 };
-// const AddressM = () => {
-//   const { UsersAddress, Addaddress, DeleteAddress, EditAddress }: any =
-//     UserAuth();
-//   const [btnType, setbtnType] = useState("send");
-//   const [editForm, seteditForm]: any = useState();
-//   const [formData, setformData] = useState({
-//     title: "",
-//     firstName: "",
-//     lastName: "",
-//     country: "Nigeria",
-//     city: "",
-//     state: "",
-//     address: "",
-//     phone: "",
-//     email: "",
-//   });
-
-//   const HandleChange = (e: any) => {
-//     const { name, value } = e.target;
-//     setformData({ ...formData, [name]: value });
-//   };
-//   const HandleEdit = (_id: any) => {
-//     const SelectedAddress: any = UsersAddress.find(
-//       (item: any) => item._id === _id
-//     );
-//     setformData(SelectedAddress);
-//     setbtnType("Edit");
-//     seteditForm(SelectedAddress);
-//   };
-
-//   const handleSubumit = (e: any) => {
-//     e.preventDefault();
-
-//     if (btnType === "send") {
-//       toast.error("Please Fill in the Input Correctly");
-
-//       if (
-//         formData.firstName.trim() &&
-//         formData.email.trim() &&
-//         formData.city.trim() &&
-//         formData.state.trim() &&
-//         formData.title.trim() &&
-//         formData.address.trim() &&
-//         formData.phone.trim() &&
-//         formData.lastName.trim() &&
-//         formData.country.trim()
-//       ) {
-//         toast.success("Add Address Succssfully");
-//         Addaddress(formData);
-//         setformData({
-//           title: "",
-//           firstName: "",
-//           lastName: "",
-//           country: "",
-//           city: "",
-//           state: "",
-//           address: "",
-//           phone: "",
-//           email: "",
-//         });
-//       }
-//     } else {
-//       if (
-//         formData.firstName.trim() &&
-//         formData.email.trim() &&
-//         formData.city.trim() &&
-//         formData.state.trim() &&
-//         formData.title.trim() &&
-//         formData.address.trim() &&
-//         formData.phone.trim() &&
-//         formData.lastName.trim() &&
-//         formData.country.trim()
-//       ) {
-//         EditAddress(editForm && editForm._id, formData);
-//         toast.success("Edited Address Succssfully");
-//         setformData({
-//           title: "",
-//           firstName: "",
-//           lastName: "",
-//           country: "",
-//           city: "",
-//           state: "",
-//           address: "",
-//           phone: "",
-//           email: "",
-//         });
-//       }
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <div className="flex hover:shadow-lg hover:rounded-xl transition-all duration-150 hover:drop-shadow flex-col outline-1 rounded-md shadow py-1.5 px-2 outline-slate-400 outline mb-4">
-//         {UsersAddress.sort((a: any, b: any) => b._id - a._id).map(
-//           (item: AddressProp, index: number) => {
-//             // const even = index % 2 === 0;
-//             return (
-//               <div key={index}>
-//                 <div className="w-full flex justify-between items-center">
-//                   <address>
-//                     <h1 className="text-base font-bold">{item.title}</h1>
-//                     <div className="pb-2">
-//                       {item.address}, {item.city},{" "}
-//                       {item.state && item.state.toString().split("state")} State
-//                     </div>
-//                   </address>
-//                   <div className="flex gap-2 items-center">
-//                     <button
-//                       onClick={() => HandleEdit(item._id)}
-//                       className="px-3 py-3 cursor-pointer font-semibold hover:font-bold text-base"
-//                     >
-//                       <p>Edit</p>
-//                     </button>
-//                     <button
-//                       onClick={() => DeleteAddress(item._id)}
-//                       className="px-3 text-red-700 cursor-pointer py-3 font-semibold hover:font-bold text-base"
-//                     >
-//                       <p>Delete</p>
-//                     </button>
-//                   </div>
-//                 </div>
-
-//                 <hr className="my-1.5 outline-1 outline outline-slate-300" />
-//               </div>
-//             );
-//           }
-//         )}
-//         {!UsersAddress.length && (
-//           <div className=" w-full flex justify-center text-center text-red-800 py-10 animate-bounce font-bold text-xl">
-//             No Address
-//           </div>
-//         )}
-//       </div>
-
-//       <div>
-//         <h1 className="py-4 text-[min(5vw,18px)] font-semibold">
-//           Add New Address
-//         </h1>
-//         <form onSubmit={handleSubumit}>
-//           <div className="w-full flex flex-row gap-4 max-[500px]:flex-col">
-//             <InputField
-//               label="FirstName*"
-//               type="text"
-//               onChange={HandleChange}
-//               name="firstName"
-//               placeholder="Ex. John"
-//               value={formData.firstName}
-//             />
-//             <InputField
-//               label="LastName*"
-//               type="text"
-//               onChange={HandleChange}
-//               name="lastName"
-//               placeholder="Ex. Doe"
-//               value={formData.lastName}
-//             />
-//           </div>
-
-//           <div className="flex flex-col gap-y-3.5 py-4">
-//             <InputField
-//               label="title*"
-//               type="text"
-//               onChange={HandleChange}
-//               name="title"
-//               placeholder="Main Address"
-//               value={formData.title}
-//             />
-//             <SelectField
-//               label="Country"
-//               onChange={HandleChange}
-//               options={Countries}
-//               name="country"
-//               value={formData.country}
-//             />
-//             <InputField
-//               label="Street Address*"
-//               type="text"
-//               onChange={HandleChange}
-//               name="address"
-//               placeholder="Enter Street address"
-//               value={formData.address}
-//             />
-//             <InputField
-//               label="city*"
-//               type="text"
-//               onChange={HandleChange}
-//               name="city"
-//               placeholder="owerri"
-//               value={formData.city}
-//             />
-
-//             <SelectField
-//               label="state"
-//               onChange={HandleChange}
-//               options={States}
-//               name="state"
-//               value={formData.state}
-//             />
-//             <InputField
-//               label="phone*"
-//               type="tel"
-//               onChange={HandleChange}
-//               name="phone"
-//               placeholder="Enter Phone Number"
-//               value={formData.phone}
-//             />
-//             <InputField
-//               label="email*"
-//               type="email"
-//               onChange={HandleChange}
-//               name="email"
-//               placeholder="Enter Email address"
-//               value={formData.email}
-//             />
-//           </div>
-
-//           <div className="py-4">
-//             <button className={`outline-1 ${buttonClassName}`}>
-//               <p>{btnType === "send" ? "Add Address" : "Edit Address"}</p>
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
 
 export default AddressM;

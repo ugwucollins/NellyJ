@@ -24,6 +24,7 @@ const Navbar = ({ HandleTheme, darkMode }: any) => {
 export const Desktop = ({ HandleTheme, darkMode }: any) => {
   const { user, LogOut }: any = UserAuth();
   const { getTotalCount }: any = UserProduct();
+  const [Img, setImg] = useState("");
   const [open, setOpen] = useState(false);
   const pathName = useLocation().pathname;
   const count = user && getTotalCount().length === 0 ? 0 : getTotalCount();
@@ -34,8 +35,11 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
     handleClose();
     LogOut();
   };
+
   useEffect(() => {
-    console.log(user && user);
+    if (user) {
+      setImg(user && user.imageUrl);
+    }
   }, [user]);
 
   return (
@@ -92,14 +96,13 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
 
                     <div className="relative group">
                       <div className="flex relative flex-row-reverse icon items-center gap-1">
-                        {user && user.imageUrl ? (
-                          user.imageUrl && (
-                            <img
-                              src={user && user.imageUrl}
-                              className="size-10 object-cover rounded-full ring-1 dark:ring-gray-800"
-                              alt="userprofile"
-                            />
-                          )
+                        {user ? (
+                          <img
+                            src={Img ? Img : user.imageUrl}
+                            className="size-10 object-cover rounded-full ring-1 dark:ring-gray-800"
+                            alt="userprofile"
+                            loading="lazy"
+                          />
                         ) : (
                           <AvaterImage size="10" />
                         )}
@@ -241,6 +244,7 @@ export const LogoIcon = () => {
 export const Mobile = ({ HandleTheme, darkMode }: any) => {
   const { getTotalCount }: any = UserProduct();
   const [open, setopen] = useState(false);
+  const [Img, setImg] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const { user, LogOut }: any = UserAuth();
   const pathName = useLocation().pathname;
@@ -258,6 +262,11 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
   const handleClose = () => {
     setopen(!open);
   };
+  useEffect(() => {
+    if (user) {
+      setImg(user && user.imageUrl);
+    }
+  }, [user]);
 
   return (
     <div className="w-full relative">
@@ -311,14 +320,13 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
 
                         <div className="flex flex-row-reverse relative items-center gap-1 group">
                           <div className="flex flex-row-reverse items-center gap-1">
-                            {user && user.imageUrl ? (
-                              user.imageUrl && (
-                                <img
-                                  src={user && user.imageUrl}
-                                  className="size-10 object-cover rounded-full ring-1 dark:ring-gray-800"
-                                  alt="userprofile"
-                                />
-                              )
+                            {user ? (
+                              <img
+                                src={Img ? Img : user.imageUrl}
+                                loading="lazy"
+                                className="size-10 object-cover rounded-full ring-1 dark:ring-gray-800"
+                                alt="userprofile"
+                              />
                             ) : (
                               <AvaterImage />
                             )}

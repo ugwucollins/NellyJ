@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DummyAddress } from "../component/assets";
 import toast from "react-hot-toast";
+import type { AddressProp } from "./Types";
+import ApiURL from "./Api";
 
 export const UserProvider = createContext({});
 export const sellerPath: string = import.meta.env.VITE_SELLER_PATH;
@@ -12,23 +13,20 @@ export const production: boolean = import.meta.env.PROD;
 export const NotAuth: string = "/auth/signin";
 
 const UserContext = ({ children }: any) => {
-  const [user, setuser] = useState<null | Object>(
-    // {
-    //   firstName: "collins",
-    //   _id: "collins",
-    //   gender: "male",
-    //   lastName: "ugwu",
-    //   email: "collins@gmail.com",
-    //   imageUrl: Assets.Client2,
-    //   phoneNumber: 8101245121,
-    //   password: "12345678",
-    // }
-    null
-  );
+  const authHeader = localStorage.getItem("token");
+
+  const [user, setuser] = useState<null | Object>(null);
   const [isLogIn, setisLogIn] = useState(false);
-  const [UsersAddress, setUsersAddress] = useState(DummyAddress);
+  const [token, setToken] = useState(JSON.parse(authHeader!));
+  const [UsersAddress, setUsersAddress] = useState<any>([]);
   const JsonValue: any = localStorage.getItem("event");
   const [events, setEvents] = useState(JSON.parse(JsonValue) || []);
+
+  const options = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const router = useNavigate();
 
@@ -36,10 +34,11 @@ const UserContext = ({ children }: any) => {
     window.location.replace(NotAuth);
     setuser(null);
     localStorage.removeItem("token");
+    setToken("");
   };
   const Addaddress = (formData: any) => {
     const _id = Date.now();
-    // UsersAddress.length > 0 ? UsersAddress[0]._id.toString() + 1 : 1;
+
     const data = {
       _id: _id,
       title: formData.title,
@@ -57,7 +56,7 @@ const UserContext = ({ children }: any) => {
     setUsersAddress(Addedaddress);
   };
   const EditAddress = (_id: any, formData: any) => {
-    const Address: any = UsersAddress.map((item) =>
+    const Address: any = UsersAddress.map((item: AddressProp | any) =>
       item._id === _id
         ? {
             ...item,
@@ -70,25 +69,31 @@ const UserContext = ({ children }: any) => {
             address: formData.address,
             phone: formData.phone,
             email: formData.email,
+            nearestBusTop: formData.nearestBusTop,
           }
         : item
     );
     setUsersAddress(Address);
     toast.success(`Edited the ${Address[0].title}`);
   };
-  const DeleteAddress = (_id: any) => {
-    const Address = UsersAddress.filter((item) => item._id !== _id);
-    setUsersAddress(Address);
-    toast.success(`Deleted the ${Address[0].title}`);
+  const DeleteAddress = async (_id: any) => {
+    const Address = UsersAddress.filter(
+      (item: AddressProp | any) => item._id !== _id
+    );
+    const res = await ApiURL.delete(`/v1/user/address/delete/${_id}`, options);
+    const data = res.data;
+    if (data.success) {
+      setUsersAddress(Address);
+      toast.success(`Deleted the ${Address[0]?.title}`);
+    } else {
+      toast.error(data.message || `Deleted the ${Address[0]?.title}`);
+    }
   };
 
-  useEffect(() => {
-    if (user) {
-      setUsersAddress(DummyAddress);
-    }
-  }, []);
-
   const Values = {
+    options,
+    token,
+    setToken,
     user,
     setuser,
     DeleteAddress,
@@ -101,6 +106,7 @@ const UserContext = ({ children }: any) => {
     LogOut,
     events,
     setEvents,
+    setUsersAddress,
   };
   return (
     <UserProvider.Provider value={Values}>{children}</UserProvider.Provider>

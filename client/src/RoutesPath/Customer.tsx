@@ -27,16 +27,20 @@ import EventHistory from "../component/pages/EventHistory";
 import CompletePage from "../component/auth/Customer/SignUp/CompletePage";
 import ApiURL from "../context/Api";
 import { UserRoleAuth } from "../RolesControlle/RoleContext";
+import { UserProduct } from "../context/ProductContext";
+import { UseSaveAuth } from "../context/WishListContext";
+import toast from "react-hot-toast";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
-  const { setuser }: any = UserAuth();
+  const { setuser, token, options, setUsersAddress }: any = UserAuth();
   const { setRoles }: any = UserRoleAuth();
+  const { setcartItem }: any = UserProduct();
+  const { setsaveItem }: any = UseSaveAuth();
   const location = useLocation().pathname;
   const forget = location.match(forgetPath) && location.includes(forgetPath);
   const isLogin = location.match(loginPath) && location.includes(loginPath);
+
   async function FetchUser() {
-    const authHeader = localStorage.getItem("token");
-    const token = JSON.parse(authHeader!);
     const res = await ApiURL.get("/user/verify", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -46,11 +50,29 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
     if (data.success) {
       setuser(data?.data);
       setRoles(data?.data?.roles);
+      setcartItem(data?.data?.cartItems);
+      setsaveItem(data?.data?.wishList);
+    }
+  }
+
+  async function getUserAddress() {
+    try {
+      const { data } = await ApiURL.get(`/v1/user/address/get`, options);
+      if (data.success) {
+        setUsersAddress(data.data);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
     }
   }
 
   useEffect(() => {
-    FetchUser();
+    if (token) {
+      getUserAddress();
+      FetchUser();
+    }
   }, []);
   return (
     <div>
@@ -64,12 +86,12 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/complete/:id" element={<CompletePage />} />
 
           {/* Protected Route */}
           <Route
             element={<PrivateRoute allowedRoles={[PersonalRoles.USERS]} />}
           >
-            <Route path="/complete/:id" element={<CompletePage />} />
             <Route path="/event" element={<Event />} />
             <Route path="/event/history" element={<EventHistory />} />
             <Route path="/cart" element={<Cart />} />

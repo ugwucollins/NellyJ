@@ -47,30 +47,17 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     cartItems: {
-      type: [
-        {
-          itemName: {
-            type: String,
-          },
-          price: {
-            type: Number,
-            default: 0,
-            // required: true,
-          },
-          quantity: {
-            type: Number,
-            // required: tru
-            default: 0,
-          },
-        },
-        {
-          timestamps: true,
-        },
-      ],
+      type: Object,
+      default: {},
+    },
+    wishList: {
+      type: Object,
+      default: {},
     },
   },
   {
     timestamps: true,
+    minimize: false,
   }
 );
 

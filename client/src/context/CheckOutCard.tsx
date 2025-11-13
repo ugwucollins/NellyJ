@@ -18,14 +18,6 @@ const CheckOutCard = ({ LinkPath }: any) => {
     getTotalDeliveryFee,
   }: any = UserProduct();
 
-  // const HandleCheckout = () => {
-  //   setTimeout(() => {
-  //     settext("");
-  //     localStorage.removeItem("HiddenCode");
-  //     setcode(false);
-  //   }, 3000);
-  // };
-
   function grtTotalCartItems() {
     let totalCart: any = [];
     for (const key in cartItem) {
