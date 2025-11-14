@@ -22,7 +22,7 @@ const SignInForm = () => {
   });
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || -1;
+  const from = location.state?.from?.pathname || "/";
 
   const OnSubmit: SubmitHandler<LoginField> = async (data) => {
     try {
@@ -38,7 +38,15 @@ const SignInForm = () => {
         setTimeout(() => {
           setValue("email", "");
           setValue("password", "");
-          navigate(from, { replace: true });
+          if (
+            from === "/auth/forget-password" ||
+            from === "/auth/reset-password" ||
+            from === "/auth/signup"
+          ) {
+            navigate("/", { replace: true });
+          } else {
+            navigate(from, { replace: true });
+          }
         }, 1000);
         toast.success("SignIn Successfully", { id: "signIn" });
       } else {

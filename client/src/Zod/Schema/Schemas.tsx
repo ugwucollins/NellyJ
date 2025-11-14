@@ -1,7 +1,10 @@
 import z from "zod";
+import { PasswordRegexM as ResetPasswordRegexM, Regex } from "./RegisterSchema";
 
 export const NameRegex = /^[a-z0-9]{4,30}$/i;
+
 export const MinPassword = "Password must be more that 8 characters";
+
 export const EmailM = "Enter a valid Email Address";
 export const PasswordRegexM =
   "Password must contain 1 Upper Case, 1 Lower Case, 1 Special Char, and at least 1 Number";
@@ -65,6 +68,7 @@ export const AddressSchema = z
   .strict();
 
 const descriptionM = "description must be more that 50 characters";
+
 export const EventSchema = z
   .object({
     name: z.string().trim().min(4),
@@ -95,6 +99,7 @@ export const NewsLetterSchema = z
     email: z.string().trim().email(),
   })
   .strict();
+
 export const PassWordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!.%*?&_])[A-Za-z\d$@$!%*.?&_]{8,30}$/;
 
@@ -114,10 +119,21 @@ export const PasswordUpdateSchema = z
   })
   .strict();
 
+export const PasswordResetSchema = z
+  .object({
+    password: z.string().min(8, MinPassword).regex(Regex, ResetPasswordRegexM),
+    confirmPassword: z
+      .string()
+      .min(8, MinPassword)
+      .regex(Regex, ResetPasswordRegexM),
+  })
+  .strict();
+
 export const TrackOrderSchema = z.object({
   orderID: z.string().min(5, "please enter a valid OrderID").trim(),
   email: z.string().email(),
 });
+
 export const ProductSchema = z.object({
   name: z.string().min(5).trim(),
   description: z.string().or(z.array(z.string())),

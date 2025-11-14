@@ -1,5 +1,6 @@
 import z from "zod";
-import { MinPassword } from "./Schemas";
+
+export const MinPassword = "Password must be more that 8 characters";
 
 export const PasswordRegexM =
   "Password must contain 1 Lower Case, 1 Special Char, and at least 1 Number";

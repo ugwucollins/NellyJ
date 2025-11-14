@@ -14,7 +14,12 @@ import Profile from "../component/pages/Profile";
 import SignIn from "../component/auth/Customer/SignIn/SignIn";
 import SignUp from "../component/auth/Customer/SignUp/SignUp";
 import Address from "../component/pages/Address";
-import { forgetPath, loginPath, UserAuth } from "../context/UserContext";
+import {
+  forgetPath,
+  loginPath,
+  resetPath,
+  UserAuth,
+} from "../context/UserContext";
 import WishList from "../component/pages/WishList";
 import ForgetPassword from "../component/auth/Customer/Forget-Password";
 import Orders from "../component/pages/Orders";
@@ -30,6 +35,7 @@ import { UserRoleAuth } from "../RolesControlle/RoleContext";
 import { UserProduct } from "../context/ProductContext";
 import { UseSaveAuth } from "../context/WishListContext";
 import toast from "react-hot-toast";
+import ResetPassword from "../component/auth/Customer/ResetPassword";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
   const { setuser, token, options, setUsersAddress }: any = UserAuth();
@@ -37,6 +43,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
   const { setcartItem }: any = UserProduct();
   const { setsaveItem }: any = UseSaveAuth();
   const location = useLocation().pathname;
+  const reset = location.match(resetPath) && location.includes(resetPath);
   const forget = location.match(forgetPath) && location.includes(forgetPath);
   const isLogin = location.match(loginPath) && location.includes(loginPath);
 
@@ -76,10 +83,10 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
   }, []);
   return (
     <div>
-      {!isLogin && !forget && (
+      {!isLogin && !forget && !reset && (
         <Navbar HandleTheme={HandleTheme} darkMode={darkMode} />
       )}
-      <div className={`w-full ${isLogin || forget ? "p-0" : "pt-20"}`}>
+      <div className={`w-full ${isLogin || forget || reset ? "p-0" : "pt-20"}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<Products />} />
@@ -107,9 +114,13 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
           <Route path="/auth/signin" element={<SignIn />} />
           <Route path="/auth/signup" element={<SignUp />} />
           <Route path="/auth/forget-password" element={<ForgetPassword />} />
+          <Route
+            path="/auth/reset-password/:id/:token"
+            element={<ResetPassword />}
+          />
           <Route path="*" element={<NotFound Link="/" />} />
         </Routes>
-        {!isLogin && !forget && <Footer />}
+        {!isLogin && !forget && !reset && <Footer />}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ export const sellerPath: string = import.meta.env.VITE_SELLER_PATH;
 export const adminPath: string = import.meta.env.VITE_ADMIN_PATH;
 export const loginPath: string = import.meta.env.VITE_LOGIN_PATH;
 export const forgetPath: string = import.meta.env.VITE_FORGET_PATH;
+export const resetPath: string = import.meta.env.VITE_RESET_PATH;
 export const production: boolean = import.meta.env.PROD;
 export const NotAuth: string = "/auth/signin";
 
