@@ -40,7 +40,7 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
     if (user) {
       setImg(user && user.imageUrl);
     }
-  }, [user]);
+  }, []);
 
   return (
     <div>
@@ -108,11 +108,7 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
                         )}
 
                         <span className="font-semibold max-lg:block capitalize max-sm:hidden">
-                          {user && user.name
-                            ? user && user.name.split(" ").slice(0, 6)[1]
-                            : user.firstName && user.firstName
-                            ? user.firstName
-                            : "Avater"}
+                          {user ? user.firstName : "Avater"}
                         </span>
                       </div>
                       <div className="absolute bg-transparent px-2 hidden  group-hover:flex flex-col left-0">
@@ -331,9 +327,7 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
                               <AvaterImage />
                             )}
                             <span className="font-semibold max-lg:block capitalize max-sm:hidden">
-                              {user && user.name
-                                ? user && user.name.split(" ").slice(0, 6)[1]
-                                : "Avater"}
+                              {user ? user.firstName : "Avater"}
                             </span>
                           </div>
                           <div className="absolute bg-transparent px-2 hidden  group-hover:flex flex-col -left-24 top-10">

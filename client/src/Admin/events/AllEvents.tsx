@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import EventCards from "./EventCards";
 import { Assets } from "../../component/assets";
+import { EmptyItems } from "../../component/ShoppingCart";
+import { MdEventAvailable } from "react-icons/md";
+import { adminPath } from "../../context/UserContext";
 
 const AllEvents = () => {
   const [events, setEvents] = useState([]);
@@ -18,23 +21,35 @@ const AllEvents = () => {
 
   return (
     <div className=" w-full flex justify-center flex-wrap gap-4 py-2">
-      {events.map((event: any, index: number) => {
-        return (
-          <EventCards
-            event={event}
-            key={index}
-            // imageUrl={event.userId.imageUrl}
-            // name={event.userId.lastName + " " + event.userId.firstName}
-            // event={event.event}
-            // address={event.address}
-            // date={event.date}
-            // key={index}
-            // description={event.description}
-            // number={event.phone}
-            // status={"completed"}
+      {events &&
+        events.map((event: any, index: number) => {
+          return (
+            <EventCards
+              event={event}
+              key={index}
+              // imageUrl={event.userId.imageUrl}
+              // name={event.userId.lastName + " " + event.userId.firstName}
+              // event={event.event}
+              // address={event.address}
+              // date={event.date}
+              // key={index}
+              // description={event.description}
+              // number={event.phone}
+              // status={"completed"}
+            />
+          );
+        })}
+
+      <div className="flex justify-center min-h-[60vh] items-center">
+        {!events && (
+          <EmptyItems
+            title="No Booked Events"
+            icon={<MdEventAvailable />}
+            LinkPath={adminPath}
+            Text="Contiune checking"
           />
-        );
-      })}
+        )}
+      </div>
     </div>
   );
 };

@@ -15,7 +15,6 @@ export const NotAuth: string = "/auth/signin";
 
 const UserContext = ({ children }: any) => {
   const authHeader = localStorage.getItem("token");
-
   const [user, setuser] = useState<null | Object>(null);
   const [isLogIn, setisLogIn] = useState(false);
   const [token, setToken] = useState(JSON.parse(authHeader!));
@@ -32,10 +31,10 @@ const UserContext = ({ children }: any) => {
   const router = useNavigate();
 
   const LogOut = () => {
-    window.location.replace(NotAuth);
     setuser(null);
     localStorage.removeItem("token");
     setToken("");
+    window.location.replace(NotAuth);
   };
   const Addaddress = (formData: any) => {
     const _id = Date.now();

@@ -1,9 +1,9 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-import PrivateRoute from "../Admin/PrivateRoute";
+// import ProtectedRoute from "../RolesControlle/ProtectedRoute";
 import Dashboard from "../Admin/pages/Dashboard";
 import NotFound from "../component/pages/NotFound";
 import Login from "../component/auth/Admin/Login/Login";
-import { adminPath } from "../context/UserContext";
+import { adminPath, UserAuth } from "../context/UserContext";
 import { PersonalRoles } from "../RolesControlle/RolesValue";
 import { UserAdminAuth } from "../Admin/context/AdminContext";
 import { useEffect } from "react";
@@ -18,11 +18,32 @@ import Users from "../Admin/pages/Users";
 import Settings from "../Admin/pages/Settings";
 import EventsDetails from "../Admin/events/EventsDetails";
 import UsersDetails from "../Admin/users/UsersDetails";
+import ApiURL from "../context/Api";
+import { UserRoleAuth } from "../RolesControlle/RoleContext";
+import ProtectedRoute from "../RolesControlle/ProtectedRoute";
 
 const Admin = () => {
-  const { admin }: any = UserAdminAuth();
+  const { token }: any = UserAuth();
+  const { setRoles }: any = UserRoleAuth();
+  const { admin, setAdmin }: any = UserAdminAuth();
   const router = useNavigate();
+  async function FetchUser() {
+    const res = await ApiURL.get("/user/verify", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = res.data;
+    if (data.success) {
+      setAdmin(data?.data);
+      setRoles(data?.data?.roles);
+    }
+  }
   useEffect(() => {
+    if (token) {
+      FetchUser();
+    }
+
     if (admin === null && !admin) {
       router(adminPath + "/login");
     }
@@ -34,7 +55,7 @@ const Admin = () => {
         <Route path={adminPath}>
           <Route path={"login"} element={<Login />} />
           <Route
-            element={<PrivateRoute allowedRoles={[PersonalRoles.ADMIN]} />}
+            element={<ProtectedRoute allowedRoles={[PersonalRoles.ADMIN]} />}
           >
             <Route index element={<Dashboard />} />
             <Route path="addproduct" element={<CreateProduct />} />

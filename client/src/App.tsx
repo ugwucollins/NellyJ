@@ -13,6 +13,7 @@ import SellersContext from "./seller/Context/SellersContext";
 import Admin from "./RoutesPath/Admin";
 import AdminContext from "./Admin/context/AdminContext";
 import RoleContext from "./RolesControlle/RoleContext";
+import RoleRouter from "./RolesControlle/RoleRouter";
 import Modal from "./context/Modal";
 import { BiWifiOff } from "react-icons/bi";
 
@@ -90,18 +91,16 @@ const App = () => {
             </div>
           )}
           <UserContext>
+            <RoleRouter />
+
             <SellersContext>
               <AdminContext>
                 <ProductContext>
                   <WishListContext>
                     {isSeller ? (
-                      <>
-                        <Seller />
-                      </>
+                      <Seller />
                     ) : isAdmin ? (
-                      <>
-                        <Admin />
-                      </>
+                      <Admin />
                     ) : (
                       <>
                         <Customer

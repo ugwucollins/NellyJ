@@ -36,7 +36,9 @@ const UserSchema = new mongoose.Schema(
     },
     roles: {
       type: [String],
-      default: ["2013"],
+      required: true,
+      enum: ["user", "seller", "admin"],
+      default: ["user"],
     },
     month: {
       type: String,

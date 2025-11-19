@@ -45,7 +45,7 @@ const SignInForm = () => {
           ) {
             navigate("/", { replace: true });
           } else {
-            navigate(from, { replace: true });
+            window.location.replace(from);
           }
         }, 1000);
         toast.success("SignIn Successfully", { id: "signIn" });

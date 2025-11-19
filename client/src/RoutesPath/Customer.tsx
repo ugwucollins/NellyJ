@@ -25,7 +25,7 @@ import ForgetPassword from "../component/auth/Customer/Forget-Password";
 import Orders from "../component/pages/Orders";
 import TrackOrders from "../component/pages/TrackOrders";
 import TrackOrderById from "../component/OrdersContent/TrackOrderById";
-import PrivateRoute from "../component/auth/PrivateRoute";
+import ProtectedRoute from "../RolesControlle/ProtectedRoute";
 import { PersonalRoles } from "../RolesControlle/RolesValue";
 import Event from "../component/pages/Event";
 import EventHistory from "../component/pages/EventHistory";
@@ -81,6 +81,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
       FetchUser();
     }
   }, []);
+
   return (
     <div>
       {!isLogin && !forget && !reset && (
@@ -97,7 +98,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
 
           {/* Protected Route */}
           <Route
-            element={<PrivateRoute allowedRoles={[PersonalRoles.USERS]} />}
+            element={<ProtectedRoute allowedRoles={[PersonalRoles.USERS]} />}
           >
             <Route path="/event" element={<Event />} />
             <Route path="/event/history" element={<EventHistory />} />

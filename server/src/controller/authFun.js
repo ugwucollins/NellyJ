@@ -5,8 +5,9 @@ import DBConnect from "../connections/db.connect.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import nodemailer from "nodemailer";
+import { ROLES } from "../middleware/role.middleware.js";
 
-const { JWT_SECRET, EMAIL, PASSWORD } = process.env;
+const { JWT_SECRET, EMAIL, PASSWORD, ROLEEMAIL, ROLEPASSWORD } = process.env;
 export const Register = async (req, res) => {
   await DBConnect();
   const { firstName, lastName, email, password } = req.body;
@@ -23,7 +24,12 @@ export const Register = async (req, res) => {
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
-
+    let userRoles;
+    if (email === ROLEEMAIL && password === ROLEPASSWORD) {
+      userRoles = ROLES.ADMIN;
+    } else {
+      userRoles = ROLES.USER;
+    }
     const data = {
       firstName: firstName,
       lastName: lastName,
@@ -31,6 +37,7 @@ export const Register = async (req, res) => {
       password: hashedPassword,
       month: month,
       year: year,
+      roles: userRoles,
     };
     const User = await UserModel.create(data);
     const savedUser = await User.save();

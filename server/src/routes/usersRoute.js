@@ -9,9 +9,10 @@ import {
 import { protectedAuth } from "../middleware/auth.middleware.js";
 import { UpdateUserCart } from "../controller/updateCartFun.js";
 import { UpdateWishList } from "../controller/UpdateWishListFun.js";
+import authorizeRole, { ROLES } from "../middleware/role.middleware.js";
 const usersRouter = express.Router();
 
-usersRouter.get("/", GetAllUsers);
+usersRouter.get("/", protectedAuth, authorizeRole(ROLES.ADMIN), GetAllUsers);
 usersRouter.get("/verify", protectedAuth, verifyUser);
 usersRouter.get("/get/:id", GetUserById);
 usersRouter.put("/update", protectedAuth, UpdateUserById);

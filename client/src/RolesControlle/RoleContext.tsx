@@ -9,7 +9,7 @@ import { UserAuth } from "../context/UserContext";
 
 export const createRoleContext = createContext({});
 const RoleContext = ({ children }: { children: ReactNode }) => {
-  const [roles, setRoles]: any = useState();
+  const [roles, setRoles]: any = useState(["guest"]);
   const { user }: any = UserAuth();
   const Values = {
     roles,
