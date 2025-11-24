@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import type { AddressProp } from "./Types";
 import ApiURL from "./Api";
+import { UserAuthInfo } from "../App";
 
 export const UserProvider = createContext({});
 export const sellerPath: string = import.meta.env.VITE_SELLER_PATH;
@@ -15,8 +16,9 @@ export const NotAuth: string = "/auth/signin";
 
 const UserContext = ({ children }: any) => {
   const authHeader = localStorage.getItem("token");
-  const [user, setuser] = useState<null | Object>(null);
-  const [isLogIn, setisLogIn] = useState(false);
+  const { setUser }: any = UserAuthInfo();
+
+  const [usersStatus, setUsersStatus] = useState("");
   const [token, setToken] = useState(JSON.parse(authHeader!));
   const [UsersAddress, setUsersAddress] = useState<any>([]);
   const JsonValue: any = localStorage.getItem("event");
@@ -31,7 +33,7 @@ const UserContext = ({ children }: any) => {
   const router = useNavigate();
 
   const LogOut = () => {
-    setuser(null);
+    setUser(null);
     localStorage.removeItem("token");
     setToken("");
     window.location.replace(NotAuth);
@@ -94,13 +96,11 @@ const UserContext = ({ children }: any) => {
     options,
     token,
     setToken,
-    user,
-    setuser,
     DeleteAddress,
     Addaddress,
-    isLogIn,
+    usersStatus,
     EditAddress,
-    setisLogIn,
+    setUsersStatus,
     router,
     UsersAddress,
     LogOut,
@@ -116,5 +116,12 @@ const UserContext = ({ children }: any) => {
 export default UserContext;
 
 export const UserAuth = () => {
-  return useContext(UserProvider);
+  const state = useContext(UserProvider);
+  if (state === null) {
+    toast.error("Still processing");
+  } else if (state === undefined) {
+    toast.error("Still processing state Undefine");
+  }
+  // return useContext(UserProvider);
+  return state;
 };

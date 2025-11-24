@@ -36,9 +36,11 @@ import { UserProduct } from "../context/ProductContext";
 import { UseSaveAuth } from "../context/WishListContext";
 import toast from "react-hot-toast";
 import ResetPassword from "../component/auth/Customer/ResetPassword";
+import Unauthorize from "../component/pages/Unauthorize";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
-  const { setuser, token, options, setUsersAddress }: any = UserAuth();
+  const { usersStatus, token, options, setUsersAddress, setUsersStatus }: any =
+    UserAuth();
   const { setRoles }: any = UserRoleAuth();
   const { setcartItem }: any = UserProduct();
   const { setsaveItem }: any = UseSaveAuth();
@@ -55,7 +57,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
     });
     const data = res.data;
     if (data.success) {
-      setuser(data?.data);
+      setUsersStatus(data?.data.status);
       setRoles(data?.data?.roles);
       setcartItem(data?.data?.cartItems);
       setsaveItem(data?.data?.wishList);
@@ -82,6 +84,9 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
     }
   }, []);
 
+  if (usersStatus === "passed") {
+    return <Unauthorize />;
+  }
   return (
     <div>
       {!isLogin && !forget && !reset && (

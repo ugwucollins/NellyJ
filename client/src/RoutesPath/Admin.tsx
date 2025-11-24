@@ -21,9 +21,10 @@ import UsersDetails from "../Admin/users/UsersDetails";
 import ApiURL from "../context/Api";
 import { UserRoleAuth } from "../RolesControlle/RoleContext";
 import ProtectedRoute from "../RolesControlle/ProtectedRoute";
+import Unauthorize from "../component/pages/Unauthorize";
 
 const Admin = () => {
-  const { token }: any = UserAuth();
+  const { token, setUsersStatus, usersStatus }: any = UserAuth();
   const { setRoles }: any = UserRoleAuth();
   const { admin, setAdmin }: any = UserAdminAuth();
   const router = useNavigate();
@@ -37,6 +38,7 @@ const Admin = () => {
     if (data.success) {
       setAdmin(data?.data);
       setRoles(data?.data?.roles);
+      setUsersStatus(data?.data?.status);
     }
   }
   useEffect(() => {
@@ -48,6 +50,10 @@ const Admin = () => {
       router(adminPath + "/login");
     }
   }, []);
+
+  if (usersStatus === "passed" || usersStatus === "blocked") {
+    return <Unauthorize />;
+  }
 
   return (
     <div>

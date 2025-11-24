@@ -96,6 +96,40 @@ export const UpdateUserById = async (req, res) => {
     });
   }
 };
+export const UpdateUserStatusById = async (req, res) => {
+  const userId = req.userId;
+
+  const { status } = req.body;
+
+  try {
+    const user = await UserModel.findById({ _id: userId });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: " UserId Not Found",
+      });
+    }
+
+    const data = {
+      status: status,
+    };
+
+    const UpdatedUserStatus = await UserModel.findByIdAndUpdate(
+      { _id: userId },
+      data
+    );
+    return res.status(200).json({
+      success: true,
+      data: UpdatedUserStatus,
+      message: "User status has been Updated",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
 
 export const UpdateUserPassword = async (req, res) => {
   const { id } = req.params;
@@ -140,6 +174,7 @@ export const UpdateUserPassword = async (req, res) => {
 
 export const verifyUser = async (req, res) => {
   const { userId } = req;
+
   try {
     const users = await UserModel.findById({ _id: userId }).select("-password");
     if (!users) {

@@ -4,6 +4,7 @@ import {
   GetUserById,
   verifyUser,
   UpdateUserById,
+  UpdateUserStatusById,
   UpdateUserPassword,
 } from "../controller/usersFun.js";
 import { protectedAuth } from "../middleware/auth.middleware.js";
@@ -15,6 +16,7 @@ const usersRouter = express.Router();
 usersRouter.get("/", protectedAuth, authorizeRole(ROLES.ADMIN), GetAllUsers);
 usersRouter.get("/verify", protectedAuth, verifyUser);
 usersRouter.get("/get/:id", GetUserById);
+usersRouter.put("/update/status", protectedAuth, UpdateUserStatusById);
 usersRouter.put("/update", protectedAuth, UpdateUserById);
 usersRouter.put("/whishList/update", protectedAuth, UpdateWishList);
 usersRouter.post("/whishList/update", protectedAuth, UpdateWishList);

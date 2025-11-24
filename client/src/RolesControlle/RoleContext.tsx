@@ -5,12 +5,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { UserAuth } from "../context/UserContext";
+import { UserAuthInfo } from "../App";
 
 export const createRoleContext = createContext({});
 const RoleContext = ({ children }: { children: ReactNode }) => {
   const [roles, setRoles]: any = useState(["guest"]);
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
+
   const Values = {
     roles,
     setRoles,

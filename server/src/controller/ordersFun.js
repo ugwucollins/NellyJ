@@ -1,4 +1,5 @@
 import OrdersModel from "../model/OrdersModel.js";
+import ProductModel from "../model/ProductModel.js";
 import { month, year } from "../controller/Exporters.js";
 
 export const GetAllOrders = async (req, res) => {
@@ -51,31 +52,35 @@ export const GetOrderById = async (req, res) => {
 };
 
 export const CreateOrder = async (req, res) => {
-  const {
-    products,
-    totalPrice,
-    deliveryFee,
-    orderStatus,
-    address,
-    isPaid,
-    paymentMethod,
-  } = req.body;
+  const { products, deliveryFee, address } = req.body;
   const userId = req.userId;
 
-  const data = {
-    orderedBy: userId,
-    products: products,
-    totalPrice: totalPrice,
-    deliveryFee: deliveryFee,
-    orderStatus: orderStatus,
-    address: address,
-    isPaid: isPaid,
-    paymentMethod: paymentMethod,
-    month: month,
-    year: year,
-  };
-
   try {
+    if (products.length === 0 || !userId || !address) {
+      return res.status(404).json({
+        message: "invalid Data",
+        success: false,
+      });
+    }
+
+    let amount = await products.reduce(async (acc, item) => {
+      const product = await ProductModel.findById({ _id: item.product });
+      return (await acc) + product.price + item.quantity;
+    }, 0);
+
+    // add tax
+    amount += Math.floor(amount + 0.05);
+
+    const data = {
+      orderedBy: userId,
+      products: products,
+      totalPrice: amount,
+      deliveryFee: deliveryFee,
+      address: address,
+      month: month,
+      year: year,
+    };
+
     const order = await OrdersModel.create(data);
 
     return res.status(201).json({

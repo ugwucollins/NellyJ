@@ -14,6 +14,7 @@ import type { AddressField } from "../../Zod/typesField";
 import { ZodInputField } from "../../context/InputField";
 import { BiLoaderCircle } from "react-icons/bi";
 import ApiURL from "../../context/Api";
+import { UserAuthInfo } from "../../App";
 
 const AddressM = () => {
   const {
@@ -25,14 +26,10 @@ const AddressM = () => {
   } = useForm({
     resolver: zodResolver(AddressSchema),
   });
-  const {
-    UsersAddress,
-    user,
-    options,
-    Addaddress,
-    DeleteAddress,
-    EditAddress,
-  }: any = UserAuth();
+  const { UsersAddress, options, Addaddress, DeleteAddress, EditAddress }: any =
+    UserAuth();
+  const { user }: any = UserAuthInfo();
+
   const [btnType, setbtnType] = useState("send");
   const [editForm, seteditForm]: any = useState();
 

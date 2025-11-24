@@ -4,6 +4,7 @@ import {
   GetProductById,
   CreateProduct,
   UpdateProductById,
+  UpdateProductStocksById,
   DeleteProductById,
 } from "../controller/productFun.js";
 import { protectedAuth } from "../middleware/auth.middleware.js";
@@ -25,6 +26,13 @@ productRouter.post(
 );
 productRouter.put("/update/:id", protectedAuth, UpdateProductById);
 productRouter.patch("/update/:id", protectedAuth, UpdateProductById);
+
+productRouter.put(
+  "/update/stock/:id",
+  protectedAuth,
+  authorizeRole(ROLES.ADMIN),
+  UpdateProductStocksById
+);
 productRouter.delete(
   "/delete/:id",
   protectedAuth,

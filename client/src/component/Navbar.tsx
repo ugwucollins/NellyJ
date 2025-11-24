@@ -9,6 +9,7 @@ import { DarkModeClass } from "./HomeContent/HomeExportComponent";
 import { UserProduct } from "../context/ProductContext";
 import AvaterImage from "../context/AvaterImage";
 import Modal from "../context/Modal";
+import { UserAuthInfo } from "../App";
 
 const Navbar = ({ HandleTheme, darkMode }: any) => {
   useEffect(() => {}, [darkMode]);
@@ -22,7 +23,8 @@ const Navbar = ({ HandleTheme, darkMode }: any) => {
 };
 
 export const Desktop = ({ HandleTheme, darkMode }: any) => {
-  const { user, LogOut }: any = UserAuth();
+  const { LogOut }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const { getTotalCount }: any = UserProduct();
   const [Img, setImg] = useState("");
   const [open, setOpen] = useState(false);
@@ -40,7 +42,7 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
     if (user) {
       setImg(user && user.imageUrl);
     }
-  }, []);
+  }, [user]);
 
   return (
     <div>
@@ -192,9 +194,9 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
                       <IoIosCart className="text-2xl" />
                     </div>
                   </NavLink>
-                  <NavLink to={"/auth/signup"}>
+                  <NavLink to={"/auth/signin"}>
                     <button className="bg-secondary dark:outline dark:outline-1 dark:outline-white text-primary font-semibold px-5 py-2.5 rounded-full">
-                      <p className="bg-transparent">Sign UP</p>
+                      <p className="bg-transparent">Sign In</p>
                     </button>
                   </NavLink>
                   {darkMode ? (
@@ -219,7 +221,7 @@ export const Desktop = ({ HandleTheme, darkMode }: any) => {
 };
 
 export const LogoIcon = () => {
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   return (
     <NavLink to={user ? "/" : "/auth/signin"}>
       <div className="flex  items-center flex-row gap-2.5">
@@ -242,7 +244,9 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
   const [open, setopen] = useState(false);
   const [Img, setImg] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const { user, LogOut }: any = UserAuth();
+  const { LogOut }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
+
   const pathName = useLocation().pathname;
 
   const count = user && getTotalCount().length === 0 ? 0 : getTotalCount();
@@ -425,9 +429,9 @@ export const Mobile = ({ HandleTheme, darkMode }: any) => {
                             <IoIosCart className="text-2xl" />
                           </div>
                         </NavLink>
-                        <NavLink to={"/auth/signup"} onClick={handleClose}>
+                        <NavLink to={"/auth/signin"} onClick={handleClose}>
                           <button className="bg-secondary text-primary font-semibold px-5 py-2.5 rounded-full">
-                            <p>Sign UP</p>
+                            <p>Sign In</p>
                           </button>
                         </NavLink>
                         {darkMode ? (

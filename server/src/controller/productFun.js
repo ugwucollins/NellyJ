@@ -144,6 +144,39 @@ export const UpdateProductById = async (req, res) => {
   }
 };
 
+export const UpdateProductStocksById = async (req, res) => {
+  const { id } = req.params;
+  const { instock } = req.body;
+  try {
+    const product = await ProductModel.findById({ _id: id });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: " ProductId Not Found",
+      });
+    }
+    const data = {
+      instock: instock,
+    };
+
+    const UpdatedProductStock = await ProductModel.findByIdAndUpdate(
+      { _id: id },
+      data
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: UpdatedProductStock,
+      message: "Product stock has been Updated",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
 export const DeleteProductById = async (req, res) => {
   const { id } = req.params;
   try {

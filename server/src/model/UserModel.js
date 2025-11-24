@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import "dotenv/config";
+
+const { USERS_ROLE, SELLERS_ROLE, ADMIN_ROLE } = process.env;
 
 const UserSchema = new mongoose.Schema(
   {
@@ -37,8 +40,14 @@ const UserSchema = new mongoose.Schema(
     roles: {
       type: [String],
       required: true,
-      enum: ["user", "seller", "admin"],
-      default: ["user"],
+      enum: [ADMIN_ROLE, SELLERS_ROLE, USERS_ROLE],
+      default: [USERS_ROLE],
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ["active", "blocked", "passed"],
+      default: "active",
     },
     month: {
       type: String,

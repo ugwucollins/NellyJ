@@ -20,6 +20,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import type { EventField } from "../../Zod/typesField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EventSchema } from "../../Zod/Schema/Schemas";
+import { UserAuthInfo } from "../../App";
 
 const EventForm = () => {
   return (
@@ -69,6 +70,7 @@ export const EventPath = () => {
 
 export function EventFormField() {
   const { events, setEvents }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const [date, setDate] = useState("");
   const {
     register,
@@ -79,6 +81,9 @@ export function EventFormField() {
   } = useForm({
     defaultValues: {
       date: date ? date : "",
+      email: user ? user.email : "",
+      name: user ? user.lastName + " " + user.firstName : "",
+      phoneNumber: user ? user.phoneNumber : "",
     },
     resolver: zodResolver(EventSchema),
   });

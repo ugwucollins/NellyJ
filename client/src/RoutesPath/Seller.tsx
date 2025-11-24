@@ -15,10 +15,11 @@ import Contacts from "../seller/pages/Contacts";
 import ContactID from "../seller/Contact/ContactID";
 import ApiURL from "../context/Api";
 import { UserRoleAuth } from "../RolesControlle/RoleContext";
+import Unauthorize from "../component/pages/Unauthorize";
 
 const Seller = () => {
   const { seller, setSeller }: any = UserSellerAuth();
-  const { token }: any = UserAuth();
+  const { token, setUsersStatus, usersStatus }: any = UserAuth();
   const { setRoles }: any = UserRoleAuth();
 
   const router = useNavigate();
@@ -32,6 +33,7 @@ const Seller = () => {
     if (data.success) {
       setSeller(data?.data);
       setRoles(data?.data?.roles);
+      setUsersStatus(data?.data.status);
     }
   }
   useEffect(() => {
@@ -43,6 +45,9 @@ const Seller = () => {
       FetchUser();
     }
   }, []);
+  if (usersStatus === "passed" || usersStatus === "blocked") {
+    return <Unauthorize />;
+  }
 
   return (
     <div>

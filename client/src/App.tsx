@@ -16,21 +16,26 @@ import RoleContext from "./RolesControlle/RoleContext";
 import RoleRouter from "./RolesControlle/RoleRouter";
 import Modal from "./context/Modal";
 import { BiWifiOff } from "react-icons/bi";
+import ApiURL from "./context/Api";
 
 const localTheme: any = localStorage.getItem("theme");
+const localJson: any = localStorage.getItem("token");
+const token = JSON.parse(localJson);
 export const ThemeContext = createContext(JSON.parse(localTheme) || "system");
+export const UserInfoContext = createContext({});
 const App = () => {
   const location = useLocation().pathname;
   const [darkMode, setdarkMode] = useState(JSON.parse(localTheme) || "system");
   const media = window.matchMedia("(prefers-color-scheme:dark)");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [user, setUser] = useState<object | null>();
   const isSeller = location.match(sellerPath) && location.includes(sellerPath);
   const isAdmin = location.match(adminPath) && location.includes(adminPath);
+  const [usersStatus, setUsersStatus] = useState("");
 
   const HandleTheme = () => {
     setdarkMode(!darkMode);
   };
-
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
@@ -50,6 +55,21 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const handleUnReLoad = (e: BeforeUnloadEvent) => {
+      if (user) {
+        e.returnValue = "";
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleUnReLoad);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnReLoad);
+    };
+  }, [user]);
+
+  useEffect(() => {
     if (darkMode === true || (!(`theme` in localStorage) && media.matches)) {
       document.body.classList.add("dark");
       localStorage.setItem("theme", JSON.stringify(darkMode));
@@ -67,61 +87,95 @@ const App = () => {
     setdarkMode,
     HandleTheme,
   };
+
+  const userValues = {
+    user,
+    setUser,
+    usersStatus,
+    setUsersStatus,
+  };
+
+  async function FetchUser() {
+    const res = await ApiURL.get("/user/verify", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = res.data;
+    if (data.success) {
+      setUser(data?.data);
+      setUsersStatus(data?.data.status);
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      FetchUser();
+    }
+  }, []);
+
   const handleP = () => {
     window.location.reload();
   };
+
   return (
     <ThemeContext value={Values}>
-      <RoleContext>
-        <div
-          className={`w-full p-0 m-0 overflow-hidden bg-primary transition-colors duration-500 dark:bg-secondary  dark:text-primary1 ${
-            darkMode === true && "dark"
-          }`}
-        >
-          {!isOnline && production && (
-            <div>
-              <Modal
-                Title="No Internet Connection, Please Check Your Internet Connection"
-                Icon={<BiWifiOff />}
-                CancelBtn="No"
-                Progress={handleP}
-                OkayBtn="Try Again"
-                Cancel={() => alert("Please Check Your Connection")}
-              />
-            </div>
-          )}
-          <UserContext>
-            <RoleRouter />
+      <UserInfoContext value={userValues}>
+        <RoleContext>
+          <div
+            className={`w-full p-0 m-0 overflow-hidden bg-primary transition-colors duration-500 dark:bg-secondary  dark:text-primary1 ${
+              darkMode === true && "dark"
+            }`}
+          >
+            {!isOnline && production && (
+              <div>
+                <Modal
+                  Title="No Internet Connection, Please Check Your Internet Connection"
+                  Icon={<BiWifiOff />}
+                  CancelBtn="No"
+                  Progress={handleP}
+                  OkayBtn="Try Again"
+                  Cancel={() => alert("Please Check Your Connection")}
+                />
+              </div>
+            )}
 
-            <SellersContext>
-              <AdminContext>
-                <ProductContext>
-                  <WishListContext>
-                    {isSeller ? (
-                      <Seller />
-                    ) : isAdmin ? (
-                      <Admin />
-                    ) : (
-                      <>
-                        <Customer
-                          HandleTheme={HandleTheme}
-                          darkMode={darkMode}
-                        />
-                      </>
-                    )}
-                  </WishListContext>
-                </ProductContext>
-              </AdminContext>
-            </SellersContext>
-          </UserContext>
-        </div>
-      </RoleContext>
+            <UserContext>
+              <RoleRouter />
+
+              <SellersContext>
+                <AdminContext>
+                  <ProductContext>
+                    <WishListContext>
+                      {isSeller ? (
+                        <Seller />
+                      ) : isAdmin ? (
+                        <Admin />
+                      ) : (
+                        <>
+                          <Customer
+                            HandleTheme={HandleTheme}
+                            darkMode={darkMode}
+                          />
+                        </>
+                      )}
+                    </WishListContext>
+                  </ProductContext>
+                </AdminContext>
+              </SellersContext>
+            </UserContext>
+          </div>
+        </RoleContext>
+      </UserInfoContext>
     </ThemeContext>
   );
 };
 
 export const UseTheme = () => {
   return useContext(ThemeContext);
+};
+export const UserAuthInfo = () => {
+  return useContext(UserInfoContext);
 };
 
 export default App;

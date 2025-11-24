@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { PiPencilLineBold } from "react-icons/pi";
 import { Assets } from "../component/assets";
 import { BiUser } from "react-icons/bi";
-import { UserAuth } from "./UserContext";
 import ApiURL from "./Api";
 import toast from "react-hot-toast";
+import { UserAuthInfo } from "../App";
 type Avater = {
   setimageData: any;
   className?: string;
   setImg?: string | any;
 };
 const Avater = ({ setimageData, className, setImg }: Avater) => {
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
 
   const [imgUrl, setImgUrl] = useState("");
   const [imageUrl, setimageUrl] = useState("");

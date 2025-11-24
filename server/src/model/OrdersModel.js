@@ -7,21 +7,19 @@ const OrdersSchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    products: {
-      type: [
-        {
-          productId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "products",
-          },
-          quantity: {
-            type: Number,
-            required: true,
-          },
+    products: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "products",
         },
-      ],
-    },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
 
     totalPrice: {
       type: Number,
@@ -30,12 +28,13 @@ const OrdersSchema = new mongoose.Schema(
 
     deliveryFee: {
       type: Number,
-      default: 0,
+      default: 700,
     },
 
     orderStatus: {
       type: String,
       required: true,
+      default: "order placed",
     },
 
     address: {
@@ -46,11 +45,13 @@ const OrdersSchema = new mongoose.Schema(
 
     isPaid: {
       type: Boolean,
+      required: true,
       default: false,
     },
     paymentMethod: {
       type: String,
       required: true,
+      default: "COD",
     },
     month: {
       type: String,

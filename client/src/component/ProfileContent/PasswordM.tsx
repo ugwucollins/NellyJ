@@ -7,15 +7,15 @@ import type { PasswordUpdateField } from "../../Zod/typesField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordUpdateSchema } from "../../Zod/Schema/Schemas";
 import { BiLoaderCircle } from "react-icons/bi";
-import { UserAuth } from "../../context/UserContext";
 import ApiURL from "../../context/Api";
+import { UserAuthInfo } from "../../App";
 // const InputField = lazy(() => import("../../context/InputField"));
 
 export type ProfileMProp = {
   setCurrentIndex?: React.Dispatch<React.SetStateAction<string>> | any;
 };
 const PasswordM = ({ setCurrentIndex }: ProfileMProp) => {
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const {
     register,
     handleSubmit,

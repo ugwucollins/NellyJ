@@ -11,8 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileSchema } from "../../Zod/Schema/Schemas";
 import { BiLoaderCircle } from "react-icons/bi";
 import ApiURL from "../../context/Api";
+import { UserAuthInfo } from "../../App";
 const AccountM = () => {
-  const { user, setuser, options }: any = UserAuth();
+  const { options }: any = UserAuth();
+  const { user, setUser }: any = UserAuthInfo();
+
   const [imageData, setimageData]: any = React.useState(null);
   const [img, setImg] = React.useState("");
   const {
@@ -42,8 +45,6 @@ const AccountM = () => {
     }
   }, []);
 
-  console.log(img);
-
   const onSubmit: SubmitHandler<ProfileField> = async (data) => {
     const { firstName, lastName, gender, phoneNumber, email } = data;
 
@@ -61,7 +62,7 @@ const AccountM = () => {
       const info = res.data;
       if (info.success) {
         toast.success(info.message || "User Update Successfully");
-        setuser(info.data);
+        setUser(info.data);
         setValue("imageUrl", imageData!);
       } else {
         toast.error(info.message);

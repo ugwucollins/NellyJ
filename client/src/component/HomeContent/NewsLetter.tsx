@@ -3,14 +3,14 @@ import TextAnimation, { buttonClassName } from "../Animation";
 import { Link } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserAuth } from "../../context/UserContext";
 import { NewsLetterSchema } from "../../Zod/Schema/Schemas";
 import type { NewsLetterField } from "../../Zod/typesField";
 import { BiLoaderCircle } from "react-icons/bi";
 import toast from "react-hot-toast";
+import { UserAuthInfo } from "../../App";
 
 const NewsLetter = () => {
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const {
     register,
     handleSubmit,

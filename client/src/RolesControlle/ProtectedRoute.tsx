@@ -2,7 +2,7 @@ import { useLocation, Outlet, Navigate } from "react-router-dom";
 import { UserRoleAuth } from "./RoleContext";
 import { RolesArray } from "./RolesValue";
 import Unauthorize from "../component/pages/Unauthorize";
-import { UserAuth } from "../context/UserContext";
+import { UserAuthInfo } from "../App";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const { roles }: any = UserRoleAuth();
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const location = useLocation();
 
   // Check if user has a role

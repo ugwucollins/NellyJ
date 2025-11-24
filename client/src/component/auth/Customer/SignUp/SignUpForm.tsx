@@ -53,6 +53,8 @@ const SignUpForm = () => {
         toast.error(data.message);
       }
     } catch (error: any) {
+      console.log(error);
+
       const message =
         error.response.data.message || error.message || "Internal Server Error";
       toast.error(message, { id: "signUpError" });
@@ -106,6 +108,12 @@ const SignUpForm = () => {
           />
         </div>
 
+        {errors.root && (
+          <span className="text-base text-red-500 font-semibold">
+            {errors.root.message}
+          </span>
+        )}
+
         <button
           disabled={isSubmitting}
           className={`outline-1 mt-5 disabled:opacity-85 hover:shadow-xl transition-all duration-150 max-sm:hover:text-white max-sm:hover:outline-white hover:drop-shadow w-full max-sm:dark:hover:outline-white hover:outline-black  dark:hover:text-black max-sm:dark:hover:text-white ${buttonClassName}`}
@@ -126,12 +134,6 @@ const SignUpForm = () => {
           Sign In
         </Link>
       </p>
-
-      {errors.root && (
-        <span className="text-base text-red-500 font-semibold">
-          {errors.root.message}
-        </span>
-      )}
     </div>
   );
 };
