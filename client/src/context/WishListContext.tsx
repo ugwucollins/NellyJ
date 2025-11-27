@@ -2,11 +2,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ApiURL from "./Api";
 import { UserAuth } from "./UserContext";
+import { UserAuthInfo } from "../App";
 
 const WishListProvider = createContext({});
 
 const WishListContext = ({ children }: any) => {
-  const { token, user }: any = UserAuth();
+  const { token }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const [saveItem, setsaveItem] = useState({});
 
   const AddsaveItem = async (itemId: any) => {
@@ -43,6 +45,7 @@ const WishListContext = ({ children }: any) => {
           },
         });
         const data = res.data;
+
         if (!data.success) {
           toast.error(data.message, { id: "wishList" });
         }

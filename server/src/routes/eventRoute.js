@@ -16,7 +16,7 @@ const eventRouter = express.Router();
 eventRouter.get(
   "/get",
   protectedAuth,
-  authorizeRole([ROLES.ADMIN, ROLES.SELLER]),
+  authorizeRole(ROLES.ADMIN, ROLES.SELLER),
   GetAllEvents
 );
 eventRouter.get("/get/:id", protectedAuth, GetEventById);
@@ -28,14 +28,14 @@ eventRouter.put("/update/user/:id", protectedAuth, UpdateUserEventById);
 eventRouter.put(
   "/update/:id",
   protectedAuth,
-  authorizeRole([ROLES.ADMIN, ROLES.SELLER]),
+  authorizeRole(ROLES.ADMIN, ROLES.SELLER),
   UpdateEventById
 );
 
 eventRouter.patch(
   "/update/:id",
   protectedAuth,
-  authorizeRole([ROLES.ADMIN, ROLES.SELLER]),
+  authorizeRole(ROLES.ADMIN, ROLES.SELLER),
   UpdateEventById
 );
 eventRouter.delete(

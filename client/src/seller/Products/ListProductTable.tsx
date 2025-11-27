@@ -104,7 +104,8 @@ export const Table = () => {
                               }`}
                             >
                               <img
-                                src={item && item.image}
+                                src={item && item.imageUrl}
+                                loading="lazy"
                                 className="size-12 rounded-md object-cover"
                                 alt={`${item.name} photo`}
                               />

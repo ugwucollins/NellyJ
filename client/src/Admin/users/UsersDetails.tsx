@@ -2,11 +2,12 @@ import { useParams } from "react-router-dom";
 import Navbar from "../Bars/Navbar";
 import Sidebar from "../Bars/Sidebar";
 import HeaderProp from "../../context/HeaderProp";
-import { adminPath } from "../../context/UserContext";
+import { adminPath, UserAuth } from "../../context/UserContext";
 import type { UserCardProp } from "./UsersCard";
 import { useEffect, useState } from "react";
-import { UsersArray } from "./UsersPage";
 import AvaterImage from "../../context/AvaterImage";
+import ApiURL from "../../context/Api";
+import toast from "react-hot-toast";
 
 const UsersDetails = () => {
   const { id } = useParams();
@@ -32,18 +33,40 @@ const UsersDetails = () => {
 };
 
 export const UsersInfo = ({ _id }: any | string) => {
+  const { options, token }: any = UserAuth();
   const [user, setUser]: UserCardProp | any = useState({});
-
+  const [address, setAddress]: UserCardProp | any = useState({});
   const FetchContactInfo = async () => {
-    const filter = UsersArray.find(
-      (item) => item._id.toString() === _id.toString()
-    );
-    setUser(filter);
-    console.log(filter);
+    try {
+      const res = await ApiURL.get("/user/get/" + _id);
+      const data = res.data;
+      if (data.success) {
+        setUser(data.data);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message, { id: "users" });
+    }
+  };
+  const FetchAddressInfo = async () => {
+    try {
+      const res = await ApiURL.get(
+        "/v1/user/address/get/address/" + _id,
+        options
+      );
+      const data = res.data;
+      if (data.success) {
+        setAddress(data.data);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message, { id: "users" });
+    }
   };
 
   useEffect(() => {
-    FetchContactInfo();
+    if (token) {
+      FetchAddressInfo();
+      FetchContactInfo();
+    }
   }, []);
 
   return (
@@ -56,11 +79,12 @@ export const UsersInfo = ({ _id }: any | string) => {
               true ? "dark:bg-neutral-600" : "dark:bg-neutral-300"
             }`}
           >
-            {user && user?._id ? (
+            {user && user?.imageUrl ? (
               <img
                 src={user && user?.imageUrl}
                 className="size-20 rounded-full object-cover"
-                alt={"contacted photos"}
+                alt={user?.firstName + " photo"}
+                loading="lazy"
               />
             ) : (
               <AvaterImage size="20" />
@@ -68,7 +92,9 @@ export const UsersInfo = ({ _id }: any | string) => {
           </div>
           <div className="whitespace-nowrap">
             <p className="font-semibold text-base capitalize">
-              {user && user.name}
+              {user && user.lastName}
+
+              {user && user.firstName}
             </p>
             <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
               {user && user.email}
@@ -81,17 +107,17 @@ export const UsersInfo = ({ _id }: any | string) => {
             PhoneNumber:
           </span>
           <div className="pr-4 pb-6 text-left font-semibold text-gray-600 dark:text-gray-400">
-            {user.PhoneNumber}
+            {user?.phoneNumber}
           </div>
         </div>
         <div>
           <span className="font-semibold mr-4 font-serif opacity-85">
-            Address:
+            {address && "Address:"}
           </span>
           <address className="pr-4 pb-6 text-left font-semibold text-gray-600 dark:text-gray-400">
-            "{user.address?.address && user.address?.address},{" "}
-            {user.address?.busTop}, {user.address?.town}, {user.address?.state},{" "}
-            {user.address?.country}"
+            "{address?.address && address?.address}, {address?.busTop},{" "}
+            {address?.nearestBusTop} {address?.town}, {address?.state},{" "}
+            {address?.country}"
           </address>
         </div>
         <div className="flex items-center w-full justify-end pt-4">
@@ -104,7 +130,7 @@ export const UsersInfo = ({ _id }: any | string) => {
                }
                  `}
           >
-            {user && user?._id ? "Active customer" : "guest Visitor"}
+            {user && user?._id ? user?.status + " customer" : "guest Visitor"}
           </p>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { UserProduct } from "../../context/ProductContext";
 import toast from "react-hot-toast";
 import { IoMdCheckmark } from "react-icons/io";
 import { Assets } from "../../component/assets";
@@ -11,9 +10,15 @@ import {
   OrderStatusProgress,
   OrderStatusValues,
 } from "../../seller/Orders/OrdersInfo";
+import { UserAdminAuth } from "../context/AdminContext";
+import ApiURL from "../../context/Api";
+import { adminPath, UserAuth } from "../../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const OrdersInfoID = ({ orderId }: any) => {
-  const { orders }: any = UserProduct();
+  const { allOrders }: any = UserAdminAuth();
+  const { options }: any = UserAuth();
+
   const [OrderStatus, setOrderStatus] = useState("accepted");
   const [OrderValue, setOrderValue]: any = useState({});
   const CheckOrder = OrderStatus === "" ? [] : [0];
@@ -24,15 +29,17 @@ const OrdersInfoID = ({ orderId }: any) => {
   const [loading, setLoading] = useState(false);
 
   const HandleOrders = () => {
-    const findOrder = orders.find((order: any) => order._id === orderId);
+    const findOrder =
+      allOrders && allOrders.find((order: any) => order._id === orderId);
     setOrderValue(findOrder);
-    setOrderStatus(findOrder?.status!);
-    setOrderSValue(findOrder?.status!);
+    setOrderStatus(findOrder?.orderStatus!);
+    setOrderSValue(findOrder?.orderStatus!);
   };
 
   useEffect(() => {
     HandleOrders();
   }, []);
+
   const handleOrdersChange = () => {
     switch (OrderStatus) {
       case OrderStatusValues.Order_Placed:
@@ -71,15 +78,33 @@ const OrdersInfoID = ({ orderId }: any) => {
     handleOrdersChange();
   }, [OrderStatus]);
 
+  const router = useNavigate();
+
   const HandleSubmit = async (e: any) => {
     setLoading(true);
+    const status = {
+      orderStatus: orderSValue,
+    };
     e.preventDefault();
     try {
-      setTimeout(() => {
-        setLoading(false);
+      const res = await ApiURL.put(
+        "/v1/orders/update/status/" + orderId,
+        status,
+        options
+      );
+      const data = res.data;
+      if (data.success) {
         setOrderStatus(orderSValue);
-        toast.success("Updated Order Successfully", { id: "orders" });
-      }, 1000);
+        toast.success(data.message || "Updated Order Successfully", {
+          id: "orders",
+        });
+        setTimeout(() => {
+          setLoading(false);
+          router(adminPath + "/orders", { replace: true });
+        }, 1000);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
       toast.error("Server Error 501");
     } finally {
@@ -138,9 +163,12 @@ const OrdersInfoID = ({ orderId }: any) => {
           <div className="flex items-center gap-2">
             <div className="size-20 mb-2 rounded-full bg-slate-300 p-2">
               <img
-                src={Assets.CustomerPhotos}
+                src={
+                  (OrderValue.orderedBy && OrderValue?.orderedBy?.imageUrl) ||
+                  Assets.CustomerPhotos
+                }
                 className="rounded-full object-cover size-16"
-                alt=""
+                alt={OrderValue.address && OrderValue.address.firstName}
               />
             </div>
             <div className="flex flex-col">
@@ -149,7 +177,10 @@ const OrdersInfoID = ({ orderId }: any) => {
                   {OrderValue.address && OrderValue.address.lastName}{" "}
                   {OrderValue.address && OrderValue.address.firstName}
                 </h1>
-                <span> {OrderValue.address && OrderValue.address.phone}</span>
+                <span>
+                  {" "}
+                  {OrderValue.address && OrderValue.address.phoneNumber}
+                </span>
               </div>
             </div>
           </div>
@@ -159,6 +190,7 @@ const OrdersInfoID = ({ orderId }: any) => {
               {OrderValue.address && OrderValue.address.address},{" "}
               {OrderValue.address && OrderValue.address.state},{" "}
               {OrderValue.address && OrderValue.address.city},{" "}
+              {OrderValue.address && OrderValue.address.nearestBusTop},{" "}
               {OrderValue.address && OrderValue.address.country},
             </div>
           </div>
@@ -167,8 +199,8 @@ const OrdersInfoID = ({ orderId }: any) => {
         <div className="pt-5 px-4 shadow-lg pb-5 mb-8 max-sm:mb-0 mt-10 outline outline-1 outline-neutral-400/70 rounded-xl">
           <h1 className="font-semibold text-lg py-1">Products</h1>
           <hr className="w-full h-[1.5px] bg-neutral-400 my-1" />
-          {OrderValue.item &&
-            OrderValue.item.map((items: any, index: number) => (
+          {OrderValue.products &&
+            OrderValue.products.map((items: any, index: number) => (
               <div
                 key={index}
                 className="flex w-full items-center justify-start gap-2 py-2"
@@ -179,7 +211,7 @@ const OrdersInfoID = ({ orderId }: any) => {
                   }`}
                 >
                   <img
-                    src={items.product && items.product.image}
+                    src={items.product && items.product.imageUrl}
                     className="size-10 rounded-md object-cover"
                     alt={items.product && items.product.name}
                   />
@@ -194,6 +226,15 @@ const OrdersInfoID = ({ orderId }: any) => {
                 </div>
               </div>
             ))}
+
+          <hr className="w-full h-[1.5px] bg-neutral-400 my-1" />
+
+          <div className="flex flex-col justify-end text-end">
+            <h1 className="font-semibold capitalize">Total Amount</h1>
+            <p className="text-xl font-semibold">
+              {OrderValue && OrderValue.totalPrice}
+            </p>
+          </div>
         </div>
 
         <div className="w-full py-6 px-4 mb-2 rounded-xl shadow-lg drop-shadow-sm">

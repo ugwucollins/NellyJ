@@ -19,6 +19,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   }
 
   // Find the user's role in the roles array
+
   const userRole = RolesArray.find((role) => role.role.includes(roles));
 
   if (userRole) {

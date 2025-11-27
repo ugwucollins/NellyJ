@@ -1,5 +1,5 @@
 import HeaderProp from "../../context/HeaderProp";
-import { adminPath } from "../../context/UserContext";
+import { adminPath, UserAuth } from "../../context/UserContext";
 import { useState } from "react";
 import { ZodInputField, ZodInputFieldNumber } from "../../context/InputField";
 import { ZodTextAreaField } from "../../context/TextAreaField";
@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductSchema } from "../../Zod/Schema/Schemas";
 import type { ProductField } from "../../Zod/typesField";
 import { BiLoaderCircle } from "react-icons/bi";
+import ApiURL from "../../context/Api";
 
 const AddProductPage = () => {
   return (
@@ -56,38 +57,58 @@ export const AddProduct = () => {
   } = useForm({
     resolver: zodResolver(ProductSchema),
   });
+  const { options }: any = UserAuth();
   const [imageData, setimageData] = useState(null);
+  const [img, setImg] = useState();
 
   const emptyValues = () => {
     setValue("category", "");
     setValue("name", "");
     setValue("price", "");
     setValue("offerPrice", "");
+    setValue("rating", "");
     setValue("deliveryFee", "");
     setValue("description", "");
   };
-  const onSubmit: SubmitHandler<ProductField> = (values) => {
-    const data = {
-      productImg: imageData,
+
+  const onSubmit: SubmitHandler<ProductField> = async (values) => {
+    const desArray: any = values.description;
+    const dataInfo = {
+      imageUrl: img || imageData,
       name: values.name,
-      description: values.description,
+      description: desArray.split("\n") || desArray.split(","),
       category: values.category,
       deliveryFee: +values.deliveryFee,
       price: +values.price,
       offerPrice: +values.offerPrice,
+      icon: +values.rating,
     };
+
     try {
+      console.log({ values: dataInfo });
       if (imageData) {
-        console.log({ values: data });
-        toast.success("New Product Added Successfully", { id: "product" });
-        console.log(values);
-        setTimeout(() => {
-          emptyValues();
-        }, 1000);
+        console.log({ values: dataInfo });
+        const res = await ApiURL.post("/v1/product/create", dataInfo, options);
+        const data = res.data;
+        console.log(data);
+
+        if (data.success) {
+          toast.success(data.message || "New Product Added Successfully", {
+            id: "product",
+          });
+          console.log(data);
+          setTimeout(() => {
+            emptyValues();
+            console.log(data);
+          }, 1000);
+        } else {
+        }
       } else {
         toast.error("please select an Image");
       }
     } catch (error: any) {
+      console.log(error);
+
       toast.error("Please fill in the Required Space");
       setError("root", {
         message: error.message,
@@ -101,7 +122,7 @@ export const AddProduct = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="py-2 mt-8">
             <h1 className="font-bold text-base py-2">Product Image</h1>
-            <ProductImage setimageData={setimageData} />
+            <ProductImage setimageData={setimageData} setImg={setImg} />
           </div>
           <div className="w-full flex flex-col gap-y-5">
             <ZodInputField
@@ -133,6 +154,13 @@ export const AddProduct = () => {
               className="rounded-md"
               label="deliveryFee"
               error={errors.deliveryFee?.message}
+            />
+            <ZodSelectField
+              value={register("rating")}
+              options={ratingProduct}
+              className="rounded-md"
+              label="Stars"
+              error={errors.rating?.message}
             />
 
             <div className="flex gap-2 max-[400px]:flex-col flex-row w-full">
@@ -173,122 +201,6 @@ export const AddProduct = () => {
     </div>
   );
 };
-// export const AddProduct = () => {
-//   const [imageData, setimageData] = useState(null);
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     des: "",
-//     category: "",
-//     price: "",
-//     offerprice: "",
-//     deliveryFee: "",
-//   });
-
-//   const handleChange = (e: any) => {
-//     const { name, value } = e.target;
-//     setFormData((pre) => ({ ...pre, [name]: value }));
-//   };
-
-//   const handleSubmit = (e: any) => {
-//     e.preventDefault();
-//     if (
-//       formData.category.trim() &&
-//       formData.name.trim() &&
-//       formData.des.trim() &&
-//       formData.price.trim() &&
-//       formData.offerprice.trim() &&
-//       imageData
-//     ) {
-//       console.log({ data: formData });
-
-//       toast.success("New Product Added Successfully");
-//       setFormData({
-//         name: "",
-//         des: "",
-//         category: "",
-//         price: "",
-//         offerprice: "",
-//         deliveryFee: "",
-//       });
-//     } else {
-//       toast.error("Please fill in the Required Space");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <div>
-//         <form onSubmit={handleSubmit}>
-//           <div className="py-2 mt-8">
-//             <h1 className="font-bold text-base py-2">Product Image</h1>
-//             <ProductImage setimageData={setimageData} />
-//           </div>
-//           <div className="w-full flex flex-col gap-y-5">
-//             <InputField
-//               value={formData.name}
-//               type="text"
-//               placeholder="Type here"
-//               name="name"
-//               className="rounded-md"
-//               label="Product Name*"
-//               onChange={handleChange}
-//             />
-//             <TextAreaField
-//               value={formData.des}
-//               placeholder="Type here"
-//               name="des"
-//               className="rounded-md"
-//               label="Product Description"
-//               onChange={handleChange}
-//             />
-
-//             <SelectField
-//               value={formData.category}
-//               options={CategoryProduct}
-//               name="category"
-//               className="rounded-md"
-//               label="category"
-//               onChange={handleChange}
-//             />
-//             <SelectField
-//               value={formData.deliveryFee}
-//               options={DeliveryProduct}
-//               name="deliveryFee"
-//               className="rounded-md"
-//               label="deliveryFee"
-//               onChange={handleChange}
-//             />
-
-//             <div className="flex gap-2 max-[400px]:flex-col flex-row w-full">
-//               <InputField
-//                 value={formData.price}
-//                 type="number"
-//                 placeholder="Type here"
-//                 name="price"
-//                 className="rounded-md"
-//                 label="Price*"
-//                 onChange={handleChange}
-//               />
-//               <InputField
-//                 value={formData.offerprice}
-//                 type="number"
-//                 placeholder="Type here"
-//                 name="offerprice"
-//                 className="rounded-md"
-//                 label="OfferPrice*"
-//                 onChange={handleChange}
-//               />
-//             </div>
-
-//             <button className={` ${buttonClassName}`}>
-//               <p>Add Product</p>
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
 
 export const CategoryProduct = [
   { title: "Select Category", value: "" },
@@ -303,4 +215,11 @@ export const DeliveryProduct = [
   { title: "1,000", value: 1000 },
   { title: "1,500", value: 1500 },
   { title: "2,000", value: 2000 },
+];
+export const ratingProduct = [
+  { title: "1", value: 1 },
+  { title: "2", value: 2 },
+  { title: "3", value: 3 },
+  { title: "4", value: 4 },
+  { title: "5", value: 5 },
 ];

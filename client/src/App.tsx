@@ -28,7 +28,7 @@ const App = () => {
   const [darkMode, setdarkMode] = useState(JSON.parse(localTheme) || "system");
   const media = window.matchMedia("(prefers-color-scheme:dark)");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [user, setUser] = useState<object | null>();
+  const [user, setUser] = useState<object | null>(null);
   const isSeller = location.match(sellerPath) && location.includes(sellerPath);
   const isAdmin = location.match(adminPath) && location.includes(adminPath);
   const [usersStatus, setUsersStatus] = useState("");
@@ -54,20 +54,20 @@ const App = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const handleUnReLoad = (e: BeforeUnloadEvent) => {
-      if (user) {
-        e.returnValue = "";
-        e.preventDefault();
-      }
-    };
+  // useEffect(() => {
+  //   const handleUnReLoad = (e: BeforeUnloadEvent) => {
+  //     if (user) {
+  //       e.returnValue = "";
+  //       e.preventDefault();
+  //     }
+  //   };
 
-    window.addEventListener("beforeunload", handleUnReLoad);
+  //   window.addEventListener("beforeunload", handleUnReLoad);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleUnReLoad);
-    };
-  }, [user]);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleUnReLoad);
+  //   };
+  // }, [user]);
 
   useEffect(() => {
     if (darkMode === true || (!(`theme` in localStorage) && media.matches)) {
@@ -102,6 +102,7 @@ const App = () => {
       },
     });
     const data = res.data;
+
     if (data.success) {
       setUser(data?.data);
       setUsersStatus(data?.data.status);

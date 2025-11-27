@@ -17,7 +17,7 @@ const TextAnimation = (
           initial={"hidden"}
           className={`${pClas}`}
         >
-          {text === "" ? "/u000" : text}
+          {text === "" ? "\u00A0" : text}
         </motion.p>
       ))}
     </div>

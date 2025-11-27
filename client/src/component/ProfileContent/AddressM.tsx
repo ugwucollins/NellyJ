@@ -15,6 +15,8 @@ import { ZodInputField } from "../../context/InputField";
 import { BiLoaderCircle } from "react-icons/bi";
 import ApiURL from "../../context/Api";
 import { UserAuthInfo } from "../../App";
+import Modal from "../../context/Modal";
+import { PiAddressBookFill } from "react-icons/pi";
 
 const AddressM = () => {
   const {
@@ -30,6 +32,8 @@ const AddressM = () => {
     UserAuth();
   const { user }: any = UserAuthInfo();
 
+  const [AddressIndex, setAddressIndex] = useState<string | number>();
+  const [show, setShow] = useState<boolean>(false);
   const [btnType, setbtnType] = useState("send");
   const [editForm, seteditForm]: any = useState();
 
@@ -50,6 +54,18 @@ const AddressM = () => {
     setbtnType("Edit");
     seteditForm(SelectedAddress);
   };
+
+  function handleModalToggle() {
+    setShow(!show);
+  }
+
+  function handleModalActions() {
+    DeleteAddress(AddressIndex && AddressIndex);
+    setShow(!show);
+  }
+  function handleModalClose() {
+    setShow(!show);
+  }
 
   const emptyForm = () => {
     setValue("title", "");
@@ -120,6 +136,18 @@ const AddressM = () => {
 
   return (
     <div>
+      <>
+        {show && (
+          <Modal
+            Cancel={handleModalClose}
+            Progress={handleModalActions}
+            CancelBtn="No"
+            OkayBtn="Yes"
+            Icon={<PiAddressBookFill />}
+            Title="Are you sure you want to delete your Address"
+          />
+        )}
+      </>
       <div className="flex hover:shadow-lg hover:rounded-xl transition-all duration-150 hover:drop-shadow flex-col outline-1 rounded-md shadow py-1.5 px-2 outline-slate-400 outline mb-4">
         {UsersAddress.sort((a: any, b: any) => b._id - a._id).map(
           (item: AddressProp, index: number) => {
@@ -141,7 +169,10 @@ const AddressM = () => {
                       <p>Edit</p>
                     </button>
                     <button
-                      onClick={() => DeleteAddress(item._id)}
+                      onClick={() => {
+                        setAddressIndex(item._id);
+                        handleModalToggle();
+                      }}
                       className="px-3 text-red-700 cursor-pointer py-3 font-semibold hover:font-bold text-base"
                     >
                       <p>Delete</p>

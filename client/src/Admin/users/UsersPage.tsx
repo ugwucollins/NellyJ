@@ -1,24 +1,28 @@
 import { Assets, DummyAddress } from "../../component/assets";
 import { adminPath } from "../../context/UserContext";
+import { RealValues } from "../../seller/Context/RealValues";
 import UsersCard from "./UsersCard";
 
 const UsersPage = () => {
+  const { customersDetails } = RealValues();
+
   return (
     <div>
       <div className="flex py-5 flex-wrap gap-5 justify-center items-center">
-        {UsersArray.map((user: any, index) => (
-          <UsersCard
-            key={index}
-            imageUrl={user.imageUrl}
-            linkPath={user._id}
-            email={user.email}
-            createdAt={user.createdAt}
-            number={user.PhoneNumber}
-            status={user._id}
-            name={user.name}
-            Path={adminPath}
-          />
-        ))}
+        {customersDetails &&
+          customersDetails.map((user: any, index) => (
+            <UsersCard
+              key={index}
+              imageUrl={user.imageUrl}
+              linkPath={user._id}
+              email={user.email}
+              createdAt={user.createdAt}
+              number={user.phoneNumber}
+              status={user.status}
+              name={user.name}
+              Path={adminPath}
+            />
+          ))}
       </div>
     </div>
   );

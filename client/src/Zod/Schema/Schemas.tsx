@@ -136,8 +136,8 @@ export const TrackOrderSchema = z.object({
 
 export const ProductSchema = z.object({
   name: z.string().min(5).trim(),
-  description: z.string().or(z.array(z.string())),
-  category: z.string().min(5, "Please Select the category").trim(),
+  description: z.string().trim().or(z.array(z.string().trim())),
+  category: z.string().min(2, "Please Select the category").trim(),
   deliveryFee: z
     .number()
     .min(2, "Please enter the amount")
@@ -146,6 +146,10 @@ export const ProductSchema = z.object({
     .number()
     .min(2, "Please enter the amount")
     .or(z.string().min(2, "Please enter the amount")),
+  rating: z
+    .number()
+    .min(1, "Please enter the amount of stars")
+    .or(z.string().min(1, "Please enter the amount stars")),
   offerPrice: z
     .number()
     .min(2, "Please enter the amount")

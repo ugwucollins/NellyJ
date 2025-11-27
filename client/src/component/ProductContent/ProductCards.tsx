@@ -6,17 +6,18 @@ import TextAnimation, {
   checkEvenNumbers as even,
   XSlideIn,
 } from "../Animation";
-import { NotAuth, UserAuth } from "../../context/UserContext";
+import { NotAuth } from "../../context/UserContext";
 import { Link, NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { UseSaveAuth } from "../../context/WishListContext";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { UserAuthInfo } from "../../App";
 
 const ProductCards = ({ product, index }: any) => {
   const { AddtoCart, cartItem, RemoveFromeCart }: any = UserProduct();
   const { saveItem, AddsaveItem, RemovesavedItem }: any = UseSaveAuth();
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const [open, setopen] = useState<boolean>();
 
   return (
@@ -62,7 +63,8 @@ const ProductCards = ({ product, index }: any) => {
                   )}
                 </div>
                 <img
-                  src={product.image}
+                  src={product.imageUrl || product.image}
+                  loading="lazy"
                   alt={`${product.name} photo`}
                   className="w-full object-cover rounded-t-3xl h-full max-w-[18rem] max-h-[14rem]"
                 />

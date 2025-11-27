@@ -7,7 +7,7 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
     description: {
-      type: String || Array,
+      type: [String] || Array || String,
       required: true,
     },
     price: {
@@ -32,9 +32,11 @@ const ProductSchema = new mongoose.Schema(
     icon: {
       type: Number,
       required: true,
+      default: 4,
     },
     instock: {
       type: Boolean,
+      required: true,
       default: true,
     },
     month: {

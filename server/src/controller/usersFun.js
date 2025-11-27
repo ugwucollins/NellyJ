@@ -96,13 +96,14 @@ export const UpdateUserById = async (req, res) => {
     });
   }
 };
+
 export const UpdateUserStatusById = async (req, res) => {
-  const userId = req.userId;
+  const { id } = req.params;
 
   const { status } = req.body;
 
   try {
-    const user = await UserModel.findById({ _id: userId });
+    const user = await UserModel.findById({ _id: id });
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -115,7 +116,7 @@ export const UpdateUserStatusById = async (req, res) => {
     };
 
     const UpdatedUserStatus = await UserModel.findByIdAndUpdate(
-      { _id: userId },
+      { _id: id },
       data
     );
     return res.status(200).json({

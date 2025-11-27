@@ -5,7 +5,7 @@ import { BiUser } from "react-icons/bi";
 import ApiURL from "./Api";
 import toast from "react-hot-toast";
 import { UserAuthInfo } from "../App";
-type Avater = {
+export type Avater = {
   setimageData: any;
   className?: string;
   setImg?: string | any;

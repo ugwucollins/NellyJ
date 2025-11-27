@@ -25,6 +25,7 @@ const UsersCard = ({
               src={imageUrl ? imageUrl : Assets.Client1}
               className="size-12 rounded-full object-cover"
               alt={"users photos"}
+              loading="lazy"
             />
           ) : (
             <AvaterImage />

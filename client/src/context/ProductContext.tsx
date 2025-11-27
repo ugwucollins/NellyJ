@@ -1,15 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { DummyOrder, Products as ProductsArray } from "../component/assets";
+import { Products as ProductsArray } from "../component/assets";
 import type { ProductProps } from "./Types";
 import ApiURL from "./Api";
 import { UserAuth } from "./UserContext";
+import { UserAuthInfo } from "../App";
 
 export const ProductProvider = createContext({});
 export const currency = "₦";
 
 const ProductContext = ({ children }: any) => {
-  const { user, token, setuser }: any = UserAuth();
+  const { token, options }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const [products, setproducts] = useState<ProductProps>(ProductsArray || []);
   const [cartItem, setcartItem] = useState({});
   const [category, setcategory] = useState("");
@@ -21,10 +23,46 @@ const ProductContext = ({ children }: any) => {
   const local: any = localStorage.getItem("promo");
   const num: any = JSON.parse(local);
   const [cartArray, setcartArray]: any = useState([]);
-  const [orders, setOrders] = useState(DummyOrder);
+  const [orders, setOrders] = useState([]);
+
+  async function GetUsersOrders() {
+    let tempOrders: any = [];
+    try {
+      const res = await ApiURL.get("/v1/orders/get/users/order", options);
+      const data = res.data;
+      if (data.success) {
+        tempOrders.push(data?.data);
+        setOrders(tempOrders);
+      } else {
+        toast.error(data.message, { id: "orders" });
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
+  }
+  useEffect(() => {
+    if (token) {
+      GetUsersOrders();
+    }
+  }, []);
+
+  async function GetAllProducts() {
+    try {
+      const res = await ApiURL.get("/v1/product/get");
+      const data = res.data;
+      if (data.success) {
+        setproducts(data.data);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
 
   useEffect(() => {
-    setOrders(DummyOrder);
+    GetAllProducts();
   }, []);
   const duration = +num || 0 * 0 * 0 * 0 * 1000;
 
@@ -125,8 +163,9 @@ const ProductContext = ({ children }: any) => {
           },
         });
         const data = res.data;
+
         if (data.success) {
-          setuser(data.data.cartItems);
+          // setcartItem(data.data.cartItems);
         } else {
           toast.error(data.message, { id: "cart" });
         }

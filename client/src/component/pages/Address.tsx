@@ -1,8 +1,9 @@
 import toast from "react-hot-toast";
-import InputField from "../../context/InputField";
+import { ZodInputField } from "../../context/InputField";
 import type { AddressProp } from "../../context/Types";
 import { buttonClassName } from "../Animation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { UserAuth } from "../../context/UserContext";
 import {
   DarkModeClass,
@@ -10,10 +11,37 @@ import {
 } from "../HomeContent/HomeExportComponent";
 import HeaderProp from "../../context/HeaderProp";
 import CheckOutCard from "../../context/CheckOutCard";
-import SelectField from "../../context/SelectField";
+import { ZodSelectField } from "../../context/SelectField";
 import { Countries, States } from "../assets";
+import { UserAuthInfo } from "../../App";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddressSchema } from "../../Zod/Schema/Schemas";
+import type { AddressField } from "../../Zod/typesField";
+import ApiURL from "../../context/Api";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const Address = () => {
+  const { user }: any = UserAuthInfo();
+  const { UsersAddress }: any = UserAuth();
+
+  const [ActiveAddress, setActiveAddress]: any = useState<string>(
+    UsersAddress[0]._id
+  );
+  useEffect(() => {
+    const handleUnReLoad = (e: BeforeUnloadEvent) => {
+      if (user) {
+        e.returnValue = "";
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleUnReLoad);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnReLoad);
+    };
+  }, [user]);
+
   return (
     <div>
       <HeaderProp
@@ -26,8 +54,8 @@ const Address = () => {
 
       <div className="w-full px-20 max-md:px-14 max-sm:px-5 max-[170px]:px-1">
         <div className="flex w-full gap-y-7 justify-center items-start gap-x-5 py-10 flex-row max-sm:flex-col">
-          <AddaddressCom />
-          <CheckOutCard LinkPath={""} />
+          <AddaddressCom setActiveAddress={setActiveAddress} />
+          <CheckOutCard LinkPath={""} index={ActiveAddress} />
         </div>
       </div>
 
@@ -40,48 +68,68 @@ const Address = () => {
   );
 };
 
-const AddaddressCom = () => {
-  const { UsersAddress, Addaddress }: any = UserAuth();
-  const [formData, setformData] = useState({
-    title: "",
-    firstName: "",
-    lastName: "",
-    country: "Nigeria",
-    city: "",
-    state: "",
-    address: "",
-    phone: "",
-    email: "",
+const AddaddressCom = ({ setActiveAddress }: any) => {
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(AddressSchema),
   });
+  const { UsersAddress, options, Addaddress }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
+
   const [show, setshow] = useState(false);
   const [ActiveIndex, setActiveIndex] = useState(0);
-  const [ActiveAddress, setActiveAddress]: any = useState({});
 
-  const HandleChange = (e: any) => {
-    const { name, value } = e.target;
-    setformData({ ...formData, [name]: value });
+  const emptyForm = () => {
+    setValue("title", "");
+    setValue("firstName", "");
+    setValue("lastName", "");
+    setValue("country", "");
+    setValue("city", "");
+    setValue("state", "");
+    setValue("address", "");
+    setValue("phoneNumber", "");
+    setValue("email", "");
+    setValue("nearestBusTop", "");
   };
 
-  const handleSubumit = (e: any) => {
-    e.preventDefault();
-    if (show) {
-      toast.success("Add Address Succssfully");
-      Addaddress(formData);
-      setshow(!show);
-      setformData({
-        title: "",
-        firstName: "",
-        lastName: "",
-        country: "Nigeria",
-        city: "",
-        state: "",
-        address: "",
-        phone: "",
-        email: "",
+  const onSubmit: SubmitHandler<AddressField> = async (data) => {
+    const info = {
+      title: data.title,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      country: data.country,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      nearestBusTop: data.nearestBusTop,
+      createdBy: user && user._id,
+    };
+    try {
+      const res = await ApiURL.post("/v1/user/address/create", info, options);
+      const UserData = res.data;
+
+      if (UserData.success) {
+        toast.success(UserData.message || "Address Added Successfully");
+        Addaddress(data);
+        setTimeout(() => {
+          emptyForm();
+          setshow(!show);
+        }, 1000);
+      } else {
+        toast.error(UserData.message);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      setError("root", {
+        message: error.response.data.message || error.message,
       });
-    } else {
-      setshow(!show);
-      console.log(ActiveAddress);
     }
   };
 
@@ -106,7 +154,7 @@ const AddaddressCom = () => {
                     <button
                       onClick={() => {
                         setActiveIndex(index);
-                        setActiveAddress(item);
+                        setActiveAddress(item._id);
                       }}
                       className="px-4 cursor-pointer py-3 font-semibold hover:font-bold text-base"
                     >
@@ -126,6 +174,7 @@ const AddaddressCom = () => {
             );
           }
         )}
+
         {!UsersAddress.length && (
           <div className=" w-full flex justify-center text-center text-red-800 py-10 animate-bounce font-bold text-xl">
             No Address
@@ -148,97 +197,116 @@ const AddaddressCom = () => {
           Add New Address
         </h1>
 
-        <form onSubmit={handleSubumit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           {show && (
             <>
               <div className="w-full flex flex-row gap-4 max-[500px]:flex-col">
-                <InputField
+                <ZodInputField
                   label="FirstName*"
                   type="text"
-                  onChange={HandleChange}
-                  name="firstName"
+                  error={errors.firstName?.message}
                   placeholder="Ex. John"
-                  value={formData.firstName}
+                  value={register("firstName")}
                 />
-                <InputField
+                <ZodInputField
                   label="LastName*"
                   type="text"
-                  onChange={HandleChange}
-                  name="lastName"
+                  error={errors.lastName?.message}
                   placeholder="Ex. Doe"
-                  value={formData.lastName}
+                  value={register("lastName")}
                 />
               </div>
 
               <div className="flex flex-col gap-y-3.5 py-4">
-                <InputField
+                <ZodInputField
                   label="title*"
                   type="text"
-                  onChange={HandleChange}
-                  name="title"
+                  error={errors.title?.message}
                   placeholder="Main Address"
-                  value={formData.title}
+                  value={register("title")}
                 />
 
-                <InputField
-                  label="Street Address*"
-                  type="text"
-                  onChange={HandleChange}
-                  name="address"
-                  placeholder="Enter Street address"
-                  value={formData.address}
+                <ZodSelectField
+                  label="Country"
+                  error={errors.country?.message}
+                  options={Countries}
+                  value={register("country")}
                 />
-                <InputField
+                <ZodInputField
+                  label="Street Address*"
+                  error={errors.address?.message}
+                  type="text"
+                  placeholder="Enter Street address"
+                  value={register("address")}
+                />
+                <ZodInputField
                   label="city*"
                   type="text"
-                  onChange={HandleChange}
-                  name="city"
+                  error={errors.city?.message}
                   placeholder="owerri"
-                  value={formData.city}
+                  value={register("city")}
+                />
+                <ZodInputField
+                  label="NearestBusTop*"
+                  type="text"
+                  error={errors.nearestBusTop?.message}
+                  placeholder="MCC Junction"
+                  value={register("nearestBusTop")}
                 />
 
-                <SelectField
-                  label="State"
-                  onChange={HandleChange}
+                <ZodSelectField
+                  label="state"
+                  error={errors.state?.message}
                   options={States}
-                  name="state"
-                  value={formData.state}
+                  value={register("state")}
                 />
-                <SelectField
-                  label="Country"
-                  onChange={HandleChange}
-                  options={Countries}
-                  name="country"
-                  value={formData.country}
-                />
-                <InputField
+                <ZodInputField
                   label="phone*"
                   type="tel"
-                  onChange={HandleChange}
-                  name="phone"
+                  error={errors.phoneNumber?.message}
                   placeholder="Enter Phone Number"
-                  value={formData.phone}
+                  value={register("phoneNumber")}
                 />
-                <InputField
+                <ZodInputField
                   label="email*"
                   type="email"
-                  onChange={HandleChange}
-                  name="email"
+                  error={errors?.email?.message}
                   placeholder="Enter Email address"
-                  value={formData.email}
+                  value={register("email")}
                 />
               </div>
+
+              {errors.root && (
+                <span className="text-base text-red-500 font-semibold">
+                  {errors.root.message}
+                </span>
+              )}
             </>
           )}
-
-          <div className="py-4">
-            <button className={`outline-1 ${buttonClassName}`}>
-              <p>{"Add Address"}</p>
-            </button>
-          </div>
+          {show ? (
+            <div className="py-4">
+              <button type="submit" className={`outline-1 ${buttonClassName}`}>
+                {isSubmitting ? (
+                  <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+                ) : (
+                  <p>Add Address</p>
+                )}
+              </button>
+            </div>
+          ) : (
+            <div className="py-4">
+              <div
+                onClick={() => setshow(!show)}
+                className={`outline-1 ${buttonClassName}`}
+              >
+                <p>Add Address</p>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
   );
 };
+
 export default Address;

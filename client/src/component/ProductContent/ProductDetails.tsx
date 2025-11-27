@@ -11,7 +11,15 @@ import {
 import { UserAuth } from "../../context/UserContext";
 import toast from "react-hot-toast";
 import { UseSaveAuth } from "../../context/WishListContext";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import {
+  BsHeart,
+  BsHeartFill,
+  BsStar,
+  BsStarFill,
+  BsStarHalf,
+} from "react-icons/bs";
+import Loader from "../../context/Loader";
+import { UserAuthInfo } from "../../App";
 
 const ProductDetails = () => {
   const { id: _id }: any = useParams();
@@ -24,7 +32,10 @@ const ProductDetails = () => {
   const RelatedProduct =
     products &&
     products.filter(
-      (item: any) => item.category === eachProduct.category.toLowerCase()
+      (item: any) =>
+        item &&
+        item.category === eachProduct &&
+        eachProduct.category.toLowerCase()
     );
 
   return (
@@ -85,7 +96,8 @@ export const ProductDetailsHeader = ({ eachProduct }: any) => {
 
 export const ProductDisplay = ({ eachProduct, RelatedProduct }: any) => {
   const { AddtoCart, promo }: any = UserProduct();
-  const { user, router }: any = UserAuth();
+  const { router }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const { saveItem, AddsaveItem, RemovesavedItem }: any = UseSaveAuth();
 
   return (
@@ -121,9 +133,13 @@ export const ProductDisplay = ({ eachProduct, RelatedProduct }: any) => {
                 )}
               </div>
               <img
-                src={eachProduct && eachProduct.image}
+                src={
+                  (eachProduct && eachProduct.imageUrl) ||
+                  (eachProduct && eachProduct.image)
+                }
+                loading="lazy"
                 className="rounded-3xl w-full h-full"
-                alt="food image"
+                alt={eachProduct && eachProduct.name + "photo"}
               />
             </div>
           </div>
@@ -139,8 +155,57 @@ export const ProductDisplay = ({ eachProduct, RelatedProduct }: any) => {
                   : "Out of stock"}
               </span>
             </div>
+
             <div className="flex font-bold text-lg flex-row text-yellow-800">
-              {eachProduct && eachProduct.icon}
+              {(eachProduct && eachProduct.icon === 5) || "5" ? (
+                <>
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStarFill />
+                </>
+              ) : eachProduct.icon === 4 || "4" ? (
+                <>
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStar />
+                </>
+              ) : eachProduct.icon === 3 || "3" ? (
+                <>
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStar />
+                  <BsStar />
+                </>
+              ) : eachProduct.icon === 2 || "2" ? (
+                <>
+                  <BsStarFill />
+                  <BsStarFill />
+                  <BsStar />
+                  <BsStar />
+                  <BsStar />
+                </>
+              ) : eachProduct.icon === 1 || "1" ? (
+                <>
+                  <BsStarFill />
+                  <BsStar />
+                  <BsStar />
+                  <BsStar />
+                  <BsStar />
+                </>
+              ) : (
+                <>
+                  <BsStarHalf />
+                  <BsStar />
+                  <BsStar />
+                  <BsStar />
+                  <BsStar />
+                </>
+              )}
             </div>
             <div className="font-bold text-lg py-4 pt-8">
               MRP:&nbsp;
@@ -241,6 +306,7 @@ export const ProductDisplay = ({ eachProduct, RelatedProduct }: any) => {
             </div>
           ) : (
             <>
+              <Loader />
               <h1 className="text-2xl font-bold darK:text-primary text-secondary">
                 Loading ...
               </h1>

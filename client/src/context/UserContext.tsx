@@ -17,7 +17,6 @@ export const NotAuth: string = "/auth/signin";
 const UserContext = ({ children }: any) => {
   const authHeader = localStorage.getItem("token");
   const { setUser }: any = UserAuthInfo();
-
   const [usersStatus, setUsersStatus] = useState("");
   const [token, setToken] = useState(JSON.parse(authHeader!));
   const [UsersAddress, setUsersAddress] = useState<any>([]);
@@ -38,24 +37,21 @@ const UserContext = ({ children }: any) => {
     setToken("");
     window.location.replace(NotAuth);
   };
-  const Addaddress = (formData: any) => {
-    const _id = Date.now();
 
-    const data = {
-      _id: _id,
-      title: formData.title,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      country: formData.country,
-      city: formData.city,
-      state: formData.state,
-      address: formData.address,
-      phone: formData.phone,
-      email: formData.email,
-    };
-    const newAddress = data;
+  const Addaddress = async (formData: any) => {
+    const newAddress = formData;
     const Addedaddress: any = [...UsersAddress, newAddress];
     setUsersAddress(Addedaddress);
+    try {
+      const { data } = await ApiURL.get(`/v1/user/address/get`, options);
+      if (data.success) {
+        setUsersAddress(data.data);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
+    }
   };
   const EditAddress = (_id: any, formData: any) => {
     const Address: any = UsersAddress.map((item: AddressProp | any) =>

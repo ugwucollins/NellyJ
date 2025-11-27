@@ -60,7 +60,6 @@ export const ShoppingCartItems = () => {
     cartArray,
   }: any = UserProduct();
 
-  
   const HandleCoupon = () => {
     if (text === coupon) {
       settext("");
@@ -130,9 +129,10 @@ export const ShoppingCartItems = () => {
                                 }`}
                               >
                                 <img
-                                  src={item && item.image}
+                                  src={item && item.imageUrl}
                                   className="size-12 rounded-md object-cover"
                                   alt={`${item.name} photo`}
+                                  loading="lazy"
                                 />
                               </div>
                             </Link>

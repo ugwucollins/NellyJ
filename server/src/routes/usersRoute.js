@@ -13,10 +13,18 @@ import { UpdateWishList } from "../controller/UpdateWishListFun.js";
 import authorizeRole, { ROLES } from "../middleware/role.middleware.js";
 const usersRouter = express.Router();
 
+// admins only
 usersRouter.get("/", protectedAuth, authorizeRole(ROLES.ADMIN), GetAllUsers);
+usersRouter.put(
+  "/update/status/:id",
+  protectedAuth,
+  authorizeRole(ROLES.ADMIN),
+  UpdateUserStatusById
+);
+
+// users only
 usersRouter.get("/verify", protectedAuth, verifyUser);
 usersRouter.get("/get/:id", GetUserById);
-usersRouter.put("/update/status", protectedAuth, UpdateUserStatusById);
 usersRouter.put("/update", protectedAuth, UpdateUserById);
 usersRouter.put("/whishList/update", protectedAuth, UpdateWishList);
 usersRouter.post("/whishList/update", protectedAuth, UpdateWishList);

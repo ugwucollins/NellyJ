@@ -16,7 +16,7 @@ import type { ContactField } from "../../Zod/typesField";
 import { ContactSchema } from "../../Zod/Schema/Schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodInputField } from "../../context/InputField";
-import { UserAuth } from "../../context/UserContext";
+import { UserAuthInfo } from "../../App";
 
 // const InputField = lazy(() => import("../../context/InputField"));
 
@@ -49,9 +49,9 @@ export const ContactHeader = () => {
       <h1>
         {TextAnimation(
           "Contact  Us",
-          -22,
+          -25,
           0.2,
-          "flex  gap-0.5 flex-wrap",
+          "flex  gap-1 flex-wrap",
           "text-[min(10vw,30px)] font-bold"
         )}
       </h1>
@@ -70,7 +70,7 @@ export const ContactHeader = () => {
 };
 
 export const ContactForm = () => {
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const {
     register,
     handleSubmit,

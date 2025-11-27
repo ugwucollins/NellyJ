@@ -50,7 +50,7 @@ const OrderStatus = ({ orderID }: any | string) => {
   const HandleOrders = () => {
     const findOrder = orders.find((order: any) => order._id === orderID);
     setOrderValue(findOrder);
-    setOrderStatus(findOrder?.status!);
+    setOrderStatus(findOrder?.orderStatus!);
   };
 
   useEffect(() => {
@@ -156,9 +156,10 @@ const OrderStatus = ({ orderID }: any | string) => {
                   }`}
                 >
                   <img
-                    src={items.product && items.product.image}
+                    src={items.product && items.product.imageUrl}
                     className="size-10 rounded-md object-cover"
                     alt={items.product && items.product.name}
+                    loading="lazy"
                   />
                 </div>
                 <div className="whitespace-nowrap">

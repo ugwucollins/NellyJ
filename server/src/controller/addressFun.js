@@ -46,6 +46,30 @@ export const GetAddressById = async (req, res) => {
     });
   }
 };
+export const GetAddressUsersById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const address = await AddressModel.findOne({ createdBy: id });
+    if (!address) {
+      return res.status(404).json({
+        success: false,
+        message: "AddressId Not Found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: address,
+      message: "All Address Details",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
 
 export const GetUsersAddress = async (req, res) => {
   const userId = req.userId;

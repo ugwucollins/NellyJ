@@ -103,9 +103,10 @@ export const ListProductsTable = () => {
                               }`}
                             >
                               <img
-                                src={item && item.image}
+                                src={item && item.imageUrl}
                                 className="size-12 rounded-md object-cover"
                                 alt={`${item.name} photo`}
+                                loading="lazy"
                               />
                             </div>
                             <div className="whitespace-nowrap">

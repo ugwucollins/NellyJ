@@ -4,7 +4,7 @@ import { month, year } from "../controller/Exporters.js";
 
 export const GetAllOrders = async (req, res) => {
   try {
-    const orders = await OrdersModel.find({});
+    const orders = await OrdersModel.find({}).populate("address orderedBy");
 
     if (!orders.length) {
       return res.status(404).json({
@@ -50,6 +50,39 @@ export const GetOrderById = async (req, res) => {
     });
   }
 };
+export const GetUsersOrderById = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    if (!userId) {
+      return res.status(404).json({
+        success: false,
+        message: " userId Not Found",
+      });
+    }
+    const order = await OrdersModel.findOne({ orderedBy: userId }).populate(
+      "products"
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: " OrderId Not Found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: order,
+      message: "Get Users Order Details",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
 
 export const CreateOrder = async (req, res) => {
   const { products, deliveryFee, address } = req.body;
@@ -65,11 +98,12 @@ export const CreateOrder = async (req, res) => {
 
     let amount = await products.reduce(async (acc, item) => {
       const product = await ProductModel.findById({ _id: item.product });
-      return (await acc) + product.price + item.quantity;
+
+      return (await acc) + product.price * item.quantity;
     }, 0);
 
     // add tax
-    amount += Math.floor(amount + 0.05);
+    // amount += Math.floor(amount + 0.05);
 
     const data = {
       orderedBy: userId,
@@ -131,6 +165,45 @@ export const UpdateOrderById = async (req, res) => {
       success: true,
       data: UpdatedOrder,
       message: "Order Details has been Updated",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+export const UpdateOrderStatusById = async (req, res) => {
+  const { id } = req.params;
+  const { orderStatus } = req.body;
+
+  try {
+    const order = await OrdersModel.findById({ _id: id });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "OrderId Not Found",
+      });
+    }
+
+    const data = {
+      orderStatus: orderStatus,
+    };
+
+    const UpdatedOrder = await OrdersModel.findByIdAndUpdate(
+      { _id: id },
+      data,
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: UpdatedOrder,
+      message: "Order status has been Updated",
     });
   } catch (error) {
     return res.status(501).json({

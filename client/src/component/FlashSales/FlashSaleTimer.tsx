@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Assets } from "../assets";
-import { UserAuth } from "../../context/UserContext";
 import { useEffect, useState } from "react";
 import { UserProduct } from "../../context/ProductContext";
+import { UserAuthInfo } from "../../App";
 
 const FlashSaleTimer = () => {
   return (
@@ -41,7 +41,7 @@ const FlashSaleTimer = () => {
 export default FlashSaleTimer;
 
 export const TimeCounter = () => {
-  const { user }: any = UserAuth();
+  const { user }: any = UserAuthInfo();
   const { duration, num }: any = UserProduct();
 
   const [time, settime]: any = useState(+num ? +num : duration);

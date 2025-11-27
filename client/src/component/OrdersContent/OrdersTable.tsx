@@ -39,7 +39,7 @@ const OrdersTable = () => {
                     </span>
                     <p className="font-bold text-base">
                       {currency}
-                      {item.amount}
+                      {item.totalPrice}
                     </p>
                   </div>
                 </div>
@@ -77,7 +77,7 @@ const OrdersTable = () => {
               </div>
 
               <div className="w-full gap-1 px-2 flex flex-col items-center">
-                {item.item.map((product: any, index: number) => (
+                {item.products.map((product: any, index: number) => (
                   <div
                     key={index}
                     className="w-full gap-1 px-2 flex  items-center justify-between"
@@ -89,14 +89,15 @@ const OrdersTable = () => {
                         }`}
                       >
                         <img
-                          src={product.product && product.product.image}
+                          src={product && product.imageUrl}
                           className="size-10 rounded-md object-cover"
-                          alt={product.product && product.product.name}
+                          loading="lazy"
+                          alt={product && product.name}
                         />
                       </div>
                       <div className="whitespace-nowrap">
                         <p className="font-semibold text-base capitalize">
-                          {product.product && product.product.name}
+                          {product && product.name}
                         </p>
                         <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
                           Quantity: {product.quantity}
@@ -106,8 +107,7 @@ const OrdersTable = () => {
                     <div className="font-semibold pr-2 max-[300px]:pr-0 text-md whitespace-nowrap text-end">
                       {currency}
                       <span>
-                        {product.product &&
-                          product.product.price * product.quantity}
+                        {product.product && product.price * product.quantity}
                       </span>
                     </div>
                   </div>
@@ -118,27 +118,27 @@ const OrdersTable = () => {
                 <div className="w-full flex gap-2 px-2 items-center">
                   <span
                     className={`"w-auto py-2 px-4 rounded-full bg-red-400/10 outline outline-1   text-sm font-semibold capitalize ${
-                      item.status === "on the way"
+                      item.orderStatus === "on the way"
                         ? "text-blue-800 outline-blue-900"
-                        : item.status === "accepted"
+                        : item.orderStatus === "accepted"
                         ? "text-orange-700 outline-orange-900"
-                        : item.status === "Delivered"
+                        : item.orderStatus === "Delivered"
                         ? "text-green-800 outline-green-900"
                         : "text-red-900 outline-red-800"
                     }`}
                   >
-                    {item.status}
+                    {item.orderStatus}
                   </span>
-                  {item.status === "on the way"
+                  {item.orderStatus === "on the way"
                     ? "Your order Is still On the road"
-                    : item.status === "Delivered"
+                    : item.orderStatus === "Delivered"
                     ? "Your order has been Delivered"
                     : "Your order has been Approved"}
                 </div>
                 <div className="w-full mt-2 max-[250px]:justify-center flex justify-end px-1">
                   <Link
                     to={
-                      item.status === "Delivered"
+                      item.orderStatus === "Delivered"
                         ? "/product"
                         : `/track-order/${item._id}`
                     }
@@ -147,7 +147,7 @@ const OrdersTable = () => {
                       className={` rounded-full hover:shadow-md ${buttonClassName}`}
                     >
                       <p>
-                        {item.status === "Delivered"
+                        {item.orderStatus === "Delivered"
                           ? "Buy Again"
                           : "Track Order"}
                       </p>

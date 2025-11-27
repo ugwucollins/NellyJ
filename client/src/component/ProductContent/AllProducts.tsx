@@ -85,7 +85,8 @@ export const ProductHeader = () => {
             ))}
           </div>
 
-          {!products.length &&
+          {products &&
+            !products.length &&
             !PagenationFun(products, 8, current).datas.length && (
               <div className="w-full flex items-center justify-center max-sm:mt-[150px] mt-[200px] ">
                 <Loader />
