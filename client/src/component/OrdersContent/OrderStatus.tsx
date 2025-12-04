@@ -144,34 +144,33 @@ const OrderStatus = ({ orderID }: any | string) => {
         <div className="pt-5 px-4 shadow-lg pb-5 mb-8 max-sm:mb-0 mt-10 outline outline-1 outline-neutral-400/70 rounded-xl">
           <h1 className="font-semibold text-lg py-1">Products</h1>
           <hr className="w-full h-[1.5px] bg-neutral-400 my-1" />
-          {OrderValue.item &&
-            OrderValue.item.map((items: any, index: number) => (
+          {OrderValue?.items?.map((items: any, index: number) => (
+            <div
+              key={index}
+              className="flex w-full items-center justify-start gap-2 py-2"
+            >
               <div
-                key={index}
-                className="flex w-full items-center justify-start gap-2 py-2"
+                className={`bg-neutral-100 p-4 max-[330px]:p-0 rounded-md w-18 ${
+                  true ? "dark:bg-neutral-600" : "dark:bg-neutral-300"
+                }`}
               >
-                <div
-                  className={`bg-neutral-100 p-4 max-[330px]:p-0 rounded-md w-18 ${
-                    true ? "dark:bg-neutral-600" : "dark:bg-neutral-300"
-                  }`}
-                >
-                  <img
-                    src={items.product && items.product.imageUrl}
-                    className="size-10 rounded-md object-cover"
-                    alt={items.product && items.product.name}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="whitespace-nowrap">
-                  <p className="font-semibold text-base capitalize">
-                    {items.product && items.product.name}
-                  </p>
-                  <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
-                    Quantity: {items && items.quantity}
-                  </span>
-                </div>
+                <img
+                  src={items.product && items.product.imageUrl}
+                  className="size-10 rounded-md object-cover"
+                  alt={items.product && items.product.name}
+                  loading="lazy"
+                />
               </div>
-            ))}
+              <div className="whitespace-nowrap">
+                <p className="font-semibold text-base capitalize">
+                  {items.product && items.product.name}
+                </p>
+                <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
+                  Quantity: {items && items.quantity}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

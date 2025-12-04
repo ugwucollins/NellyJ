@@ -4,12 +4,14 @@ import ApiURL from "../../context/Api";
 import toast from "react-hot-toast";
 import { UserAuth } from "../../context/UserContext";
 import { UserAdminAuth } from "../../Admin/context/AdminContext";
+import { UserSellerAuth } from "./SellersContext";
 
 export const RealValues = () => {
   const { products }: any = UserProduct();
   const [customers, setCustomers] = useState([]);
-  const { options }: any = UserAuth();
+  const { options, token }: any = UserAuth();
   const { allOrders }: any = UserAdminAuth();
+  const { contact, events }: any = UserSellerAuth();
 
   async function GetAllUsersHandler() {
     try {
@@ -22,16 +24,18 @@ export const RealValues = () => {
   }
 
   useEffect(() => {
-    GetAllUsersHandler();
+    if (token) {
+      GetAllUsersHandler();
+    }
   }, []);
 
   const Sales = 20000;
   const customer = customers && customers?.length;
   const sellers = 15;
-  const events = 30;
+  const event = events && events.length;
   const product = products && products.length;
   const order = allOrders && allOrders.length;
-  const contacts = 100;
+  const contacts = contact && contact.length;
   return {
     product: product,
     orders: order,
@@ -39,7 +43,7 @@ export const RealValues = () => {
     customers: customer,
     customersDetails: customers,
     sellers: sellers,
-    events: events,
+    events: event,
     contacts: contacts,
   };
 };

@@ -49,7 +49,7 @@ export default OrdersInfo;
 const OrdersInfoID = ({ orderId }: any) => {
   const { allOrders }: any = UserAdminAuth();
   const { options }: any = UserAuth();
-
+  // item?.items?
   const [OrderStatus, setOrderStatus] = useState("accepted");
   const [OrderValue, setOrderValue]: any = useState({});
   const CheckOrder = OrderStatus === "" ? [] : [0];
@@ -230,8 +230,8 @@ const OrdersInfoID = ({ orderId }: any) => {
         <div className="pt-5 px-4 shadow-lg pb-5 mb-8 max-sm:mb-0 mt-10 outline outline-1 outline-neutral-400/70 rounded-xl">
           <h1 className="font-semibold text-lg py-1">Products</h1>
           <hr className="w-full h-[1.5px] bg-neutral-400 my-1" />
-          {OrderValue.products &&
-            OrderValue.products.map((items: any, index: number) => (
+          {OrderValue?.items?.map((items: any, index: number) => {
+            return (
               <div
                 key={index}
                 className="flex w-full items-center justify-start gap-2 py-2"
@@ -256,14 +256,15 @@ const OrdersInfoID = ({ orderId }: any) => {
                   </span>
                 </div>
               </div>
-            ))}
+            );
+          })}
 
           <hr className="w-full h-[1.5px] bg-neutral-400 my-1" />
 
           <div className="flex flex-col justify-end text-end">
             <h1 className="font-semibold capitalize">Total Amount</h1>
             <p className="text-xl font-semibold">
-              {OrderValue && OrderValue.totalPrice}
+              {OrderValue?.totalPrice + OrderValue?.deliveryFee}
             </p>
           </div>
         </div>

@@ -39,7 +39,7 @@ const OrdersTable = () => {
                     </span>
                     <p className="font-bold text-base">
                       {currency}
-                      {item.totalPrice}
+                      {item.totalPrice + item.deliveryFee}
                     </p>
                   </div>
                 </div>
@@ -77,47 +77,47 @@ const OrdersTable = () => {
               </div>
 
               <div className="w-full gap-1 px-2 flex flex-col items-center">
-                {item.products.map((product: any, index: number) => (
-                  <div
-                    key={index}
-                    className="w-full gap-1 px-2 flex  items-center justify-between"
-                  >
-                    <div className="flex w-full items-center justify-start gap-2 py-2">
-                      <div
-                        className={`bg-neutral-100 p-4 max-[330px]:p-0 rounded-md w-18 ${
-                          true ? "dark:bg-neutral-600" : "dark:bg-neutral-300"
-                        }`}
-                      >
-                        <img
-                          src={product && product.imageUrl}
-                          className="size-10 rounded-md object-cover"
-                          loading="lazy"
-                          alt={product && product.name}
-                        />
+                {item?.items?.map((item: any, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="w-full gap-1 px-2 flex  items-center justify-between"
+                    >
+                      <div className="flex w-full items-center justify-start gap-2 py-2">
+                        <div
+                          className={`bg-neutral-100 p-4 max-[330px]:p-0 rounded-md w-18 ${
+                            true ? "dark:bg-neutral-600" : "dark:bg-neutral-300"
+                          }`}
+                        >
+                          <img
+                            src={item.product && item.product.imageUrl}
+                            className="size-10 rounded-md object-cover"
+                            loading="lazy"
+                            alt={item.product && item.product.name}
+                          />
+                        </div>
+                        <div className="whitespace-nowrap">
+                          <p className="font-semibold text-base capitalize">
+                            {item.product && item.product.name}
+                          </p>
+                          <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
+                            Quantity: {item.quantity}
+                          </span>
+                        </div>
                       </div>
-                      <div className="whitespace-nowrap">
-                        <p className="font-semibold text-base capitalize">
-                          {product && product.name}
-                        </p>
-                        <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
-                          Quantity: {product.quantity}
-                        </span>
+                      <div className="font-semibold pr-2 max-[300px]:pr-0 text-md whitespace-nowrap text-end">
+                        {currency}
+                        <span>{item.product.price * item.quantity}</span>
                       </div>
                     </div>
-                    <div className="font-semibold pr-2 max-[300px]:pr-0 text-md whitespace-nowrap text-end">
-                      {currency}
-                      <span>
-                        {product.product && product.price * product.quantity}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="w-full px-2 my-4">
                 <div className="w-full flex gap-2 px-2 items-center">
                   <span
-                    className={`"w-auto py-2 px-4 rounded-full bg-red-400/10 outline outline-1   text-sm font-semibold capitalize ${
+                    className={`"w-auto whitespace-nowrap py-2 px-4 rounded-full bg-red-400/10 outline outline-1   text-sm font-semibold capitalize ${
                       item.orderStatus === "on the way"
                         ? "text-blue-800 outline-blue-900"
                         : item.orderStatus === "accepted"
@@ -131,6 +131,8 @@ const OrdersTable = () => {
                   </span>
                   {item.orderStatus === "on the way"
                     ? "Your order Is still On the road"
+                    : item.orderStatus === "order placed"
+                    ? "Your order has been placed pending..."
                     : item.orderStatus === "Delivered"
                     ? "Your order has been Delivered"
                     : "Your order has been Approved"}

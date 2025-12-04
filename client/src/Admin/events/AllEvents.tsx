@@ -1,23 +1,13 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import EventCards from "./EventCards";
 import { Assets } from "../../component/assets";
 import { EmptyItems } from "../../component/ShoppingCart";
 import { MdEventAvailable } from "react-icons/md";
 import { adminPath } from "../../context/UserContext";
+import { UserSellerAuth } from "../../seller/Context/SellersContext";
 
 const AllEvents = () => {
-  const [events, setEvents] = useState([]);
-  function HandleEvents() {
-    let tempEvent: any = [];
-    const jsonValue: any = localStorage.getItem("event");
-    const EventArray = JSON.parse(jsonValue);
-    tempEvent = EventArray;
-    setEvents(tempEvent);
-  }
-
-  useEffect(() => {
-    HandleEvents();
-  }, []);
+  const { events }: any = UserSellerAuth();
 
   return (
     <div className=" w-full flex justify-center flex-wrap gap-4 py-2">

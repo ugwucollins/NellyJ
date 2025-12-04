@@ -2,7 +2,7 @@ import AddressModel from "../model/AddressModel.js";
 
 export const GetAllAddresses = async (req, res) => {
   try {
-    const addresses = await AddressModel.find({});
+    const addresses = await AddressModel.find({}).sort({ createdAt: -1 });
     if (!addresses.length) {
       return res.status(404).json({
         success: false,
@@ -50,7 +50,10 @@ export const GetAddressUsersById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const address = await AddressModel.findOne({ createdBy: id });
+    const address = await AddressModel.findOne({ createdBy: id })
+      .select("-password")
+      .sort({ createdAt: -1 });
+
     if (!address) {
       return res.status(404).json({
         success: false,
@@ -74,7 +77,12 @@ export const GetAddressUsersById = async (req, res) => {
 export const GetUsersAddress = async (req, res) => {
   const userId = req.userId;
   try {
-    const usersAddress = await AddressModel.findOne({ createdBy: userId });
+    const usersAddress = await AddressModel.find({
+      createdBy: userId,
+    })
+      .select("-password")
+      .sort({ createdAt: -1 });
+
     if (!usersAddress) {
       return res.status(404).json({
         success: false,

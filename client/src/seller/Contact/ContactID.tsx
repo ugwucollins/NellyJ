@@ -1,12 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import HeaderProp from "../../context/HeaderProp";
-import { sellerPath } from "../../context/UserContext";
+import { sellerPath, UserAuth } from "../../context/UserContext";
 import Navbar from "../pages/Navbar";
 import Sidebar from "../pages/Sidebar";
 import { useEffect, useState } from "react";
-import { ContactArray } from "../pages/Contacts";
 import type { ContactCardProp } from "./ContactCard";
 import AvaterImage from "../../context/AvaterImage";
+import { UserSellerAuth } from "../Context/SellersContext";
+import toast from "react-hot-toast";
+import ApiURL from "../../context/Api";
+import { BiLoaderCircle } from "react-icons/bi";
+import { contactStatusArray } from "../../Admin/contacts/ContactDetails";
+import SelectField from "../../context/SelectField";
+import { buttonClassName } from "../../component/Animation";
 
 const ContactID = () => {
   const { id } = useParams();
@@ -38,10 +44,55 @@ export default ContactID;
 
 export const ContactIDDetails = ({ _id }: any) => {
   const [ContactInfo, setContactInfo]: ContactCardProp | any = useState({});
+  const { contact }: any = UserSellerAuth();
+  const { options }: any = UserAuth();
+  const [status, setStatus] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const router = useNavigate();
 
   const FetchContactInfo = async () => {
-    const filter = ContactArray.find((item) => item._id === _id);
+    const filter = contact && contact.find((item: any) => item._id === _id);
+    console.log(filter);
+
     setContactInfo(filter);
+  };
+
+  const HandleSubmit = async (e: any) => {
+    setLoading(true);
+    const statusValue = {
+      status: status,
+    };
+    e.preventDefault();
+    try {
+      if (status?.trim()) {
+        const res = await ApiURL.put(
+          "/v1/contact/update/" + _id,
+          statusValue,
+          options
+        );
+        const data = res.data;
+        if (data.success) {
+          setStatus("");
+          toast.success(data.message || "contact Updated Successfully", {
+            id: "orders",
+          });
+          setTimeout(() => {
+            setLoading(false);
+            router(sellerPath + "/contact", { replace: true });
+          }, 1000);
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        toast.error("please enter the correct value");
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message || "Server Error 501");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -58,9 +109,9 @@ export const ContactIDDetails = ({ _id }: any) => {
               true ? "dark:bg-neutral-600" : "dark:bg-neutral-300"
             }`}
           >
-            {ContactInfo && ContactInfo?.userId ? (
+            {ContactInfo && ContactInfo?.imageUrl ? (
               <img
-                src={ContactInfo && ContactInfo?.userId?.image}
+                src={ContactInfo && ContactInfo?.imageUrl}
                 className="size-20 rounded-full object-cover"
                 alt={"contacted photos"}
               />
@@ -73,7 +124,7 @@ export const ContactIDDetails = ({ _id }: any) => {
               {ContactInfo && ContactInfo.name}
             </p>
             <span className="whitespace-nowrap text-sm font-semibold opacity-60 capitalize">
-              {ContactInfo && ContactInfo.email}
+              {ContactInfo && ContactInfo.userInfo}
             </span>
           </div>
         </div>
@@ -101,17 +152,48 @@ export const ContactIDDetails = ({ _id }: any) => {
           <p
             className={`text-sm font-semibold capitalize w-auto p-2  rounded-full outline outline-1 text-black
               ${
-                ContactInfo && ContactInfo?.userId
+                ContactInfo && ContactInfo?.contactedBy
                   ? "bg-green-300  outline-green-800"
                   : "bg-yellow-200  outline-yellow-800"
               }
                 `}
           >
-            {ContactInfo && ContactInfo?.userId
+            {ContactInfo && ContactInfo?.contactedBy
               ? "Active customer"
               : "guest Visitor"}
           </p>
         </div>
+      </div>
+
+      <div className="w-full py-6 px-4 mb-2 rounded-xl shadow-lg drop-shadow-sm">
+        <h1
+          className="py-1
+          "
+        >
+          Order Status Change
+        </h1>
+
+        <form onSubmit={HandleSubmit} className="flex flex-col gap-y-4">
+          <SelectField
+            name="status"
+            label="Order Status"
+            value={status!}
+            className="py-4"
+            options={contactStatusArray}
+            onChange={(e) => setStatus(e.target.value)}
+          />
+
+          <button
+            disabled={loading}
+            className={` disabled:opacity-80 ${buttonClassName}`}
+          >
+            {loading ? (
+              <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+            ) : (
+              <p>Update</p>
+            )}
+          </button>
+        </form>
       </div>
     </div>
   );

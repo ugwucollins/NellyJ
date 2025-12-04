@@ -7,7 +7,8 @@ const OrdersSchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    products: [
+
+    items: [
       {
         product: {
           type: mongoose.Schema.Types.ObjectId,
@@ -62,7 +63,9 @@ const OrdersSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 const OrdersModel = mongoose.model("orders", OrdersSchema);

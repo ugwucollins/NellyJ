@@ -16,6 +16,8 @@ import ContactID from "../seller/Contact/ContactID";
 import ApiURL from "../context/Api";
 import { UserRoleAuth } from "../RolesControlle/RoleContext";
 import Unauthorize from "../component/pages/Unauthorize";
+import Events from "../seller/pages/Events";
+import EventsDetails from "../seller/events/EventsDetails";
 
 const Seller = () => {
   const { seller, setSeller }: any = UserSellerAuth();
@@ -66,6 +68,8 @@ const Seller = () => {
             <Route path={"listproduct"} element={<ListProduct />} />
             <Route path={"orders"} element={<Orders />} />
             <Route path={"contact"} element={<Contacts />} />
+            <Route path={"events"} element={<Events />} />
+            <Route path={"events/:id"} element={<EventsDetails />} />
             <Route path={"contact/:id"} element={<ContactID />} />
             <Route path={"orders/:orderId"} element={<OrdersInfo />} />
           </Route>

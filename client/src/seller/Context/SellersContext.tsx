@@ -1,9 +1,19 @@
-import React, { createContext, useState, type ReactNode } from "react";
-import { sellerPath } from "../../context/UserContext";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import { sellerPath, UserAuth } from "../../context/UserContext";
+import ApiURL from "../../context/Api";
+import toast from "react-hot-toast";
 
 export const createSellersContext = createContext({});
 const SellersContext = ({ children }: { children: ReactNode }) => {
   const [seller, setSeller] = useState<object | null>();
+  const [contact, setContact] = useState<[]>();
+  const [events, setEvents] = useState<[]>();
+  const { options, token }: any = UserAuth();
 
   const HandleLogOut = () => {
     setSeller(null);
@@ -12,7 +22,50 @@ const SellersContext = ({ children }: { children: ReactNode }) => {
     window.location.replace(sellerPath + "/login");
   };
 
-  const Values = { seller, setSeller, HandleLogOut };
+  async function GetAllContactHandler() {
+    try {
+      const res = await ApiURL.get("/v1/contact/get", options);
+      const data = res.data;
+      if (data.success) {
+        setContact(data.data);
+      }
+    } catch (error: any) {
+      console.log(error);
+
+      toast.error(error.response.data.message, { id: "contact" });
+    }
+  }
+  async function GetAllBookedEvents() {
+    try {
+      const res = await ApiURL.get("/v1/events/get", options);
+      const data = res.data;
+
+      if (data.success) {
+        setEvents(data.data);
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message, { id: "contact" });
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      GetAllContactHandler();
+      GetAllBookedEvents();
+    }
+  }, []);
+
+  const Values = {
+    seller,
+    setSeller,
+    HandleLogOut,
+    events,
+    setEvents,
+    contact,
+    setContact,
+    GetAllBookedEvents,
+  };
   return (
     <createSellersContext.Provider value={Values}>
       {children}

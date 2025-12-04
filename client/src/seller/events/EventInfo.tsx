@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import AvaterImage from "../../context/AvaterImage";
-import { BiLoaderCircle } from "react-icons/bi";
-import DateFormater from "../../context/DateFormat";
-import { EventStatus } from "./EventCards";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { ZodSelectField } from "../../context/SelectField";
-import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { buttonClassName } from "../../component/Animation";
-import { EventsCheck } from "../../component/assets";
+import { EventStatus } from "./EventCards";
+import { useEffect, useState } from "react";
+import { sellerPath, UserAuth } from "../../context/UserContext";
+import { UserSellerAuth } from "../Context/SellersContext";
+import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import ApiURL from "../../context/Api";
+import toast from "react-hot-toast";
+import AvaterImage from "../../context/AvaterImage";
 import { BsCakeFill } from "react-icons/bs";
 import { FaBaby, FaGraduationCap } from "react-icons/fa";
 import { RiHeartsFill } from "react-icons/ri";
@@ -16,11 +16,11 @@ import { GiCoffin } from "react-icons/gi";
 import { PiFlowerLotusFill } from "react-icons/pi";
 import { IoRoseSharp } from "react-icons/io5";
 import { TbTransactionDollar } from "react-icons/tb";
-import toast from "react-hot-toast";
-import { UserSellerAuth } from "../../seller/Context/SellersContext";
-import ApiURL from "../../context/Api";
-import { adminPath, UserAuth } from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import DateFormater from "../../context/DateFormat";
+import { ZodSelectField } from "../../context/SelectField";
+import { buttonClassName } from "../../component/Animation";
+import { BiLoaderCircle } from "react-icons/bi";
+import { EventsCheck } from "../../component/assets";
 
 const statusSchema = z.object({
   status: z.enum([
@@ -88,7 +88,7 @@ const EventInfo = ({ id: _id }: string | any) => {
           localStorage.setItem("event", JSON.stringify(Update));
           toast.success("Updated changes Successfully");
           console.log(Update);
-          router(adminPath + "/events");
+          router(sellerPath + "/events");
           GetAllBookedEvents();
         }, 1000);
       } else {

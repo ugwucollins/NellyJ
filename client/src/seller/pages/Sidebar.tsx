@@ -14,12 +14,11 @@ import { BsMoonFill } from "react-icons/bs";
 import { LuSun } from "react-icons/lu";
 import {
   MdDashboard,
+  MdEventAvailable,
   MdMenu,
-  MdOutlineAdminPanelSettings,
   MdProductionQuantityLimits,
 } from "react-icons/md";
-import { UserAdminAuth } from "../../Admin/context/AdminContext";
-import { adminPath, sellerPath } from "../../context/UserContext";
+import { sellerPath } from "../../context/UserContext";
 import { RiProductHuntFill } from "react-icons/ri";
 import { GrDeliver } from "react-icons/gr";
 import type { SidebarProp } from "../Context/Types";
@@ -241,7 +240,6 @@ type SidebarMenuComProp = {
 
 const SidebarMenuCom = ({ open }: SidebarMenuComProp) => {
   const pathName = useLocation().pathname;
-  const { admin }: any = UserAdminAuth();
 
   const SideBarMenu: SidebarProp[] = [
     {
@@ -270,9 +268,9 @@ const SidebarMenuCom = ({ open }: SidebarMenuComProp) => {
       Title: "Contact",
     },
     {
-      icon: admin && <MdOutlineAdminPanelSettings />,
-      path: admin && adminPath,
-      Title: admin && "Admin",
+      icon: <MdEventAvailable />,
+      path: sellerPath + "/events",
+      Title: "Events",
     },
   ];
 

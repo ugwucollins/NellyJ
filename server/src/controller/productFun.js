@@ -3,7 +3,7 @@ import { month, year } from "../controller/Exporters.js";
 
 export const GetAllProducts = async (req, res) => {
   try {
-    const products = await ProductModel.find({});
+    const products = await ProductModel.find({}).sort({ createdAt: -1 });
     if (!products.length) {
       return res.status(404).json({
         success: false,
@@ -146,7 +146,7 @@ export const UpdateProductById = async (req, res) => {
 
 export const UpdateProductStocksById = async (req, res) => {
   const { id } = req.params;
-  const { instock } = req.body;
+  const { inStock } = req.body;
   try {
     const product = await ProductModel.findById({ _id: id });
     if (!product) {
@@ -155,14 +155,15 @@ export const UpdateProductStocksById = async (req, res) => {
         message: " ProductId Not Found",
       });
     }
-    const data = {
-      instock: instock,
-    };
 
     const UpdatedProductStock = await ProductModel.findByIdAndUpdate(
       { _id: id },
-      data
+
+      { instock: inStock }
+      // { new: true }
     );
+
+    console.log(inStock);
 
     return res.status(200).json({
       success: true,

@@ -6,6 +6,8 @@ import DateFormater from "../../context/DateFormat";
 import { useEffect, useState } from "react";
 import Modal from "../../context/Modal";
 import toast from "react-hot-toast";
+import ApiURL from "../../context/Api";
+import { UserAuth } from "../../context/UserContext";
 
 const ListProductTable = () => {
   return (
@@ -19,25 +21,13 @@ const ListProductTable = () => {
 export default ListProductTable;
 
 export const Table = () => {
-  const { products, setproducts }: any = UserProduct();
+  const { products, setproducts, GetAllProducts }: any = UserProduct();
+  const { options }: any = UserAuth();
   const [open, setOpen] = useState(false);
   const [itemId, setItemId] = useState("");
-  const [switchValue, setswitchValue] = useState<boolean>();
-
-  const handleClick = (itemId: any) => {
-    const filter = products.map((item: any) =>
-      item._id === itemId
-        ? {
-            ...item,
-            instock: !switchValue,
-          }
-        : item
-    );
-    setproducts(filter);
-  };
 
   useEffect(() => {
-    console.log(products);
+    setproducts(products);
   }, [products]);
 
   const HandleClose = () => {
@@ -159,10 +149,28 @@ export const Table = () => {
                               <label className=" relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
                                 <input
                                   type="checkbox"
-                                  checked={item.instock}
-                                  onClick={() => handleClick(item._id)}
-                                  onChange={() => {
-                                    setswitchValue(item.instock);
+                                  checked={item ? item.instock : item.instock}
+                                  onClick={async () => {
+                                    try {
+                                      const res = await ApiURL.put(
+                                        "/v1/product/update/stock/" + item._id,
+                                        { inStock: !item.instock },
+                                        options
+                                      );
+                                      const data = res.data;
+                                      console.log(data);
+                                      if (data.success) {
+                                        toast.success(data.message);
+                                        GetAllProducts();
+                                        console.log(item.instock);
+                                      } else {
+                                        toast.error(data.message);
+                                      }
+                                    } catch (error: any) {
+                                      console.log(error);
+
+                                      toast.error(error.response.data.message);
+                                    }
                                   }}
                                   className="sr-only peer"
                                 />

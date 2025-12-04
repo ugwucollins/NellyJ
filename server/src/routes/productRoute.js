@@ -36,7 +36,7 @@ productRouter.patch(
 productRouter.put(
   "/update/stock/:id",
   protectedAuth,
-  authorizeRole(ROLES.ADMIN),
+  authorizeRole(ROLES.ADMIN, ROLES.SELLER),
   UpdateProductStocksById
 );
 

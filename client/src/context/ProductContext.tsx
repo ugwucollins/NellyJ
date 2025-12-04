@@ -32,7 +32,11 @@ const ProductContext = ({ children }: any) => {
       const data = res.data;
       if (data.success) {
         tempOrders.push(data?.data);
-        setOrders(tempOrders);
+        if (data?.data?.length === 1) {
+          setOrders(tempOrders);
+        } else {
+          setOrders(data?.data);
+        }
       } else {
         toast.error(data.message, { id: "orders" });
       }
@@ -180,6 +184,8 @@ const ProductContext = ({ children }: any) => {
   }, [cartItem]);
 
   const Values = {
+    GetAllProducts,
+    GetUsersOrders,
     getTotalDeliveryFee,
     orders,
     setOrders,

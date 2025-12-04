@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TextAnimation, { XSlideIn, YSlideIn } from "../Animation";
 import { useState } from "react";
 import {
@@ -17,6 +17,8 @@ import { ContactSchema } from "../../Zod/Schema/Schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodInputField } from "../../context/InputField";
 import { UserAuthInfo } from "../../App";
+import toast from "react-hot-toast";
+import ApiURL from "../../context/Api";
 
 // const InputField = lazy(() => import("../../context/InputField"));
 
@@ -74,24 +76,53 @@ export const ContactForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       name: user ? user.lastName + " " + user.firstName : "",
       email: user ? user.email : "",
+      phoneNumber: user ? user.phoneNumber : "",
     },
     resolver: zodResolver(ContactSchema),
   });
-
-  const OnSubmit: SubmitHandler<ContactField> = (data) => {
+  const router = useNavigate();
+  const emptyValues = () => {
+    setValue("email", "");
+    setValue("subject", "");
+    setValue("message", "");
+    setValue("phoneNumber", "");
+    setValue("name", "");
+  };
+  const OnSubmit: SubmitHandler<ContactField> = async (data) => {
     const info = {
       name: data.name,
-      email: data.email,
+      userInfo: data.email,
       subject: data.subject,
-      phoneNumber: `0${user ? user.phoneNumber : data.phoneNumber}`,
+      phoneNumber: `0${data.phoneNumber}`,
       message: data.message,
+      userId: user ? user._id : "",
+      imageUrl: user ? user.imageUrl : "",
     };
-    console.log(info);
+    try {
+      const res = await ApiURL.post("/v1/contact/create", info);
+      const resData = res.data;
+      if (resData.success) {
+        toast.success(resData.message);
+        setTimeout(() => {
+          emptyValues();
+          router("/", { replace: true });
+        }, 1000);
+      } else {
+        toast.error(resData.message);
+      }
+    } catch (error: any) {
+      setError("root", {
+        message: error.message,
+      });
+      toast.error(error.response.data.message);
+    }
   };
   const [indexIcon, setindexIcon] = useState(0);
 
@@ -155,6 +186,12 @@ export const ContactForm = () => {
             error={errors.message?.message!}
             value={register("message")}
           />
+
+          {errors.root && (
+            <span className="text-red-500 text-base">
+              {errors.root.message}
+            </span>
+          )}
           <div>
             <button
               disabled={isSubmitting}

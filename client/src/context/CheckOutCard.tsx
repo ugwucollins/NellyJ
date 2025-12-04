@@ -23,6 +23,7 @@ const CheckOutCard = ({ LinkPath, index }: CheckOutCardProps) => {
     setcartArray,
     getTotalDeliveryFee,
     setcartItem,
+    GetUsersOrders,
   }: any = UserProduct();
   const location = useLocation().pathname;
   const router = useNavigate();
@@ -30,12 +31,10 @@ const CheckOutCard = ({ LinkPath, index }: CheckOutCardProps) => {
 
   async function HandleCheckout() {
     if (location === "/cart/address" || location.includes("/cart/address")) {
-      alert("done");
-
       const datas = {
         address: index,
         deliveryFee: getTotalDeliveryFee(),
-        products: cartArray.map((item: any) => ({
+        items: cartArray.map((item: any) => ({
           product: item._id,
           quantity: item.quantity,
         })),
@@ -48,6 +47,7 @@ const CheckOutCard = ({ LinkPath, index }: CheckOutCardProps) => {
           setTimeout(() => {
             setcartItem({});
             router("/orders", { replace: true });
+            GetUsersOrders();
           }, 1000);
         }
       } catch (error: any) {

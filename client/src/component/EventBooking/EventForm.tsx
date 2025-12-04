@@ -21,6 +21,7 @@ import type { EventField } from "../../Zod/typesField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EventSchema } from "../../Zod/Schema/Schemas";
 import { UserAuthInfo } from "../../App";
+import ApiURL from "../../context/Api";
 
 const EventForm = () => {
   return (
@@ -69,7 +70,7 @@ export const EventPath = () => {
 };
 
 export function EventFormField() {
-  const { events, setEvents }: any = UserAuth();
+  const { events, setEvents, options }: any = UserAuth();
   const { user }: any = UserAuthInfo();
   const [date, setDate] = useState("");
   const {
@@ -122,34 +123,41 @@ export function EventFormField() {
     }
   }, [date]);
 
-  const onSubmit: SubmitHandler<EventField> = (data) => {
+  const onSubmit: SubmitHandler<EventField> = async (data) => {
     const info = {
-      address: data.address,
       name: data.name,
-      phone: data.phoneNumber,
-      person: data.people,
+      phoneNumber: data.phoneNumber,
       description: data.description,
       state: data.state,
       country: data.country,
       town: data.town,
-      busTop: data.busTop,
+      nearestBusTop: data.busTop,
+      NumberOfGuest: data.people,
+      address: data.address,
       event: data.event,
-      date: data.date,
+      date: date ? date : data.date,
       email: data.email,
       foods: data.foods,
+      city: data.town,
     };
     try {
       setValue("date", date);
-      toast.success(`${data.name} Booked An Event`);
-      handleArray(data);
-      setDate("");
-      setTimeout(() => {
-        window.location.replace("/event/history");
-        console.log(info);
-      }, 1000);
+      const res = await ApiURL.post("/v1/events/create", info, options);
+      const resData = res.data;
+      if (resData.success) {
+        toast.success(resData.message || `${data.name} Booked An Event`);
+        handleArray(data);
+        setDate("");
+        setTimeout(() => {
+          window.location.replace("/event/history");
+          console.log(info);
+        }, 1000);
+      } else {
+        toast.error(resData.message);
+      }
     } catch (error: any) {
       setError("root", {
-        message: error.message,
+        message: error.response.data.message,
       });
     }
   };

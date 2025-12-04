@@ -3,7 +3,7 @@ import { month, year } from "../controller/Exporters.js";
 
 export const GetAllEvents = async (req, res) => {
   try {
-    const event = await EventModel.find({});
+    const event = await EventModel.find({}).sort({ createdAt: -1 });
     if (!event.length) {
       return res.status(404).json({
         success: false,
@@ -50,9 +50,11 @@ export const GetEventById = async (req, res) => {
 
 export const GetUsersEvent = async (req, res) => {
   const userId = req.userId;
-  try {
-    const usersEvent = await EventModel.findOne({ createdBy: userId });
 
+  try {
+    const usersEvent = await EventModel.find({ createdBy: userId }).sort({
+      createdAt: -1,
+    });
     if (!usersEvent) {
       return res.status(404).json({
         success: false,
@@ -80,6 +82,7 @@ export const CreateEvent = async (req, res) => {
     city,
     state,
     country,
+    address,
     email,
     phoneNumber,
     town,
@@ -96,6 +99,7 @@ export const CreateEvent = async (req, res) => {
     event: event,
     city: city,
     state: state,
+    address: address,
     country: country,
     email: email,
     phoneNumber: phoneNumber,
@@ -172,7 +176,8 @@ export const UpdateUserEventById = async (req, res) => {
 
     const UpdatedUsersEvent = await EventModel.findByIdAndUpdate(
       { _id: id },
-      data
+      data,
+      { new: true }
     );
 
     return res.status(200).json({
@@ -202,7 +207,9 @@ export const UpdateEventById = async (req, res) => {
       status: status,
     };
 
-    const UpdatedEvent = await EventModel.findByIdAndUpdate({ _id: id }, data);
+    const UpdatedEvent = await EventModel.findByIdAndUpdate({ _id: id }, data, {
+      new: true,
+    });
 
     return res.status(200).json({
       success: true,

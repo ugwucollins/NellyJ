@@ -5,7 +5,7 @@ import { UserSellerAuth } from "../Context/SellersContext";
 import { GrDeliver } from "react-icons/gr";
 import type { AddCardProp, CardProp } from "../Context/Types";
 import { sellerPath } from "../../context/UserContext";
-import { MdProductionQuantityLimits } from "react-icons/md";
+import { MdEventAvailable, MdProductionQuantityLimits } from "react-icons/md";
 import AddCard from "../Context/AddCard";
 import { PiPlus } from "react-icons/pi";
 import { RealValues } from "../Context/RealValues";
@@ -33,8 +33,8 @@ export default SellerDashboard;
 
 export const SellerDashboardContent = () => {
   const { seller }: any = UserSellerAuth();
-  const { product, orders, sales, customers } = RealValues();
-  const RealArray: any = [sales, orders, product, customers];
+  const { product, orders, sales, events } = RealValues();
+  const RealArray: any = [sales, orders, product, events];
   return (
     <div>
       <div className=" mb-4 py-2 px-2">
@@ -130,12 +130,14 @@ export const CardArray: CardProp[] = [
     pen: "+12 Total New product",
     path: sellerPath + "/listproduct",
   },
+
   {
-    Title: "Total Customers",
-    icon: <MdProductionQuantityLimits />,
-    value: "1299",
-    color: "blue",
-    pen: "20 Total New User/customers",
+    Title: "Booked Events",
+    icon: <MdEventAvailable />,
+    value: "120",
+    color: "#059669",
+    pen: "+10 from past last week",
     path: sellerPath,
+    // + "/events",
   },
 ];

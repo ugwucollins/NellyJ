@@ -1,7 +1,5 @@
-import DateFormater from "../../context/DateFormat";
 import { Link } from "react-router-dom";
 import AvaterImage from "../../context/AvaterImage";
-import { Assets, EventsCheck } from "../../component/assets";
 import { buttonClassName } from "../../component/Animation";
 import { BsCakeFill } from "react-icons/bs";
 import { FaBaby, FaGraduationCap } from "react-icons/fa";
@@ -10,6 +8,8 @@ import { GiCoffin } from "react-icons/gi";
 import { PiFlowerLotusFill } from "react-icons/pi";
 import { IoRoseSharp } from "react-icons/io5";
 import { TbTransactionDollar } from "react-icons/tb";
+import { Assets, EventsCheck } from "../../component/assets";
+import DateFormater from "../../context/DateFormat";
 
 const EventCards = ({ event }: any) => {
   return (

@@ -4,6 +4,9 @@ import DateFormater from "../../context/DateFormat";
 import { currency } from "../../context/ProductContext";
 import { buttonClassName } from "../../component/Animation";
 import { UserAdminAuth } from "../context/AdminContext";
+import { EmptyItems } from "../../component/ShoppingCart";
+import { CiDeliveryTruck } from "react-icons/ci";
+import { adminPath } from "../../context/UserContext";
 const OrdersTable = () => {
   const { allOrders }: any = UserAdminAuth();
 
@@ -30,7 +33,7 @@ const OrdersTable = () => {
                 </div>
 
                 <div className="flex flex-col">
-                  {order.products.map((list: any, index: number) => (
+                  {order?.items?.map((list: any, index: number) => (
                     <div
                       key={index}
                       className="flex whitespace-nowrap items-center gap-1 font-medium"
@@ -58,7 +61,7 @@ const OrdersTable = () => {
 
               <div className="whitespace-nowrap font-bold">
                 {currency}
-                {order.totalPrice}
+                {order.totalPrice + order.deliveryFee}
               </div>
               <div>
                 <p className="text-base whitespace-nowrap font-medium opacity-80 pl-2 wh">
@@ -83,6 +86,17 @@ const OrdersTable = () => {
               </Link>
             </div>
           ))}
+      </div>
+
+      <div className="flex justify-center min-h-[60vh] items-center">
+        {!allOrders && (
+          <EmptyItems
+            title="No Placed Orders"
+            icon={<CiDeliveryTruck />}
+            LinkPath={adminPath}
+            Text="Contiune checking"
+          />
+        )}
       </div>
     </div>
   );

@@ -1,10 +1,18 @@
 import OrdersModel from "../model/OrdersModel.js";
 import ProductModel from "../model/ProductModel.js";
 import { month, year } from "../controller/Exporters.js";
+import { model } from "mongoose";
 
 export const GetAllOrders = async (req, res) => {
   try {
-    const orders = await OrdersModel.find({}).populate("address orderedBy");
+    const orders = await OrdersModel.find({
+      // $or: [{ paymentMethod: "COD" }, { isPaid: true }],
+    })
+      .populate(
+        "address orderedBy items.product",
+        "-password -roles -isVerified -cartItems -wishList"
+      )
+      .sort({ createdAt: -1 });
 
     if (!orders.length) {
       return res.status(404).json({
@@ -60,9 +68,20 @@ export const GetUsersOrderById = async (req, res) => {
         message: " userId Not Found",
       });
     }
-    const order = await OrdersModel.findOne({ orderedBy: userId }).populate(
-      "products"
-    );
+    const order = await OrdersModel.find({
+      orderedBy: userId,
+      $or: [{ paymentMethod: "COD" }, { isPaid: true }],
+    })
+      .populate(
+        "address orderedBy items.product",
+        "-password -roles -isVerified -cartItems -wishList"
+      )
+      .sort({ createdAt: -1 });
+    // .populate({
+    //   path: "items",
+    //   populate: { path: "product", model: "products" },
+    // })
+    // .exec();
 
     if (!order) {
       return res.status(404).json({
@@ -85,18 +104,18 @@ export const GetUsersOrderById = async (req, res) => {
 };
 
 export const CreateOrder = async (req, res) => {
-  const { products, deliveryFee, address } = req.body;
+  const { items, deliveryFee, address } = req.body;
   const userId = req.userId;
 
   try {
-    if (products.length === 0 || !userId || !address) {
+    if (items.length === 0 || !userId || !address) {
       return res.status(404).json({
         message: "invalid Data",
         success: false,
       });
     }
 
-    let amount = await products.reduce(async (acc, item) => {
+    let amount = await items.reduce(async (acc, item) => {
       const product = await ProductModel.findById({ _id: item.product });
 
       return (await acc) + product.price * item.quantity;
@@ -107,7 +126,7 @@ export const CreateOrder = async (req, res) => {
 
     const data = {
       orderedBy: userId,
-      products: products,
+      items: items,
       totalPrice: amount,
       deliveryFee: deliveryFee,
       address: address,

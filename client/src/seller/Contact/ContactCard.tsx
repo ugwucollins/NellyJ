@@ -13,21 +13,29 @@ const ContactCard = ({
   number,
   status,
   name,
+  level,
   Path,
 }: ContactCardProp) => {
   return (
     <div className="w-full dark:bg-slate-800/60 outline-none dark:outline-1 dark:outline dark:outline-slate-600/70 dark:text-white max-w-xl shadow-md drop-shadow p-6 rounded-2xl">
       <div className="flex w-full gap-1 justify-between items-center">
         <div className="flex gap-1 items-center">
-          {imageUrl ? (
-            <img
-              src={imageUrl ? imageUrl : Assets.Client1}
-              className="size-12 rounded-full object-cover"
-              alt={"users photos"}
-            />
-          ) : (
-            <AvaterImage />
-          )}
+          <div className=" relative">
+            {imageUrl ? (
+              <img
+                src={imageUrl ? imageUrl : Assets.Client1}
+                className="size-12 rounded-full object-cover"
+                alt={"users photos"}
+              />
+            ) : (
+              <AvaterImage />
+            )}
+            {level === "pending" ? (
+              <div className="absolute size-3 z-[1] bottom-1 right-0.5 rounded-full bg-red-800" />
+            ) : (
+              <div className="absolute size-3 z-[1] bottom-1 right-0.5 rounded-full bg-green-800" />
+            )}
+          </div>
           <div>
             <h1 className="font-bold">
               {name && name.length <= 12
@@ -77,6 +85,14 @@ const ContactCard = ({
           </p>
         </div>
       </div>
+
+      <div className="w-full justify-end flex text-end">
+        {level === "pending" ? (
+          <div className="absolute size-3 z-[1] bottom-1.5 right-1 rounded-full bg-red-800" />
+        ) : (
+          <div className="absolute size-3 z-[1] bottom-1.5 right-1 rounded-full bg-green-800" />
+        )}
+      </div>
     </div>
   );
 };
@@ -86,6 +102,7 @@ export default ContactCard;
 export type ContactCardProp = {
   imageUrl?: string | null;
   date: string | Date;
+  level?: string;
   linkPath: string;
   email: string;
   number: string | number;

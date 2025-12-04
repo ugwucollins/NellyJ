@@ -34,7 +34,7 @@ export default HomePage;
 const HomePageDisplay = () => {
   const { admin }: any = UserAdminAuth();
   const { product, orders, sales, customers, events, sellers } = RealValues();
-  const RealArray: any = [sales, orders, events, product, customers, sellers];
+  const RealArray: any = [sales, orders, product, customers, events, sellers];
 
   return (
     <div>
@@ -140,14 +140,7 @@ export const CardArray: CardProp[] = [
     pen: "+20 from past last week",
     path: adminPath + "/orders",
   },
-  {
-    Title: "Booked Events",
-    icon: <MdEventAvailable />,
-    value: "120",
-    color: "#059669",
-    pen: "+10 from past last week",
-    path: adminPath + "/events",
-  },
+
   {
     Title: "All Products",
     icon: <MdProductionQuantityLimits />,
@@ -156,14 +149,14 @@ export const CardArray: CardProp[] = [
     pen: "+12 Total New product",
     path: adminPath + "/listproduct",
   },
-  // {
-  //   Title: "Total Customers",
-  //   icon: <MdProductionQuantityLimits />,
-  //   value: "1299",
-  //   color: "blue",
-  //   pen: "20 Total New User/customers",
-  //   path: adminPath + "/users",
-  // },
+  {
+    Title: "Total Customers",
+    icon: <MdProductionQuantityLimits />,
+    value: "1299",
+    color: "blue",
+    pen: "20 Total New User/customers",
+    path: adminPath + "/users",
+  },
   // {
   //   Title: "Total Sellers",
   //   icon: <BiUserPlus />,

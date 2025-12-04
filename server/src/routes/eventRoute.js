@@ -21,7 +21,8 @@ eventRouter.get(
 );
 eventRouter.get("/get/:id", protectedAuth, GetEventById);
 eventRouter.post("/create", protectedAuth, CreateEvent);
-eventRouter.get("/get/event", protectedAuth, GetUsersEvent);
+
+eventRouter.get("/get/event/user", protectedAuth, GetUsersEvent);
 
 eventRouter.put("/update/user/:id", protectedAuth, UpdateUserEventById);
 
