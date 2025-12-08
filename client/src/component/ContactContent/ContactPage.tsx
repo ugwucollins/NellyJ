@@ -100,7 +100,7 @@ export const ContactForm = () => {
       name: data.name,
       userInfo: data.email,
       subject: data.subject,
-      phoneNumber: `0${data.phoneNumber}`,
+      phoneNumber: data.phoneNumber,
       message: data.message,
       userId: user ? user._id : "",
       imageUrl: user ? user.imageUrl : "",

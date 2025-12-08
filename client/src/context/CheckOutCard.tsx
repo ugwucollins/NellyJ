@@ -43,12 +43,28 @@ const CheckOutCard = ({ LinkPath, index }: CheckOutCardProps) => {
         const res = await ApiURL.post("/v1/orders/create", datas, options);
         const data = res.data;
         if (data.success) {
-          toast.success(data.message);
-          setTimeout(() => {
-            setcartItem({});
-            router("/orders", { replace: true });
-            GetUsersOrders();
-          }, 1000);
+          const salesInfo = {
+            deliveryFee: getTotalDeliveryFee(),
+            items: cartArray.map((item: any) => ({
+              product: item._id,
+              quantity: item.quantity,
+            })),
+            orderId: data?.data?._id,
+          };
+
+          const res = await ApiURL.post("/v1/sales/create", salesInfo, options);
+          const salesData = res.data;
+
+          if (salesData.success) {
+            toast.success(data.message);
+            setTimeout(() => {
+              setcartItem({});
+              router("/orders", { replace: true });
+              GetUsersOrders();
+            }, 1000);
+          } else {
+            toast.error(salesData.message);
+          }
         }
       } catch (error: any) {
         toast.error(error.response.data.message);

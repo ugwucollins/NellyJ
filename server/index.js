@@ -12,6 +12,7 @@ import connectionCloudinary from "./src/controller/ImageUpLoad.js";
 import router from "./src/routes/imageRouter.js";
 import contactRouter from "./src/routes/contactRoute.js";
 import eventRouter from "./src/routes/eventRoute.js";
+import salesRouter from "./src/routes/salesRoute.js";
 DBConnect();
 
 const app = express();
@@ -33,6 +34,7 @@ app.use("/api/auth/v1", router);
 app.use("/api/auth/v1/product", productRouter);
 app.use("/api/auth/v1/user/address", addressRouter);
 app.use("/api/auth/v1/orders", ordersRouter);
+app.use("/api/auth/v1/sales", salesRouter);
 app.use("/api/auth/v1/contact", contactRouter);
 app.use("/api/auth/v1/events", eventRouter);
 

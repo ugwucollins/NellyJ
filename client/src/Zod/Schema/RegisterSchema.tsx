@@ -16,3 +16,12 @@ export const RegisterSchema = z
     password: z.string().min(8, MinPassword).regex(Regex, PasswordRegexM),
   })
   .strict();
+export const RegisterSellerSchema = z
+  .object({
+    firstName: z.string().trim().min(3),
+    lastName: z.string().trim().min(3),
+    email: z.string().email().trim(),
+    phoneNumber: z.string().min(10).max(12).or(z.number().min(10).max(12)),
+    password: z.string().min(8, MinPassword).regex(Regex, PasswordRegexM),
+  })
+  .strict();

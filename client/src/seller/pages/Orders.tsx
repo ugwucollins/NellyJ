@@ -10,6 +10,9 @@ import Sidebar from "./Sidebar";
 import { UserAdminAuth } from "../../Admin/context/AdminContext";
 import { EmptyItems } from "../../component/ShoppingCart";
 import { CiDeliveryTruck } from "react-icons/ci";
+import { useEffect, useState } from "react";
+import InputField from "../../context/InputField";
+import Loader from "../../context/Loader";
 
 const Orders = () => {
   return (
@@ -40,16 +43,74 @@ export default Orders;
 export const OrdersTable = () => {
   const { allOrders }: any = UserAdminAuth();
 
+  const [findOrders, setFindOrders] = useState([]);
+  const [search, setSearch] = useState<string>("");
+
+  function handleChange(e: any) {
+    setSearch(e.target.value);
+  }
+
+  function handleFind() {
+    const filter =
+      allOrders &&
+      allOrders.filter(
+        (item: any) =>
+          item._id.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+          item.orderedBy.email
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase()) ||
+          item.orderedBy.firstName
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase()) ||
+          item.orderedBy.phoneNumber
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase())
+      );
+    setFindOrders(filter);
+    console.log(filter?.orderedBy?.phoneNumber);
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleFind();
+    }, 500);
+    console.log(allOrders);
+  }, [search]);
+
   return (
     <div className="w-full overflow-hidden">
+      {allOrders && (
+        <div className="w-full flex justify-end max-sm:justify-start items-end">
+          <div className="pr-10 w-80 pt-4 pl-4">
+            <InputField
+              onChange={handleChange}
+              value={search}
+              name="search"
+              placeholder="Search Orders by orderId, firstName or Email"
+              type="text"
+              className="rounded-lg shadow-lg"
+              label="Search Orders*"
+            />
+          </div>
+        </div>
+      )}
+
+      {!findOrders.length && (
+        <div className="flex justify-center min-h-[50vh] items-center">
+          <div>
+            <Loader className="w-20" size="size-16" />
+          </div>
+        </div>
+      )}
+
       <div className="w-full overflow-auto relative">
-        {allOrders &&
-          allOrders.map((order: any, index: number) => (
+        {findOrders &&
+          findOrders.map((order: any, index: number) => (
             <div
               key={index}
-              className="w-full items-center flex justify-between gap-5 shadow pl-4 pr-5 py-4"
+              className="w-full items-center flex justify-between gap-5 shadow pl-5 pr-5 py-4"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 relative">
                 <div
                   className={`size-24 mb-2 rounded-lg  p-4 ${
                     index % 2 === 0 ? "bg-slate-100" : "bg-slate-300"
@@ -74,6 +135,12 @@ export const OrdersTable = () => {
                     </div>
                   ))}
                 </div>
+
+                {order.isPaid ? (
+                  <div className="absolute size-3  top-1.5 left-0.5 rounded-full bg-green-800" />
+                ) : (
+                  <div className="absolute size-3  top-1.5 left-0.5 rounded-full bg-red-800" />
+                )}
               </div>
 
               <div className="flex text-left flex-col gap-1">

@@ -16,7 +16,7 @@ import { adminPath, UserAuth } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const OrdersInfoID = ({ orderId }: any) => {
-  const { allOrders }: any = UserAdminAuth();
+  const { allOrders, GetAllUsersOrders }: any = UserAdminAuth();
   const { options }: any = UserAuth();
 
   const [OrderStatus, setOrderStatus] = useState("accepted");
@@ -101,6 +101,7 @@ const OrdersInfoID = ({ orderId }: any) => {
         setTimeout(() => {
           setLoading(false);
           router(adminPath + "/orders", { replace: true });
+          GetAllUsersOrders();
         }, 1000);
       } else {
         toast.error(data.message);

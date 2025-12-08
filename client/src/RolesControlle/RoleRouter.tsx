@@ -28,6 +28,7 @@ const RoleRouter: React.FC = () => {
         setTimeout(() => {
           localStorage.removeItem("token");
           navigate("/");
+          window.location.reload();
         }, 1000);
       } else if (usersStatus && usersStatus === "blocked") {
         navigate("/contact");
@@ -41,6 +42,7 @@ const RoleRouter: React.FC = () => {
         setTimeout(() => {
           localStorage.removeItem("token");
           navigate("/", { replace: true });
+          window.location.reload();
         }, 20000);
       } else {
         if (roles) {

@@ -22,6 +22,8 @@ import ApiURL from "../context/Api";
 import { UserRoleAuth } from "../RolesControlle/RoleContext";
 import ProtectedRoute from "../RolesControlle/ProtectedRoute";
 import Unauthorize from "../component/pages/Unauthorize";
+import Sellers from "../Admin/pages/Sellers";
+import { SellersDetail } from "../Admin/sellers/SellersDetail";
 
 const Admin = () => {
   const { token, setUsersStatus, usersStatus }: any = UserAuth();
@@ -70,8 +72,10 @@ const Admin = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="events" element={<Events />} />
             <Route path="users" element={<Users />} />
+            <Route path={"sellers"} element={<Sellers />} />
             <Route path="orders/:orderID" element={<OrdersDetails />} />
             <Route path={"contact/:id"} element={<ContactID />} />
+            <Route path={"sellers/:id"} element={<SellersDetail />} />
             <Route path={"events/:id"} element={<EventsDetails />} />
             <Route path={"users/:id"} element={<UsersDetails />} />
             <Route path={"settings"} element={<Settings />} />

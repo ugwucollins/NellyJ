@@ -8,6 +8,8 @@ import Modal from "../../context/Modal";
 import toast from "react-hot-toast";
 import ApiURL from "../../context/Api";
 import { UserAuth } from "../../context/UserContext";
+import InputField from "../../context/InputField";
+import Loader from "../../context/Loader";
 
 const ListProductTable = () => {
   return (
@@ -25,6 +27,28 @@ export const Table = () => {
   const { options }: any = UserAuth();
   const [open, setOpen] = useState(false);
   const [itemId, setItemId] = useState("");
+
+  const [findProducts, setFindProducts] = useState([]);
+  const [search, setSearch] = useState<string>("");
+
+  function handleChange(e: any) {
+    setSearch(e.target.value);
+  }
+
+  function handleFind() {
+    const filter = products.filter(
+      (item: any) =>
+        item.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+      // item.firstName.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    );
+    setFindProducts(filter);
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleFind();
+    }, 500);
+  }, [search]);
 
   useEffect(() => {
     setproducts(products);
@@ -58,6 +82,27 @@ export const Table = () => {
           Cancel={HandleClose}
         />
       )}
+
+      {/* search felid */}
+      <div className="w-full pt-11 pb-4">
+        {findProducts && (
+          <div className="w-full flex justify-end max-sm:justify-start items-end">
+            <div className="pr-10 w-80 pt-4 pl-4">
+              <InputField
+                onChange={handleChange}
+                value={search}
+                name="search"
+                placeholder="Search for Products name"
+                type="text"
+                className="rounded-lg shadow-lg"
+                label="Search Products*"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Products */}
       <div className="w-full overflow-hidden gap-8 py-10 flex items-center flex-col justify-center px-16 max-md:px-10 mb-5 max-sm:px-8 max-[200px]:px-1 max-[750px]:flex-col">
         <div className="flex w-full gap-y-7  items-center justify-center gap-x-2 flex-row max-sm:flex-col">
           <div className="overflow-hidden  w-full">
@@ -73,7 +118,7 @@ export const Table = () => {
                   </tr>
                 </thead>
                 <tbody className="w-full overflow-x-auto">
-                  {products.map((item: any, index: number) => {
+                  {findProducts.map((item: any, index: number) => {
                     const even = index % 2 === 0;
                     return (
                       <tr key={index}>
@@ -185,6 +230,12 @@ export const Table = () => {
                   })}
                 </tbody>
               </table>
+
+              {!findProducts.length && (
+                <div className="w-full flex justify-center items-center text-center min-h-[40vh]">
+                  <Loader className="w-20" size="size-16" />
+                </div>
+              )}
 
               {!products.length && (
                 <EmptyItems

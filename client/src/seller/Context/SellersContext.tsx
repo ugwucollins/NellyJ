@@ -12,6 +12,7 @@ export const createSellersContext = createContext({});
 const SellersContext = ({ children }: { children: ReactNode }) => {
   const [seller, setSeller] = useState<object | null>();
   const [contact, setContact] = useState<[]>();
+  const [sales, setSales] = useState<[]>();
   const [events, setEvents] = useState<[]>();
   const { options, token }: any = UserAuth();
 
@@ -48,11 +49,24 @@ const SellersContext = ({ children }: { children: ReactNode }) => {
       toast.error(error.response.data.message, { id: "contact" });
     }
   }
+  async function GetAllSales() {
+    try {
+      const res = await ApiURL.get("/v1/sales/get", options);
+      const data = res.data;
+      if (data.success) {
+        setSales(data.data);
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message, { id: "contact" });
+    }
+  }
 
   useEffect(() => {
     if (token) {
       GetAllContactHandler();
       GetAllBookedEvents();
+      GetAllSales();
     }
   }, []);
 
@@ -65,6 +79,8 @@ const SellersContext = ({ children }: { children: ReactNode }) => {
     contact,
     setContact,
     GetAllBookedEvents,
+    sales,
+    setSales,
   };
   return (
     <createSellersContext.Provider value={Values}>

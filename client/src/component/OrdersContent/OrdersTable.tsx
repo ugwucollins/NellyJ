@@ -117,14 +117,14 @@ const OrdersTable = () => {
               <div className="w-full px-2 my-4">
                 <div className="w-full flex gap-2 px-2 items-center">
                   <span
-                    className={`"w-auto whitespace-nowrap py-2 px-4 rounded-full bg-red-400/10 outline outline-1   text-sm font-semibold capitalize ${
+                    className={`"w-auto whitespace-nowrap py-2 px-4 rounded-full  outline outline-1   text-sm font-semibold capitalize ${
                       item.orderStatus === "on the way"
-                        ? "text-blue-800 outline-blue-900"
+                        ? "text-blue-800 bg-blue-500/40 outline-blue-900"
                         : item.orderStatus === "accepted"
-                        ? "text-orange-700 outline-orange-900"
+                        ? "text-orange-700 bg-orange-400/40 outline-orange-900"
                         : item.orderStatus === "Delivered"
-                        ? "text-green-800 outline-green-900"
-                        : "text-red-900 outline-red-800"
+                        ? "text-green-800 bg-green-400/50 outline-green-900"
+                        : "text-red-900 bg-red-400/30 outline-red-800"
                     }`}
                   >
                     {item.orderStatus}

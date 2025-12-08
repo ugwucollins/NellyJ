@@ -6,6 +6,7 @@ import {
   UpdateUserById,
   UpdateUserStatusById,
   UpdateUserPassword,
+  GetAllSellers,
 } from "../controller/usersFun.js";
 import { protectedAuth } from "../middleware/auth.middleware.js";
 import { UpdateUserCart } from "../controller/updateCartFun.js";
@@ -14,7 +15,18 @@ import authorizeRole, { ROLES } from "../middleware/role.middleware.js";
 const usersRouter = express.Router();
 
 // admins only
-usersRouter.get("/", protectedAuth, authorizeRole(ROLES.ADMIN), GetAllUsers);
+usersRouter.get(
+  "/",
+  protectedAuth,
+  authorizeRole(ROLES.ADMIN, ROLES.SELLER),
+  GetAllUsers
+);
+usersRouter.get(
+  "/sellers",
+  protectedAuth,
+  authorizeRole(ROLES.ADMIN),
+  GetAllSellers
+);
 usersRouter.put(
   "/update/status/:id",
   protectedAuth,

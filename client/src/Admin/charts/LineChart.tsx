@@ -7,71 +7,134 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-
-const data = [
-  {
-    name: "January",
-    orders: 4000,
-    users: 2400,
-  },
-  {
-    name: "February",
-    orders: 3000,
-    users: 1398,
-  },
-  {
-    name: "March",
-    orders: 2000,
-    users: 9800,
-  },
-  {
-    name: "April",
-    orders: 2780,
-    users: 3908,
-  },
-  {
-    name: "May",
-    orders: 1890,
-    users: 4800,
-  },
-  {
-    name: "June",
-    orders: 2390,
-    users: 3800,
-  },
-  {
-    name: "July",
-    orders: 3490,
-    users: 4300,
-  },
-  {
-    name: "August",
-    orders: 3490,
-    users: 4300,
-  },
-  {
-    name: "September",
-    orders: 4590,
-    users: 4300,
-  },
-  {
-    name: "October",
-    orders: 3490,
-    users: 4300,
-  },
-  {
-    name: "November",
-    orders: 4590,
-    users: 4300,
-  },
-  {
-    name: "December",
-    orders: 3490,
-    users: 4300,
-  },
-];
+import { UserAdminAuth } from "../context/AdminContext";
+import { months } from "./BarChart";
 
 export default function LineChartExample() {
+  const { customers, allOrders }: any = UserAdminAuth();
+  // create a filter for the months
+  const January =
+    allOrders && allOrders.filter((item: any) => item.month === months.January);
+  const February =
+    allOrders &&
+    allOrders.filter((item: any) => item.month === months.February);
+  const March =
+    allOrders && allOrders.filter((item: any) => item.month === months.March);
+  const April =
+    allOrders && allOrders.filter((item: any) => item.month === months.April);
+  const May =
+    allOrders && allOrders.filter((item: any) => item.month === months.May);
+  const June =
+    allOrders && allOrders.filter((item: any) => item.month === months.June);
+  const July =
+    allOrders && allOrders.filter((item: any) => item.month === months.July);
+  const August =
+    allOrders && allOrders.filter((item: any) => item.month === months.August);
+  const September =
+    allOrders &&
+    allOrders.filter((item: any) => item.month === months.September);
+  const October =
+    allOrders && allOrders.filter((item: any) => item.month === months.October);
+  const November =
+    allOrders &&
+    allOrders.filter((item: any) => item.month === months.November);
+  const December =
+    allOrders &&
+    allOrders.filter((item: any) => item.month === months.December);
+
+  // create a filter for the user
+  const JanuaryUser =
+    customers && customers.filter((item: any) => item.month === months.January);
+  const FebruaryUser =
+    customers &&
+    customers.filter((item: any) => item.month === months.February);
+  const MarchUser =
+    customers && customers.filter((item: any) => item.month === months.March);
+  const AprilUser =
+    customers && customers.filter((item: any) => item.month === months.April);
+  const MayUser =
+    customers && customers.filter((item: any) => item.month === months.May);
+  const JuneUser =
+    customers && customers.filter((item: any) => item.month === months.June);
+  const JulyUser =
+    customers && customers.filter((item: any) => item.month === months.July);
+  const AugustUser =
+    customers && customers.filter((item: any) => item.month === months.August);
+  const SeptemberUser =
+    customers &&
+    customers.filter((item: any) => item.month === months.September);
+  const OctoberUser =
+    customers && customers.filter((item: any) => item.month === months.October);
+  const NovemberUser =
+    customers &&
+    customers.filter((item: any) => item.month === months.November);
+  const DecemberUser =
+    customers &&
+    customers.filter((item: any) => item.month === months.December);
+
+  const data = [
+    {
+      name: "January",
+      orders: January.length,
+      users: JanuaryUser.length,
+    },
+    {
+      name: "February",
+      orders: February.length,
+      users: FebruaryUser.length,
+    },
+    {
+      name: "March",
+      orders: March.length,
+      users: MarchUser.length,
+    },
+    {
+      name: "April",
+      orders: April.length,
+      users: AprilUser.length,
+    },
+    {
+      name: "May",
+      orders: May.length,
+      users: MayUser.length,
+    },
+    {
+      name: "June",
+      orders: June.length,
+      users: JuneUser.length,
+    },
+    {
+      name: "July",
+      orders: July.length,
+      users: JulyUser.length,
+    },
+    {
+      name: "August",
+      orders: August.length,
+      users: AugustUser.length,
+    },
+    {
+      name: "September",
+      orders: September.length,
+      users: SeptemberUser.length,
+    },
+    {
+      name: "October",
+      orders: October.length,
+      users: OctoberUser.length,
+    },
+    {
+      name: "November",
+      orders: November.length,
+      users: NovemberUser.length,
+    },
+    {
+      name: "December",
+      orders: December.length,
+      users: DecemberUser.length,
+    },
+  ];
+
   return (
     <LineChart
       style={{
@@ -96,13 +159,13 @@ export default function LineChartExample() {
       <YAxis width="auto" />
       <Tooltip />
       <Legend />
+      <Line type="bump" dataKey="orders" stroke="#82ca9d" />
       <Line
         type="monotone"
         dataKey="users"
         stroke="#8884d8"
         activeDot={{ r: 8 }}
       />
-      <Line type="bump" dataKey="orders" stroke="#82ca9d" />
     </LineChart>
   );
 }

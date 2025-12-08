@@ -1,9 +1,10 @@
 import bcrypt from "bcryptjs";
 import UserModel from "../model/UserModel.js";
+import { ROLES } from "../middleware/role.middleware.js";
 
 export const GetAllUsers = async (req, res) => {
   try {
-    const users = await UserModel.find({});
+    const users = await UserModel.find({}).sort({ createdAt: -1 });
     if (!users.length) {
       return res.status(404).json({
         success: false,
@@ -15,6 +16,30 @@ export const GetAllUsers = async (req, res) => {
       success: true,
       data: users,
       message: "All User Details",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+export const GetAllSellers = async (req, res) => {
+  try {
+    const users = await UserModel.find({});
+    if (!users.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Empty Users Collection",
+      });
+    }
+
+    const sellers = users.filter((item) => item.roles.includes(ROLES.SELLER));
+
+    return res.status(200).json({
+      success: true,
+      data: sellers,
+      message: "All sellers",
     });
   } catch (error) {
     return res.status(501).json({

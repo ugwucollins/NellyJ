@@ -47,7 +47,7 @@ const OrdersInfo = () => {
 export default OrdersInfo;
 
 const OrdersInfoID = ({ orderId }: any) => {
-  const { allOrders }: any = UserAdminAuth();
+  const { allOrders, GetAllUsersOrders }: any = UserAdminAuth();
   const { options }: any = UserAuth();
   // item?.items?
   const [OrderStatus, setOrderStatus] = useState("accepted");
@@ -124,6 +124,7 @@ const OrdersInfoID = ({ orderId }: any) => {
         options
       );
       const data = res.data;
+
       if (data.success) {
         setOrderStatus(orderSValue);
         toast.success(data.message || "Updated Order Successfully", {
@@ -132,6 +133,7 @@ const OrdersInfoID = ({ orderId }: any) => {
         setTimeout(() => {
           setLoading(false);
           router(sellerPath + "/orders", { replace: true });
+          GetAllUsersOrders();
         }, 1000);
       } else {
         toast.error(data.message);

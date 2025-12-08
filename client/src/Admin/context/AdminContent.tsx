@@ -3,7 +3,7 @@ import {
   MdOutlineEventSeat,
   MdProductionQuantityLimits,
 } from "react-icons/md";
-import { adminPath, sellerPath } from "../../context/UserContext";
+import { adminPath } from "../../context/UserContext";
 
 import { RiProductHuntFill } from "react-icons/ri";
 import { GrDeliver, GrUserSettings } from "react-icons/gr";
@@ -49,7 +49,7 @@ export const SideBarMenu: SidebarProp[] = [
   },
   {
     icon: <BiUserPlus />,
-    path: sellerPath,
+    path: adminPath + "/sellers",
     Title: "Seller",
   },
   {
