@@ -24,7 +24,7 @@ import { GrDeliver } from "react-icons/gr";
 import type { SidebarProp } from "../Context/Types";
 
 const Sidebar = () => {
-  const { HandleLogOut }: any = UserSellerAuth();
+  const { HandleLogOut, seller }: any = UserSellerAuth();
   const { HandleTheme, darkMode }: any = UseTheme();
 
   const [open, setOpen] = useState(true);
@@ -78,20 +78,24 @@ const Sidebar = () => {
         </div>
 
         <div className="w-full absolute bottom-3 max-sm:bottom-8 left-0">
-          <div className="flex items-center gap-3.5 cursor-pointer mb-2 px-5">
-            <img
-              src={Assets.Avater}
-              className={`object-cover ring-2 max-sm: rounded-full ${
-                open ? "size-10 ring-white" : "size-8 ring-yellow-800"
-              }`}
-              alt="Avater photo"
-            />
-            {open && (
-              <span className="font-semibold text-base hover:font-bold">
-                {"Hi Seller"}
-              </span>
-            )}
-          </div>
+          <Link to={sellerPath + "/settings"}>
+            <div className="flex items-center gap-3.5 cursor-pointer mb-2 px-5">
+              <img
+                src={
+                  seller && seller.imageUrl ? seller.imageUrl : Assets.Avater
+                }
+                className={`object-cover ring-2 max-sm: rounded-full ${
+                  open ? "size-10 ring-white" : "size-8 ring-yellow-800"
+                }`}
+                alt="Avater photo"
+              />
+              {open && (
+                <span className="font-semibold text-base hover:font-bold">
+                  {"Settings"}
+                </span>
+              )}
+            </div>
+          </Link>
 
           <div
             onClick={HandleTheme}
@@ -154,21 +158,25 @@ const Sidebar = () => {
             <SidebarMenuCom open={open} />
           </div>
 
-          <div className="w-full absolute bottom-3 max-sm:bottom-8 left-0">
-            <div className="flex items-center gap-3.5 cursor-pointer mb-2 px-5">
-              <img
-                src={Assets.Avater}
-                className={`object-cover ring-2 max-sm: rounded-full ${
-                  open ? "size-10 ring-white" : "size-8 ring-yellow-800"
-                }`}
-                alt="Avater photo"
-              />
-              {open && (
-                <span className="font-semibold text-base hover:font-bold">
-                  {"Hi Seller"}
-                </span>
-              )}
-            </div>
+          <div className="w-full absolute bottom-2 max-sm:bottom-6 left-0">
+            <Link to={sellerPath + "/settings"}>
+              <div className="flex items-center gap-3.5 cursor-pointer mb-2 px-5">
+                <img
+                  src={
+                    seller && seller.imageUrl ? seller.imageUrl : Assets.Avater
+                  }
+                  className={`object-cover ring-2 max-sm: rounded-full ${
+                    open ? "size-10 ring-white" : "size-8 ring-yellow-800"
+                  }`}
+                  alt="Avater photo"
+                />
+                {open && (
+                  <span className="font-semibold text-base hover:font-bold">
+                    {"Settings"}
+                  </span>
+                )}
+              </div>
+            </Link>
 
             <div
               onClick={HandleTheme}

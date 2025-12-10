@@ -16,7 +16,7 @@ export const NotAuth: string = "/auth/signin";
 
 const UserContext = ({ children }: any) => {
   const authHeader = localStorage.getItem("token");
-  const { setUser }: any = UserAuthInfo();
+  const { setUser, user }: any = UserAuthInfo();
   const [usersStatus, setUsersStatus] = useState("");
   const [token, setToken] = useState(JSON.parse(authHeader!));
   const [UsersAddress, setUsersAddress] = useState<any>([]);
@@ -98,14 +98,14 @@ const UserContext = ({ children }: any) => {
         toast.error(data.message, { id: "e" });
       }
     } catch (error: any) {
-      console.log(error);
-
       toast.error(error.response.data.message, { id: "e" });
     }
   };
 
   useEffect(() => {
-    handleEvents();
+    if (user) {
+      handleEvents();
+    }
   }, []);
 
   const Values = {

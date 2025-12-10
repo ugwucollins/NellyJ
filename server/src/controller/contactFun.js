@@ -3,7 +3,7 @@ import ContactModel from "../model/ContactModel.js";
 
 export const GetAllContact = async (req, res) => {
   try {
-    const contact = await ContactModel.find({});
+    const contact = await ContactModel.find({}).sort({ createdAt: -1 });
     if (!contact.length) {
       return res.status(404).json({
         success: false,

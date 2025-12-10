@@ -34,7 +34,9 @@ export const GetAllSellers = async (req, res) => {
       });
     }
 
-    const sellers = users.filter((item) => item.roles.includes(ROLES.SELLER));
+    const sellers = users
+      .filter((item) => item.roles.includes(ROLES.SELLER))
+      .sort((a, b) => b.createdAt - a.createdAt);
 
     return res.status(200).json({
       success: true,
@@ -90,9 +92,10 @@ export const UpdateUserById = async (req, res) => {
     if (!imageUrl) {
       return res.status(404).json({
         success: false,
-        message: " User Image Not Found",
+        message: "User Image Not Found",
       });
     }
+
     const data = {
       email: email,
       firstName: firstName,

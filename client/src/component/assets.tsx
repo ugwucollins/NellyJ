@@ -86,10 +86,12 @@ const CustomerPhotos = "/food_images/cu.avif";
 const CustomerPhotos1 = "/food_images/cu1.avif";
 const CustomerPhotos2 = "/food_images/cu2.avif";
 const CustomerPhotos3 = "/food_images/cu3.avif";
+const seller = "/food_images/seller.jpeg";
 const comma = "/food_images/comma.png";
 
 export const Assets = {
   comma,
+  seller,
   Avater,
   eventVideo,
   order,
@@ -494,6 +496,7 @@ export const Account: AccountProp[] = [
   { title: "Password Manager", type: "password" },
   { title: "Logout", type: "logout" },
 ];
+
 export const AccountType = {
   Personal_Account: "account",
   Manage_Address: "address",
@@ -502,6 +505,7 @@ export const AccountType = {
   My_Orders: "orders",
   Logout: "logout",
 };
+
 export const Menus = [
   { title: "Home", path: "/" },
   { title: "Menu", path: "/product" },
@@ -536,6 +540,7 @@ export const FeatureArray: Features = [
     icon: <CiWallet />,
   },
 ];
+
 export const KeyFeatures = [
   "fresh ingredients",
   "Light and Healthy",
@@ -1171,6 +1176,7 @@ export const FoodOptions: OPTIONPROP[] = [
     value: "Abacha",
   },
 ];
+
 export const Countries: OPTIONPROP[] = [
   {
     title: "Select Country",
@@ -1233,6 +1239,7 @@ export const Countries: OPTIONPROP[] = [
     value: "Russia",
   },
 ];
+
 export const Events: OPTIONPROP[] = [
   { title: "Select Event", value: "" },
   { title: "Birthday", value: "Birthday Party" },
@@ -1280,6 +1287,7 @@ export const Days: OPTIONPROP[] = [
   { title: "30", value: "30" },
   { title: "31", value: "31" },
 ];
+
 export const Months: OPTIONPROP[] = [
   { title: "Month", value: "" },
   { title: "January", value: "January" },
@@ -1295,6 +1303,7 @@ export const Months: OPTIONPROP[] = [
   { title: "November", value: "November" },
   { title: "December", value: "December" },
 ];
+
 export const Years: OPTIONPROP[] = [
   { title: "Year", value: "" },
   { title: "2025", value: "2025" },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { UserAdminAuth } from "../context/AdminContext";
 import { BiPlus, BiX } from "react-icons/bi";
@@ -11,6 +11,9 @@ import { Link } from "react-router-dom";
 import CreateSeller, { ModelForm } from "./CreateSeller";
 import ApiURL from "../../context/Api";
 import { UserAuth } from "../../context/UserContext";
+import { Assets } from "../../component/assets";
+import InputField from "../../context/InputField";
+import Loader from "../../context/Loader";
 
 const SellersTable = () => {
   const [open, setOpen] = useState(false);
@@ -55,6 +58,32 @@ export const AllSellersTable = () => {
 
   const [open, setOpen] = useState(false);
   const [itemId, setItemId] = useState("");
+  const [findSellers, setFindSellers] = useState([]);
+  const [search, setSearch] = useState<string>("");
+
+  function handleChange(e: any) {
+    setSearch(e.target.value);
+  }
+
+  function handleFind() {
+    const filter =
+      sellers &&
+      sellers.filter(
+        (item: any) =>
+          item.email.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+          item.firstName
+            .toLocaleLowerCase()
+            .includes(search.toLocaleLowerCase()) ||
+          item.lastName.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+      );
+    setFindSellers(filter);
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleFind();
+    }, 1000);
+  }, [search]);
 
   const HandleClose = () => {
     setOpen(!open);
@@ -98,6 +127,22 @@ export const AllSellersTable = () => {
       <div className="w-full overflow-hidden gap-8 py-10 flex items-center flex-col justify-center px-16 max-md:px-10 mb-5 max-sm:px-8 max-[200px]:px-1 max-[750px]:flex-col">
         <div className="flex w-full gap-y-7  items-center justify-center gap-x-2 flex-row max-sm:flex-col">
           <div className="overflow-hidden  w-full">
+            {sellers && (
+              <div className="w-full flex justify-end max-sm:justify-start items-end">
+                <div className="pr-10 w-80 pt-4 pl-4">
+                  <InputField
+                    onChange={handleChange}
+                    value={search}
+                    name="search"
+                    placeholder="Search sellers by email, firstName or Email"
+                    type="text"
+                    className="rounded-lg shadow-lg"
+                    label="Search Sellers*"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-col gap-2 overflow-auto px-2 py-2">
               <table className="w-full overflow-auto">
                 <thead className="text-left bg-yellow-700 px-4 py-6 capitalize h-10 rounded-3xl w-full">
@@ -110,9 +155,10 @@ export const AllSellersTable = () => {
                   </tr>
                 </thead>
                 <tbody className="w-full overflow-x-auto">
-                  {sellers &&
-                    sellers.map((item: any, index: number) => {
+                  {findSellers &&
+                    findSellers.map((item: any, index: number) => {
                       const even = index % 2 === 0;
+
                       return (
                         <tr key={index}>
                           <td className="pr-4">
@@ -135,7 +181,7 @@ export const AllSellersTable = () => {
                                   src={
                                     item.imageUrl
                                       ? item.imageUrl
-                                      : "seller.jpeg"
+                                      : Assets.seller
                                   }
                                   className="size-12 rounded-md object-cover"
                                   alt={`${item.firstName} photo`}
@@ -210,6 +256,14 @@ export const AllSellersTable = () => {
                     })}
                 </tbody>
               </table>
+
+              {!findSellers.length && (
+                <div className="flex justify-center min-h-[50vh] items-center">
+                  <div>
+                    <Loader className="w-20" size="size-16" />
+                  </div>
+                </div>
+              )}
 
               {!sellers.length && (
                 <EmptyItems

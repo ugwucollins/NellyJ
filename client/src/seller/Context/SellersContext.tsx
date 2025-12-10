@@ -79,6 +79,7 @@ const SellersContext = ({ children }: { children: ReactNode }) => {
     contact,
     setContact,
     GetAllBookedEvents,
+    GetAllContactHandler,
     sales,
     setSales,
   };

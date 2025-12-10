@@ -67,14 +67,12 @@ export const OrdersTable = () => {
             .includes(search.toLocaleLowerCase())
       );
     setFindOrders(filter);
-    console.log(filter?.orderedBy?.phoneNumber);
   }
 
   useEffect(() => {
     setTimeout(() => {
       handleFind();
     }, 500);
-    console.log(allOrders);
   }, [search]);
 
   return (

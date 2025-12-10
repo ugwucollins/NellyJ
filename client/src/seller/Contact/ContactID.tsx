@@ -44,18 +44,17 @@ export default ContactID;
 
 export const ContactIDDetails = ({ _id }: any) => {
   const [ContactInfo, setContactInfo]: ContactCardProp | any = useState({});
-  const { contact }: any = UserSellerAuth();
+  const { contact, GetAllContactHandler }: any = UserSellerAuth();
   const { options }: any = UserAuth();
-  const [status, setStatus] = useState<string>();
+  const [status, setStatus] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const router = useNavigate();
 
   const FetchContactInfo = async () => {
     const filter = contact && contact.find((item: any) => item._id === _id);
-    console.log(filter);
-
     setContactInfo(filter);
+    setStatus(filter.status);
   };
 
   const HandleSubmit = async (e: any) => {
@@ -80,6 +79,7 @@ export const ContactIDDetails = ({ _id }: any) => {
           setTimeout(() => {
             setLoading(false);
             router(sellerPath + "/contact", { replace: true });
+            GetAllContactHandler();
           }, 1000);
         } else {
           toast.error(data.message);

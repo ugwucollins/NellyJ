@@ -10,7 +10,7 @@ import Orders from "../seller/pages/Orders";
 import OrdersInfo from "../seller/Orders/OrdersInfo";
 import { PersonalRoles } from "../RolesControlle/RolesValue";
 import { UserSellerAuth } from "../seller/Context/SellersContext";
-import { useEffect } from "react";
+import { lazy, useEffect } from "react";
 import Contacts from "../seller/pages/Contacts";
 import ContactID from "../seller/Contact/ContactID";
 import ApiURL from "../context/Api";
@@ -18,6 +18,7 @@ import { UserRoleAuth } from "../RolesControlle/RoleContext";
 import Unauthorize from "../component/pages/Unauthorize";
 import Events from "../seller/pages/Events";
 import EventsDetails from "../seller/events/EventsDetails";
+const Settings = lazy(() => import("../seller/pages/settings"));
 
 const Seller = () => {
   const { seller, setSeller }: any = UserSellerAuth();
@@ -71,6 +72,7 @@ const Seller = () => {
             <Route path={"events"} element={<Events />} />
             <Route path={"events/:id"} element={<EventsDetails />} />
             <Route path={"contact/:id"} element={<ContactID />} />
+            <Route path={"settings"} element={<Settings />} />
             <Route path={"orders/:orderId"} element={<OrdersInfo />} />
           </Route>
         </Route>

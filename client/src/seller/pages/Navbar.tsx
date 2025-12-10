@@ -5,7 +5,7 @@ import { UserSellerAuth } from "../Context/SellersContext";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { HandleLogOut }: any = UserSellerAuth();
+  const { HandleLogOut, seller }: any = UserSellerAuth();
 
   const handleClose = () => {
     setOpen(!open);
@@ -42,7 +42,10 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-4">
           <h1 className="text-xl font-semibold">
-            Hi' <span className="font-bold">{"Seller"}</span>
+            Hi'{" "}
+            <span className="font-bold">
+              {seller ? seller.firstName : "Seller"}
+            </span>
           </h1>
           <button
             onClick={handleClose}

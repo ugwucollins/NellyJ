@@ -13,7 +13,7 @@ import { UserSellerAuth } from "../../seller/Context/SellersContext";
 
 const ContactDetails = ({ _id }: any | string) => {
   const [ContactInfo, setContactInfo]: ContactCardProp | any = useState({});
-  const { contact }: any = UserSellerAuth();
+  const { contact, GetAllContactHandler }: any = UserSellerAuth();
 
   const { options }: any = UserAuth();
   const [status, setStatus] = useState<string>();
@@ -48,6 +48,7 @@ const ContactDetails = ({ _id }: any | string) => {
           setTimeout(() => {
             setLoading(false);
             router(adminPath + "/contact", { replace: true });
+            GetAllContactHandler();
           }, 1000);
         } else {
           toast.error(data.message);

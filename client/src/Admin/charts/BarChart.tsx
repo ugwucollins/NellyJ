@@ -128,9 +128,8 @@ const CustomContentOfTooltip = ({
   const December =
     allOrders &&
     allOrders.filter((item: any) => item.month === months.December);
-  console.log(November);
 
-  // create a filter for the useer
+  // create a filter for the user
   const JanuaryUser =
     customers && customers.filter((item: any) => item.month === months.January);
   const FebruaryUser =
