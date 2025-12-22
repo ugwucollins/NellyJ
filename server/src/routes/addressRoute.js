@@ -13,10 +13,15 @@ import { protectedAuth } from "../middleware/auth.middleware.js";
 import authorizeRole, { ROLES } from "../middleware/role.middleware.js";
 const addressRouter = express.Router();
 
-addressRouter.get("/get", GetAllAddresses);
+addressRouter.get(
+  "/get",
+  protectedAuth,
+  authorizeRole(ROLES.ADMIN, ROLES.SELLER),
+  GetAllAddresses
+);
 addressRouter.get("/get/:id", protectedAuth, GetAddressById);
 addressRouter.post("/create", protectedAuth, CreateAddress);
-addressRouter.get("/get/address", protectedAuth, GetUsersAddress);
+addressRouter.get("/get/users/address", protectedAuth, GetUsersAddress);
 addressRouter.get(
   "/get/address/:id",
   protectedAuth,

@@ -13,6 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TrackOrderSchema } from "../../Zod/Schema/Schemas";
 import { useNavigate } from "react-router-dom";
 import { BiLoaderCircle } from "react-icons/bi";
+import { useState } from "react";
+import Modal from "../../context/Modal";
 
 const TrackOrders = () => {
   return (
@@ -35,6 +37,9 @@ const TrackOrders = () => {
 
 export function TrackOrderForm() {
   const { orders }: any = UserProduct();
+  const [open, setOpen] = useState(false);
+  const [openModel, setOpenModel] = useState(false);
+  const [ID, setID] = useState("");
   const {
     register,
     handleSubmit,
@@ -48,13 +53,24 @@ export function TrackOrderForm() {
 
   const onSubmit: SubmitHandler<TrackOrderField> = (data) => {
     const findOrder = orders.filter((order: any) => order._id === data.orderID);
+    const findOrderEmail = orders.filter(
+      (order: any) => order.orderedBy.email === data.email
+    );
 
     try {
-      if (findOrder.length) {
-        router("/Track-order/" + data.orderID);
+      if (findOrder.length && findOrderEmail.length) {
+        router("/track-order/" + data.orderID);
         setValue("email", "");
         setValue("orderID", "");
         toast.success("Order is Confirmed", { id: "order" });
+      } else if (!findOrderEmail.length) {
+        const message = open ? "Order is Confirmed" : "Wrong Email Pls,Check";
+        !open && toast.error(message, { id: "order" });
+        setError("email", {
+          message: message,
+        });
+        setOpenModel(true);
+        setID(data.orderID);
       } else {
         const message = "Invalid OrderID Pls,Check";
         toast.error(message, { id: "orderError" });
@@ -68,51 +84,77 @@ export function TrackOrderForm() {
       });
     }
   };
+  const HandleClose = () => {
+    setOpen(false);
+    setOpenModel(false);
+  };
+
+  const HandleActionModal = () => {
+    setOpen(true);
+    handleSubmit(onSubmit);
+    setOpenModel(false);
+    router("/track-order/" + ID);
+    setValue("email", "");
+    setValue("orderID", "");
+    toast.success("Order is Confirmed", { id: "order" });
+  };
 
   return (
-    <div className="w-full px-16 max-md:px-14 pt-10 max-sm:px-6 max-[170px]:px-1">
-      <div className="max-[400px]:text-balance w-full text-center flex justify-center items-center ">
-        <p className="max-w-6xl w-full">
-          To Track your order please enter your Order ID in the box below and
-          press the 'Track Order' button. This was given to you on your receipt
-          and in the confirmation email you should have received
-        </p>
-      </div>
+    <>
+      {openModel && (
+        <Modal
+          OkayBtn="Yes"
+          Title="Do yo want to track the Orders without the email Address"
+          CancelBtn="No"
+          Progress={HandleActionModal}
+          Cancel={HandleClose}
+        />
+      )}
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="pt-8 flex flex-col gap-y-5"
-      >
-        <ZodInputField
-          type="text"
-          label="Order ID*"
-          placeholder="Enter your Order ID"
-          value={register("orderID")}
-          error={errors.orderID?.message}
-        />
-        <ZodInputField
-          type="email"
-          label="email*"
-          placeholder="Enter your Email"
-          value={register("email")}
-          error={errors.email?.message}
-        />
-        <div className="max-[300px]:flex max-[300px]:flex-col">
-          <button className={`${buttonClassName}`}>
-            {isSubmitting ? (
-              <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
-            ) : (
-              <p>Track Order</p>
-            )}
-          </button>
+      <div className="w-full px-16 max-md:px-14 pt-10 max-sm:px-6 max-[170px]:px-1">
+        <div className="max-[400px]:text-balance w-full text-center flex justify-center items-center ">
+          <p className="max-w-6xl w-full">
+            To Track your order please enter your Order ID in the box below and
+            press the 'Track Order' button. This was given to you on your
+            receipt and in the confirmation email you should have received
+          </p>
         </div>
-        {errors.root && (
-          <span className="text-base text-red-500 font-semibold">
-            {errors.root.message}
-          </span>
-        )}
-      </form>
-    </div>
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="pt-8 flex flex-col gap-y-5"
+        >
+          <ZodInputField
+            type="text"
+            label="Order ID*"
+            placeholder="Enter your Order ID"
+            value={register("orderID")}
+            error={errors.orderID?.message}
+          />
+          <ZodInputField
+            type="email"
+            label="email*"
+            placeholder="Enter your Email"
+            value={register("email")}
+            error={errors.email?.message}
+          />
+          <div className="max-[300px]:flex max-[300px]:flex-col">
+            <button className={`${buttonClassName}`}>
+              {isSubmitting ? (
+                <BiLoaderCircle className="text-2xl w-full animate-spin transition-all duration-150" />
+              ) : (
+                <p>Track Order</p>
+              )}
+            </button>
+          </div>
+          {errors.root && (
+            <span className="text-base text-red-500 font-semibold">
+              {errors.root.message}
+            </span>
+          )}
+        </form>
+      </div>
+    </>
   );
 }
 

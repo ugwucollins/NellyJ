@@ -13,6 +13,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@paystack/paystack-sdk": "^1.0.1",
+    "axios": "^1.13.2",
     "bcryptjs": "^3.0.2",
     "chalk": "^5.6.2",
     "cloudinary": "^2.8.0",
@@ -25,6 +27,8 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.10",
     "nodemon": "^3.1.10",
+    "paystack-sdk": "^3.6.1",
+    "stripe": "^20.0.0",
     "validator": "^13.15.15"
   },
   "devDependencies": {

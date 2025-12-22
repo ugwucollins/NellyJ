@@ -66,6 +66,7 @@ export const RolesArray: RoleAuth[] = [
       "/Track-orders",
       "/track-order/*",
       "/track-order/:id",
+      "/verify_payment_status",
     ],
     defaultRedirect: "/product",
   },

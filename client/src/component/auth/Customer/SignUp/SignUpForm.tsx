@@ -3,16 +3,16 @@ import { LogoIcon } from "../../../Navbar";
 import { buttonClassName } from "../../../Animation";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { UserAuth } from "../../../../context/UserContext";
 import { BiLoaderCircle } from "react-icons/bi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { RegisterSchema } from "../../../../Zod/Schema/RegisterSchema";
 import type { RegisterField } from "../../../../Zod/typesField";
 import ApiURL from "../../../../context/Api";
+import { UserAuthInfo } from "../../../../App";
 
 const SignUpForm = () => {
-  const { setuser }: any = UserAuth();
+  const { setuser }: any = UserAuthInfo();
   const {
     register,
     handleSubmit,
@@ -22,7 +22,6 @@ const SignUpForm = () => {
   } = useForm({
     resolver: zodResolver(RegisterSchema),
   });
-
   const OnSubmit: SubmitHandler<RegisterField> = async (data) => {
     const { firstName, lastName, password, email } = data;
     const UserData = {

@@ -83,6 +83,7 @@ const App = () => {
   ]);
 
   const Values = {
+    isOnline,
     darkMode,
     setdarkMode,
     HandleTheme,
@@ -90,6 +91,8 @@ const App = () => {
 
   const userValues = {
     user,
+    isOnline,
+
     setUser,
     usersStatus,
     setUsersStatus,

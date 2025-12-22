@@ -57,6 +57,8 @@ const SignInForm = () => {
       toast.error(error.response.data.message || message, {
         id: "signInError",
       });
+      console.log(error);
+      
       setError("root", {
         message: error.response.data.message || message,
       });

@@ -76,6 +76,7 @@ export const GetAddressUsersById = async (req, res) => {
 
 export const GetUsersAddress = async (req, res) => {
   const userId = req.userId;
+
   try {
     const usersAddress = await AddressModel.find({
       createdBy: userId,

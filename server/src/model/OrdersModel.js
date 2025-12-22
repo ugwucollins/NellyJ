@@ -49,6 +49,11 @@ const OrdersSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+
+    reference: {
+      type: String,
+    },
+
     paymentMethod: {
       type: String,
       required: true,

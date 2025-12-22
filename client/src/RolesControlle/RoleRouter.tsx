@@ -12,12 +12,24 @@ const RoleRouter: React.FC = () => {
   const { user, usersStatus }: any = UserAuthInfo();
 
   const localJson: any = localStorage.getItem("id");
+  const paylocalJson: any = localStorage.getItem("payment");
+  const paymentType = JSON.parse(paylocalJson);
   const UserId = JSON.parse(localJson);
+  const resJson: any = localStorage.getItem("res");
+  const res = JSON.parse(resJson);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
       navigate("/", { replace: true });
+    }
+
+    if (paymentType && paymentType === true) {
+      setTimeout(() => {
+        navigate(`/verify_payment_status?reference=` + res, {
+          replace: true,
+        });
+      }, 1000);
     }
 
     if (UserId) {

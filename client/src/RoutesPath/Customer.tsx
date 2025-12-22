@@ -37,6 +37,7 @@ import { UseSaveAuth } from "../context/WishListContext";
 import toast from "react-hot-toast";
 import ResetPassword from "../component/auth/Customer/ResetPassword";
 import Unauthorize from "../component/pages/Unauthorize";
+import Payment from "../component/pages/Payment";
 
 const Customer = ({ HandleTheme, darkMode }: any) => {
   const { usersStatus, token, options, setUsersAddress, setUsersStatus }: any =
@@ -66,7 +67,11 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
 
   async function getUserAddress() {
     try {
-      const { data } = await ApiURL.get(`/v1/user/address/get`, options);
+      const { data } = await ApiURL.get(
+        `/v1/user/address/get/users/address`,
+        options
+      );
+
       if (data.success) {
         setUsersAddress(data.data);
       } else {
@@ -114,6 +119,7 @@ const Customer = ({ HandleTheme, darkMode }: any) => {
             <Route path="/track-orders" element={<TrackOrders />} />
             <Route path="/track-order/:id" element={<TrackOrderById />} />
             <Route path="/wishlist" element={<WishList />} />
+            <Route path="/verify_payment_status" element={<Payment />} />
           </Route>
 
           <Route path="/faqs" element={<FAQs />} />

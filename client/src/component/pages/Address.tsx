@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { ZodInputField } from "../../context/InputField";
 import type { AddressProp } from "../../context/Types";
 import { buttonClassName } from "../Animation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { UserAuth } from "../../context/UserContext";
 import {
@@ -21,26 +21,26 @@ import ApiURL from "../../context/Api";
 import { BiLoaderCircle } from "react-icons/bi";
 
 const Address = () => {
-  const { user }: any = UserAuthInfo();
+  // const { user }: any = UserAuthInfo();
   const { UsersAddress }: any = UserAuth();
 
   const [ActiveAddress, setActiveAddress]: any = useState<string>(
     UsersAddress[0]._id
   );
-  useEffect(() => {
-    const handleUnReLoad = (e: BeforeUnloadEvent) => {
-      if (user) {
-        e.returnValue = "";
-        e.preventDefault();
-      }
-    };
+  // useEffect(() => {
+  //   const handleUnReLoad = (e: BeforeUnloadEvent) => {
+  //     if (user) {
+  //       e.returnValue = "";
+  //       e.preventDefault();
+  //     }
+  //   };
 
-    window.addEventListener("beforeunload", handleUnReLoad);
+  //   window.addEventListener("beforeunload", handleUnReLoad);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleUnReLoad);
-    };
-  }, [user]);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleUnReLoad);
+  //   };
+  // }, [user]);
 
   return (
     <div>

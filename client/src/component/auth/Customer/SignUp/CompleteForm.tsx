@@ -11,12 +11,12 @@ import { ZodSelectField } from "../../../../context/SelectField";
 import { genderValue } from "../../../ProfileContent/AccountM";
 import toast from "react-hot-toast";
 import ApiURL from "../../../../context/Api";
-import { UserAuth } from "../../../../context/UserContext";
+import { UserAuthInfo } from "../../../../App";
 
 const CompleteForm = ({ _id }: any | string) => {
   const localJson: any = localStorage.getItem("id");
   const [Id, setId] = useState(JSON.parse(localJson));
-  const { setuser }: any = UserAuth();
+  const { setuser }: any = UserAuthInfo();
   const [imageData, setImageData]: any = useState({});
   const [img, setImg] = useState("");
   const [email, setEmail] = useState("");

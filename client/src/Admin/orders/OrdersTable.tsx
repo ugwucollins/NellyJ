@@ -10,6 +10,7 @@ import { adminPath } from "../../context/UserContext";
 import { useEffect, useState } from "react";
 import InputField from "../../context/InputField";
 import Loader from "../../context/Loader";
+import { OrderStatusValues } from "../../seller/Orders/OrdersInfo";
 const OrdersTable = () => {
   const { allOrders }: any = UserAdminAuth();
 
@@ -143,7 +144,11 @@ const OrdersTable = () => {
 
               <Link to={`${order._id}`}>
                 <button className={`ml-2 whitespace-nowrap ${buttonClassName}`}>
-                  <p>View Order</p>
+                  {order?.orderStatus === OrderStatusValues.Delivered ? (
+                    <p>{OrderStatusValues.Delivered}</p>
+                  ) : (
+                    <p>View Order</p>
+                  )}
                 </button>
               </Link>
             </div>

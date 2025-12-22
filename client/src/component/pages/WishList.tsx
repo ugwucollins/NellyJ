@@ -1,4 +1,4 @@
-import { BiX } from "react-icons/bi";
+import { BiPlus, BiX } from "react-icons/bi";
 import HeaderProp from "../../context/HeaderProp";
 import { currency, UserProduct } from "../../context/ProductContext";
 import { EmptyItems } from "../ShoppingCart";
@@ -11,6 +11,7 @@ import {
 import { buttonClassName } from "../Animation";
 import { BsCassetteFill } from "react-icons/bs";
 import DateFormater from "../../context/DateFormat";
+import { GrSubtract } from "react-icons/gr";
 
 const WishList = () => {
   return (
@@ -32,7 +33,7 @@ const WishList = () => {
 export default WishList;
 
 export const ShowSavedItems = () => {
-  const { AddtoCart, products }: any = UserProduct();
+  const { AddtoCart, products, cartItem, RemoveFromeCart }: any = UserProduct();
   const { saveItem, RemovesavedItem }: any = UseSaveAuth();
   const [savedArray, setsavedArray] = useState([]);
 
@@ -128,15 +129,41 @@ export const ShowSavedItems = () => {
                       </td>
 
                       <td className="pl-2 text-end pr-1">
-                        <div className="w-full whitespace-nowrap">
-                          <button
-                            disabled={!item.instock}
-                            onClick={() => AddtoCart(item._id)}
-                            className={` disabled:line-through disabled:opacity-85 text-sm outline-1 ${buttonClassName}`}
-                          >
-                            <p>Add to Cart</p>
-                          </button>
-                        </div>
+                        <>
+                          {cartItem[item._id] ? (
+                            <div className="w-full whitespace-nowrap">
+                              <div className="flex gap-3 justify-end items-center max-[170px]:flex-col-reverse flex-row max-[170px]:flex-wrap">
+                                <button
+                                  onClick={() => {
+                                    AddtoCart(item._id);
+                                  }}
+                                  className="py-2 disabled:opacity-70 disabled:bg-yellow-900 px-2 rounded-full text-lg   bg-yellow-700 text-white"
+                                >
+                                  <BiPlus className="hover:text-[20px]" />
+                                </button>
+                                <p className="font-extrabold">
+                                  {cartItem[item._id] && cartItem[item._id]}
+                                </p>
+                                <button
+                                  onClick={() => RemoveFromeCart(item._id)}
+                                  className="py-2 disabled:opacity-70 disabled:bg-yellow-900 px-2 rounded-full text-lg   bg-secondary text-white"
+                                >
+                                  <GrSubtract className="hover:text-[20px]" />
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="w-full whitespace-nowrap">
+                              <button
+                                disabled={!item.instock}
+                                onClick={() => AddtoCart(item._id)}
+                                className={` disabled:line-through disabled:opacity-85 text-sm outline-1 ${buttonClassName}`}
+                              >
+                                <p>Add to Cart</p>
+                              </button>
+                            </div>
+                          )}
+                        </>
                       </td>
                     </tr>
                   );

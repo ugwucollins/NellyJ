@@ -12,10 +12,15 @@ export const currency = "₦";
 const ProductContext = ({ children }: any) => {
   const { token, options }: any = UserAuth();
   const { user }: any = UserAuthInfo();
+  const payment: any = localStorage.getItem("payment");
+
   const [products, setproducts] = useState<ProductProps>(ProductsArray || []);
   const [cartItem, setcartItem] = useState({});
   const [category, setcategory] = useState("");
   const [coupon, setcoupon] = useState("1111");
+  const [paymentType, setPaymentType] = useState<boolean>(
+    JSON.parse(payment) || false
+  );
   const JsonValue: any = localStorage.getItem("HiddenCode");
   const [code, setcode] = useState(JSON.parse(JsonValue));
   const [text, settext] = useState("");
@@ -117,15 +122,15 @@ const ProductContext = ({ children }: any) => {
     return Math.floor(totalAmount * 100) / 100;
   };
   const getTotalDeliveryFee = () => {
-    let totalAmount = 0;
+    let totalDeliveryFee = 0;
     let cart: any = cartItem;
     for (const item in cart) {
       let itemPrice = products.find((product) => product._id === item);
       if (cart[item] > 0) {
-        totalAmount += +itemPrice?.deliveryFee! * cart[item];
+        totalDeliveryFee += +itemPrice?.deliveryFee! * cart[item];
       }
     }
-    return Math.floor(totalAmount * 100) / 100;
+    return Math.floor(totalDeliveryFee * 100) / 100;
   };
 
   const RemoveFromeCart = async (itemId: any) => {
@@ -188,6 +193,8 @@ const ProductContext = ({ children }: any) => {
     GetUsersOrders,
     getTotalDeliveryFee,
     orders,
+    paymentType,
+    setPaymentType,
     setOrders,
     cartArray,
     setcartArray,

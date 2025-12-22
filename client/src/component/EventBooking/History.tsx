@@ -131,7 +131,7 @@ export const HistoryCard = () => {
         </motion.div>
       ))}
       {events?.length === 0 && (
-        <div>
+        <div className="flex justify-center items-center min-h-[50vh]">
           <EmptyItems
             Text="Book Now"
             LinkPath="/event"
