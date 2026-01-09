@@ -14,29 +14,31 @@ import contactRouter from "./src/routes/contactRoute.js";
 import eventRouter from "./src/routes/eventRoute.js";
 import salesRouter from "./src/routes/salesRoute.js";
 DBConnect();
+const { PORT, API_PATH } = process.env;
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://nelly-j.vercel.app",
+    // origin: "http://localhost:5173",
     credentials: true,
   })
 );
 
 connectionCloudinary();
 app.get("/", (req, res) => res.send("Hello World!"));
-app.use("/api/auth", authRoute);
-app.use("/api/auth/user", usersRouter);
-app.use("/api/auth/v1", router);
-app.use("/api/auth/v1/product", productRouter);
-app.use("/api/auth/v1/user/address", addressRouter);
-app.use("/api/auth/v1/orders", ordersRouter);
-app.use("/api/auth/v1/sales", salesRouter);
-app.use("/api/auth/v1/contact", contactRouter);
-app.use("/api/auth/v1/events", eventRouter);
+app.use(`${API_PATH}`, authRoute);
+app.use(`${API_PATH}/user`, usersRouter);
+app.use(`${API_PATH}/v1`, router);
+app.use(`${API_PATH}/v1/product`, productRouter);
+app.use(`${API_PATH}/v1/user/address`, addressRouter);
+app.use(`${API_PATH}/v1/orders`, ordersRouter);
+app.use(`${API_PATH}/v1/sales`, salesRouter);
+app.use(`${API_PATH}/v1/contact`, contactRouter);
+app.use(`${API_PATH}/v1/events`, eventRouter);
 
 app.use(errorHandler);
 
