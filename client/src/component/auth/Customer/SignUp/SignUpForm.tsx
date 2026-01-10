@@ -1,7 +1,7 @@
 import { ZodInputField } from "../../../../context/InputField";
 import { LogoIcon } from "../../../Navbar";
 import { buttonClassName } from "../../../Animation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { BiLoaderCircle } from "react-icons/bi";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,10 +9,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { RegisterSchema } from "../../../../Zod/Schema/RegisterSchema";
 import type { RegisterField } from "../../../../Zod/typesField";
 import ApiURL from "../../../../context/Api";
-import { UserAuthInfo } from "../../../../App";
 
 const SignUpForm = () => {
-  const { setuser }: any = UserAuthInfo();
+  const router = useNavigate();
   const {
     register,
     handleSubmit,
@@ -34,28 +33,23 @@ const SignUpForm = () => {
     try {
       const res = await ApiURL.post("/register", UserData);
       const data = res.data;
+
       if (data.success) {
         localStorage.setItem("id", JSON.stringify(data.data._id));
         const localJson: any = localStorage.getItem("id");
-        setTimeout(() => {
-          setuser(UserData);
-          toast.success(data.message, { id: "signUp" });
-          window.location.replace(
-            `/complete/${data.data._id || JSON.parse(localJson)}`
-          );
-          setValue("firstName", "");
-          setValue("lastName", "");
-          setValue("email", "");
-          setValue("password", "");
-        }, 100);
+        toast.success(data.message, { id: "signUp" });
+        router(`/complete/${data.data._id || JSON.parse(localJson)}`, {
+          replace: true,
+        });
+        setValue("firstName", "");
+        setValue("lastName", "");
+        setValue("email", "");
+        setValue("password", "");
       } else {
         toast.error(data.message);
       }
     } catch (error: any) {
-      console.log(error);
-
-      const message =
-        error.response.data.message || error.message || "Internal Server Error";
+      const message = error.message || "Internal Server Error";
       toast.error(message, { id: "signUpError" });
       setError("root", {
         message: message,

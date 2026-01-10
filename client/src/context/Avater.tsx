@@ -25,6 +25,7 @@ const Avater = ({ setimageData, className, setImg }: Avater) => {
 
     const formData = new FormData();
     formData.append("image", file[0]);
+
     try {
       const res = await ApiURL.post("/v1/upload", formData, {
         headers: {
@@ -35,8 +36,8 @@ const Avater = ({ setimageData, className, setImg }: Avater) => {
 
       if (data.success) {
         setimageData(data.data);
-        console.log("Upload successful:", res.data);
         setImg(data.data.url);
+        toast.success("Upload successful");
       } else {
         toast.error(data.message);
       }

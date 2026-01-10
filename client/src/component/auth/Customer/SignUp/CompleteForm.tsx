@@ -11,15 +11,15 @@ import { ZodSelectField } from "../../../../context/SelectField";
 import { genderValue } from "../../../ProfileContent/AccountM";
 import toast from "react-hot-toast";
 import ApiURL from "../../../../context/Api";
-import { UserAuthInfo } from "../../../../App";
+import { useNavigate } from "react-router-dom";
 
 const CompleteForm = ({ _id }: any | string) => {
   const localJson: any = localStorage.getItem("id");
   const [Id, setId] = useState(JSON.parse(localJson));
-  const { setuser }: any = UserAuthInfo();
   const [imageData, setImageData]: any = useState({});
   const [img, setImg] = useState("");
   const [email, setEmail] = useState("");
+  const router = useNavigate();
 
   async function GetUserEmail() {
     const Ids = _id.length <= 5 ? Id : _id;
@@ -53,17 +53,16 @@ const CompleteForm = ({ _id }: any | string) => {
     };
 
     try {
-      if (imageData && img.length && email.trim()) {
+      if (img.length && email.trim()) {
         const res = await ApiURL.post("/completeProfile", Info);
         const UserData = res.data;
 
         if (UserData.success) {
           setValue("imageUrl", img);
           toast.success("Profile Completed Successfully");
-          setuser(UserData.data);
           setTimeout(() => {
             localStorage.removeItem("id");
-            window.location.replace("/auth/signin");
+            router("/auth/signin", { replace: true });
           }, 1000);
         } else {
           toast.error(UserData.message, { id: "UserData" });
@@ -72,9 +71,7 @@ const CompleteForm = ({ _id }: any | string) => {
         toast.error("Please Put an Image");
       }
     } catch (error: any) {
-      console.log(error);
-
-      toast.error(error.response.data.message || error.message);
+      toast.error(error.message || error.response.data.message);
     }
   };
   return (

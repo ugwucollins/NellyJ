@@ -5,7 +5,6 @@ import CompleteForm from "./CompleteForm";
 
 const CompletePage = () => {
   const { id } = useParams();
-  console.log(id);
 
   return (
     <div className="w-full flex pb-10 max-sm:bg-white bg-neutral-50 flex-col justify-center min-h-screen items-center max-sm:px-1">
