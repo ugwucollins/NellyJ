@@ -53,7 +53,7 @@ const CompleteForm = ({ _id }: any | string) => {
     };
 
     try {
-      if (img.length && email.trim()) {
+      if (img && email.trim()) {
         const res = await ApiURL.post("/completeProfile", Info);
         const UserData = res.data;
 
@@ -90,6 +90,7 @@ const CompleteForm = ({ _id }: any | string) => {
             setimageData={setImageData}
             setImg={setImg}
           />
+
           <div className="w-full flex flex-row gap-4 max-[500px]:flex-col">
             <ZodInputField
               label="phoneNumber*"
