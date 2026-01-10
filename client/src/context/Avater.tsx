@@ -5,6 +5,7 @@ import { BiUser } from "react-icons/bi";
 import ApiURL from "./Api";
 import toast from "react-hot-toast";
 import { UserAuthInfo } from "../App";
+
 export type Avater = {
   setimageData: any;
   className?: string;
@@ -25,6 +26,7 @@ const Avater = ({ setimageData, className, setImg }: Avater) => {
 
     const formData = new FormData();
     formData.append("image", file[0]);
+    // formData.append("upload_preset", "xbqopbbq");
 
     try {
       const res = await ApiURL.post("/v1/upload", formData, {
@@ -32,11 +34,22 @@ const Avater = ({ setimageData, className, setImg }: Avater) => {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      // const res = await axios.post(
+      //   "https://api.cloudinary.com/v1_1/dhbbyotul/image/upload",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+
       const data = res.data;
 
       if (data.success) {
         setimageData(data.data);
-        setImg(data.data.url);
+        setImg(data.data.url || data.data.secure_url);
         toast.success("Upload successful");
       } else {
         toast.error(data.message);

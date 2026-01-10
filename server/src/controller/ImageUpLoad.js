@@ -32,23 +32,67 @@ export const ImageUpload = async (req, res) => {
         .json({ message: "No file uploaded", success: false });
     }
 
-    const result = await cloudinary.uploader.upload(file.path, {
-      resource_type: "auto",
-      folder: "nelly_J",
-    });
+    // const result = await cloudinary.uploader.upload(file.path, {
+    //   resource_type: "auto",
+    //   folder: "nelly_J",
+    // });
 
-    console.log(result);
-    const newImage = {
-      imageUrl: result.secure_url,
-      publicId: result.public_id,
-      url: result.url,
-    };
+    const result = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "auto",
+        folder: "nelly_J",
+      },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          console.error("Cloudinary uploader error:" + err);
+          res.status(500).json({
+            message: "Cloudinary upload Failed",
+            success: false,
+          });
+        }
 
-    res.status(200).json({
-      message: "Image uploaded successfully",
-      data: newImage,
-      success: true,
-    });
+        res.status(200).json({
+          message: "Image uploaded successfully",
+          data: {
+            url: result.url,
+            secure_url: result.secure_url,
+          },
+          success: true,
+        });
+      }
+    );
+
+    result.end(file.buffer);
+
+    // const stream = cloudinary.uploader.upload_stream(
+    //   {
+    //     resource_type: "auto",
+    //     folder: "nelly_J",
+    //   },
+    //   (err, result) => {
+    //     console.log(err);
+
+    //     if (err) {
+    //       console.log(err);
+    //       console.error("Cloudinary uploader error:" + err);
+    //       res.status(500).json({
+    //         message: "Cloudinary upload Failed",
+    //         success: false,
+    //       });
+    //     }
+
+    //     console.log(result);
+
+    //     res.status(200).json({
+    //       message: "Image uploaded successfully",
+    //       data: result,
+    //       success: true,
+    //     });
+    //   }
+    // );
+
+    // stream.end(file.buffer || req.file.buffer);
   } catch (error) {
     res.status(500).json({ message: "Server error during upload" });
   }

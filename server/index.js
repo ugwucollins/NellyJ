@@ -14,15 +14,16 @@ import contactRouter from "./src/routes/contactRoute.js";
 import eventRouter from "./src/routes/eventRoute.js";
 import salesRouter from "./src/routes/salesRoute.js";
 DBConnect();
-const { PORT, API_PATH } = process.env;
+const { PORT, API_PATH, ORIGIN_URL } = process.env;
 
 const app = express();
 const port = PORT || 3000;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "https://nelly-j.vercel.app",
+    origin: `${ORIGIN_URL}`,
     credentials: true,
   })
 );
