@@ -5,6 +5,7 @@ import { upload } from "../middleware/image.middleware.js";
 
 const router = express.Router();
 
+// router.post("/upload", ImageUpload);
 router.post("/upload", upload.single("image"), ImageUpload);
 
 // const router = express.Router();

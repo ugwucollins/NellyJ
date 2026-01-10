@@ -37,6 +37,7 @@ export const ImageUpload = async (req, res) => {
       folder: "nelly_J",
     });
 
+    console.log(result);
     const newImage = {
       imageUrl: result.secure_url,
       publicId: result.public_id,
