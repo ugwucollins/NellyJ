@@ -87,11 +87,12 @@ const SignUpForm = () => {
         <div className="flex flex-col gap-y-3.5 py-4">
           <ZodInputField
             label="email*"
-            type="tel"
+            type="email"
             placeholder="Enter email Address"
             value={register("email")}
             error={errors.email?.message}
           />
+
           <ZodInputField
             label="password*"
             type="password"
