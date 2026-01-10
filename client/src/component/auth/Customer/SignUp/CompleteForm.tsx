@@ -53,7 +53,7 @@ const CompleteForm = ({ _id }: any | string) => {
     };
 
     try {
-      if (img && email.trim()) {
+      if (Info.imageUrl ? Info.imageUrl : img && email.trim()) {
         const res = await ApiURL.post("/completeProfile", Info);
         const UserData = res.data;
 
