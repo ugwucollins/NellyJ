@@ -34,7 +34,7 @@ const UserContext = ({ children }: any) => {
     setUser(null);
     localStorage.removeItem("token");
     setToken("");
-    window.location.replace(NotAuth);
+    router(NotAuth, { replace: true });
   };
 
   const Addaddress = async (formData: any) => {
