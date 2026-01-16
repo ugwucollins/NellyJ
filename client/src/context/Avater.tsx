@@ -52,7 +52,11 @@ const Avater = ({ setimageData, className, setImg }: Avater) => {
         setImg(data.data.url || data.data.secure_url);
         toast.success("Upload successful");
       } else {
-        toast.error(data.message);
+        setImg(image);
+        const message = data?.message.length
+          ? data.message
+          : "Image Failed to Upload";
+        toast.error(message);
       }
     } catch (error: any) {
       console.log(error);

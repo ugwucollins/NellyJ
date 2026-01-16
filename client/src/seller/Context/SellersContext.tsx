@@ -7,6 +7,7 @@ import React, {
 import { sellerPath, UserAuth } from "../../context/UserContext";
 import ApiURL from "../../context/Api";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const createSellersContext = createContext({});
 const SellersContext = ({ children }: { children: ReactNode }) => {
@@ -15,12 +16,13 @@ const SellersContext = ({ children }: { children: ReactNode }) => {
   const [sales, setSales] = useState<[]>();
   const [events, setEvents] = useState<[]>();
   const { options, token }: any = UserAuth();
+  const router = useNavigate();
 
   const HandleLogOut = () => {
     setSeller(null);
     localStorage.removeItem("token");
     localStorage.removeItem("path");
-    window.location.replace(sellerPath + "/login");
+    router(sellerPath + "/login", { replace: true });
   };
 
   async function GetAllContactHandler() {

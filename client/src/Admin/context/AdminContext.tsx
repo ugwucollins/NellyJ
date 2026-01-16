@@ -7,6 +7,7 @@ import React, {
 import { adminPath, UserAuth } from "../../context/UserContext";
 import ApiURL from "../../context/Api";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const createAdminContext = createContext({});
 const AdminContext = ({ children }: { children: ReactNode }) => {
@@ -16,6 +17,7 @@ const AdminContext = ({ children }: { children: ReactNode }) => {
   const [sellers, setSellers] = useState<[] | any>([]);
   const [teams, setTeams] = useState<[] | any>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const router = useNavigate();
 
   const { options, token }: any = UserAuth();
 
@@ -83,7 +85,7 @@ const AdminContext = ({ children }: { children: ReactNode }) => {
   const HandleLogOut = () => {
     setAdmin(null);
     localStorage.removeItem("token");
-    window.location.replace(adminPath + "/login");
+    router(adminPath + "/login", { replace: true });
   };
 
   const Values = {
