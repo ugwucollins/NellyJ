@@ -14,6 +14,8 @@ const AdminContext = ({ children }: { children: ReactNode }) => {
   const [allOrders, setAllOrders] = useState<[] | null>();
   const [customers, setCustomers] = useState([]);
   const [sellers, setSellers] = useState<[] | any>([]);
+  const [teams, setTeams] = useState<[] | any>([]);
+  const [open, setOpen] = useState<boolean>(false);
 
   const { options, token }: any = UserAuth();
 
@@ -43,6 +45,7 @@ const AdminContext = ({ children }: { children: ReactNode }) => {
       toast.error(error.response.data.message, { id: "users" });
     }
   }
+
   async function GetAllSellers() {
     try {
       const res = await ApiURL.get("/user/sellers", options);
@@ -55,9 +58,22 @@ const AdminContext = ({ children }: { children: ReactNode }) => {
       toast.error(error.response.data.message, { id: "sellers" });
     }
   }
+  async function GetAllTeams() {
+    try {
+      const res = await ApiURL.get("/v1/teams/get", options);
+      const data = res.data;
+
+      if (data.success) {
+        setTeams(data.data);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message, { id: "chiefs" });
+    }
+  }
 
   useEffect(() => {
     if (token) {
+      GetAllTeams();
       GetAllUsersOrders();
       GetAllUsersHandler();
       GetAllSellers();
@@ -71,6 +87,11 @@ const AdminContext = ({ children }: { children: ReactNode }) => {
   };
 
   const Values = {
+    GetAllTeams,
+    open,
+    setOpen,
+    teams,
+    setTeams,
     customers,
     setCustomers,
     admin,

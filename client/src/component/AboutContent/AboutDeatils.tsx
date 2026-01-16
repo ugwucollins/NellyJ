@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import TextAnimation, { XSlideIn, YSlideIn } from "../Animation";
-import { AboutArrays, Assets, Qualitys, TeamsArrays } from "../assets";
+import { AboutArrays, Assets, Qualitys } from "../assets";
 import {
   DarkModeClass,
   FeatureArryMap,
 } from "../HomeContent/HomeExportComponent";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Social } from "../../Admin/chiefs/AdminChiefsCard";
+import { UserAuth } from "../../context/UserContext";
 
 const AboutDeatils = () => {
   return (
@@ -213,6 +215,7 @@ export const ThirdBanner = () => {
 export const FourthBanner = () => {
   const [currentIndex, setcurrentIndex] = useState(0);
   const [currentTeam, setcurrentTeam] = useState(0);
+  const { teams }: any = UserAuth();
   return (
     <div className="py-10 pt-24 w-full">
       <div className="flex flex-col justify-center text-center items-center">
@@ -236,7 +239,7 @@ export const FourthBanner = () => {
         </h1>
 
         <div className="w-full px-20 max-md:px-14 max-sm:px-3 max-[170px]:px-1 flex flex-wrap justify-center gap-3 max-md:gap-3 items-center py-10">
-          {TeamsArrays.map((team: any, index: number) => (
+          {teams.map((team: any, index: number) => (
             <motion.div
               variants={YSlideIn(-100, 0.5, index, 0.5)}
               whileInView={"show"}
@@ -248,14 +251,18 @@ export const FourthBanner = () => {
               <div className="relative flex justify-center flex-col items-center w-full">
                 <div className="w-[min(50vw,300px)] max-[300px]:w-full h-[400px]">
                   <img
-                    src={team.image}
-                    className="w-full object-cover rounded-xl h-full"
+                    src={team.imageUrl}
+                    loading="lazy"
+                    className={`w-full object-cover rounded-xl h-full ${
+                      currentTeam === index &&
+                      "ring-2 rounded-2xl ring-yellow-800"
+                    }`}
                     alt="team photo"
                   />
                 </div>
                 {currentTeam === index && (
                   <div className="w-full absolute flex flex-wrap gap-4 bottom-5 left-0 justify-evenly">
-                    {team.handle.map((icon: any, index: number) => (
+                    {Social.map((icon: any, index: number) => (
                       <motion.div
                         variants={YSlideIn(80, 0.5, index, 0.5)}
                         whileInView={"show"}
@@ -268,7 +275,7 @@ export const FourthBanner = () => {
                             : "bg-primary1 text-secondary"
                         }`}
                       >
-                        {icon.icon}
+                        {icon}
                       </motion.div>
                     ))}
                   </div>
@@ -276,7 +283,7 @@ export const FourthBanner = () => {
               </div>
               <div className="flex gap-2 py-2 pt-8 flex-col text-center w-full capitalize justify-center items-center">
                 <h1 className="text-[min(10vw,20px)] font-bold">{team.name}</h1>
-                <span className="font-bold">{team.role}</span>
+                <span className="font-bold capitalize">[{team.role}]</span>
               </div>
             </motion.div>
           ))}

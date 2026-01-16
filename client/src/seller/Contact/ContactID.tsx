@@ -129,7 +129,7 @@ export const ContactIDDetails = ({ _id }: any) => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-y-4 w-full">
+        <div className="flex flex-col gap-y-4 w-full relative">
           <div className=" w-full text-end">
             <h1 className="font-semibold text-lg underline capitalize py-1">
               Subject/Title:
@@ -138,13 +138,13 @@ export const ContactIDDetails = ({ _id }: any) => {
               {ContactInfo && ContactInfo?.subject}
             </p>
           </div>
-          <div>
+          <div className="w-full min-h-[10vh] bg-yellow-900 overflow-hidden h-auto relative">
             <h1 className="font-semibold text-lg py-1 underline capitalize">
               Message:
             </h1>
-            <p className="font-bold text-balance opacity-80 ">
+            <div className="font-bold h-auto w-full text-wrap opacity-80 ">
               {ContactInfo && ContactInfo?.message}
-            </p>
+            </div>
           </div>
         </div>
 

@@ -10,8 +10,14 @@ import { buttonClassName } from "../../component/Animation";
 import { RegisterSellerSchema } from "../../Zod/Schema/RegisterSchema";
 import ApiURL from "../../context/Api";
 import { UserAdminAuth } from "../context/AdminContext";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Avater from "../../context/Avater";
 
 const CreateSeller = () => {
+  const router = useNavigate();
+  const [imageData, setImageData]: any = useState({});
+  const [img, setImg] = useState("");
   const {
     register,
     handleSubmit,
@@ -21,6 +27,7 @@ const CreateSeller = () => {
   } = useForm({
     resolver: zodResolver(RegisterSellerSchema),
   });
+
   const { GetAllSellers }: any = UserAdminAuth();
 
   const OnSubmit: SubmitHandler<RegisterSellersField> = async (data) => {
@@ -32,6 +39,7 @@ const CreateSeller = () => {
       firstName: firstName,
       lastName: lastName,
       password: password,
+      imageUrl: img || imageData,
       phoneNumber: phoneNumber,
     };
 
@@ -47,7 +55,7 @@ const CreateSeller = () => {
           setValue("email", "");
           setValue("password", "");
         }, 100);
-        window.location.replace(adminPath + "/sellers");
+        router(adminPath + "/sellers", { replace: true });
         GetAllSellers();
       } else {
         toast.error(data.message);
@@ -81,6 +89,11 @@ const CreateSeller = () => {
         onSubmit={handleSubmit(OnSubmit)}
         className="max-sm:w-full text-black dark:text-white"
       >
+        <Avater
+          className="justify-center items-center flex"
+          setimageData={setImageData}
+          setImg={setImg}
+        />
         <div className="w-full text-black dark:text-black flex flex-row gap-4 max-[400px]:flex-col">
           <ZodInputField
             label="FirstName*"
@@ -128,6 +141,7 @@ const CreateSeller = () => {
         )}
 
         <button
+          type="submit"
           disabled={isSubmitting}
           className={`outline-1 disabled:opacity-85 mt-5 hover:shadow-xl transition-all duration-150 max-sm:hover:text-black max-sm:hover:outline-white hover:drop-shadow dark:hover:outline-black    dark:hover:text-black text-black w-full max-sm:dark:hover:text-white ${buttonClassName}`}
         >
@@ -146,8 +160,8 @@ export default CreateSeller;
 
 export const ModelForm = ({ children, onClose }: any) => {
   return (
-    <div className="w-full z-[3] h-screen flex flex-col justify-center text-center items-center bg-black/50 fixed top-0 left-0">
-      <div className="shadow-md relative drop-shadow bg-white p-4 rounded-lg">
+    <div className="w-full z-[3] overflow-auto h-screen flex flex-col justify-center text-center items-center bg-black/50 fixed top-0 left-0">
+      <div className="shadow-md relative drop-shadow bg-white p-4 rounded-lg overflow-auto">
         <div
           onClick={onClose}
           className="absolute cursor-pointer top-5 text-3xl text-black right-5"

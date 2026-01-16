@@ -58,8 +58,16 @@ export const Register = async (req, res) => {
 };
 
 export const CreateSeller = async (req, res) => {
-  const { firstName, lastName, email, password, phoneNumber, accountEmail } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    imageUrl,
+    phoneNumber,
+    accountEmail,
+  } = req.body;
+
   const ExistingUser = await UserModel.findOne({
     email: email,
   });
@@ -68,6 +76,12 @@ export const CreateSeller = async (req, res) => {
     if (ExistingUser) {
       return res.status(403).json({
         message: "User Info Already Exists",
+        success: false,
+      });
+    }
+    if (!imageUrl) {
+      return res.status(403).json({
+        message: "please put your Image Info",
         success: false,
       });
     }
@@ -84,8 +98,8 @@ export const CreateSeller = async (req, res) => {
       firstName: firstName,
       lastName: lastName,
       email: email,
+      imageUrl: imageUrl,
       password: hashedPassword,
-
       phoneNumber: phoneNumber,
       month: month,
       year: year,

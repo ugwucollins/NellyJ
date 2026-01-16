@@ -12,11 +12,13 @@ export type SocialMedia = {
   path: string;
 }[];
 export type Chiefs = {
-  image: string;
+  imageUrl: string;
   name: string;
-  experience: string;
+  email: string;
+  status: string;
+  role?: string;
+  experience: number | string;
   handle: {
-    icon: ReactElement;
     path: string;
   }[];
 }[];

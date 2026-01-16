@@ -111,9 +111,9 @@ const ContactDetails = ({ _id }: any | string) => {
             <h1 className="font-semibold text-lg py-1 underline capitalize">
               Message:
             </h1>
-            <p className="font-bold text-balance opacity-80 ">
+            <div className="font-bold h-auto w-full text-wrap opacity-80 ">
               {ContactInfo && ContactInfo?.message}
-            </p>
+            </div>
           </div>
         </div>
 

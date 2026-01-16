@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { LoginSchema } from "./Schema/LoginSchema";
 import type {
+  RegisterChiefSchema,
   RegisterSchema,
   RegisterSellerSchema,
 } from "./Schema/RegisterSchema";
@@ -20,6 +21,7 @@ import type {
 export type LoginField = z.infer<typeof LoginSchema>;
 export type RegisterField = z.infer<typeof RegisterSchema>;
 export type RegisterSellersField = z.infer<typeof RegisterSellerSchema>;
+export type RegisterChiefsField = z.infer<typeof RegisterChiefSchema>;
 export type ContactField = z.infer<typeof ContactSchema>;
 export type CompleteProfileField = z.infer<typeof CompleteProfileSchema>;
 export type ProfileField = z.infer<typeof ProfileSchema>;

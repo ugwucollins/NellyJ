@@ -24,6 +24,8 @@ import ProtectedRoute from "../RolesControlle/ProtectedRoute";
 import Unauthorize from "../component/pages/Unauthorize";
 import Sellers from "../Admin/pages/Sellers";
 import { SellersDetail } from "../Admin/sellers/SellersDetail";
+import OurTeam from "../Admin/pages/Teams";
+import TeamsDetails from "../Admin/chiefs/TeamsDetails";
 
 const Admin = () => {
   const { token, setUsersStatus, usersStatus }: any = UserAuth();
@@ -73,6 +75,8 @@ const Admin = () => {
             <Route path="events" element={<Events />} />
             <Route path="users" element={<Users />} />
             <Route path={"sellers"} element={<Sellers />} />
+            <Route path={"teams"} element={<OurTeam />} />
+            <Route path={"teams/:id"} element={<TeamsDetails />} />
             <Route path="orders/:orderID" element={<OrdersDetails />} />
             <Route path={"contact/:id"} element={<ContactID />} />
             <Route path={"sellers/:id"} element={<SellersDetail />} />

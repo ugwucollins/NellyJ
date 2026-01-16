@@ -1,4 +1,4 @@
-import { BiDollar } from "react-icons/bi";
+import { BiDollar, BiPlus } from "react-icons/bi";
 import { GrDeliver } from "react-icons/gr";
 import { MdEventAvailable, MdProductionQuantityLimits } from "react-icons/md";
 import { PiPlus } from "react-icons/pi";
@@ -11,6 +11,11 @@ import Card from "../../seller/Context/Card";
 import HeaderProp from "../../context/HeaderProp";
 import TwoLevelPieChart from "../charts/PieChart";
 import LineChartExample from "../charts/LineChart";
+import { GiCook } from "react-icons/gi";
+import { Link } from "react-router-dom";
+import { buttonClassName } from "../../component/Animation";
+import { ModelForm } from "../sellers/CreateSeller";
+import AddChief from "../chiefs/AddChief";
 
 const HomePage = () => {
   return (
@@ -32,17 +37,35 @@ const HomePage = () => {
 
 export default HomePage;
 const HomePageDisplay = () => {
-  const { admin }: any = UserAdminAuth();
+  const { admin, open, setOpen }: any = UserAdminAuth();
   const { product, orders, sales, customers, events, sellers } = RealValues();
   const RealArray: any = [sales, orders, product, customers, events, sellers];
+  function handleClose() {
+    setOpen(!open);
+  }
 
   return (
     <div>
-      <div className=" mb-4 py-2 px-2">
-        <h1 className="font-bold text-xl">Dashboard Overview</h1>
-        <h1 className="opacity-90 text-sm font-semibold">
-          Welcome {admin && admin.email.split("@gmail.com")}!
-        </h1>
+      <div className="flex flex-row items-center justify-between flex-wrap">
+        <div className=" mb-4 py-2 px-2">
+          <h1 className="font-bold text-xl">Dashboard Overview</h1>
+          <h1 className="opacity-90 text-sm font-semibold">
+            Welcome {admin && admin.email.split("@gmail.com")}!
+          </h1>
+        </div>
+        <div>
+          <Link to={``}>
+            <button
+              onClick={() => setOpen(!open)}
+              className={`ml-2 whitespace-nowrap ${buttonClassName}`}
+            >
+              <div className="flex gap-0.5 items-center text-center">
+                <BiPlus className="text-xl pt-1" />
+                <p>Create a Worker</p>
+              </div>
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="flex flex-wrap justify-around max-md:justify-center gap-5 my-5">
@@ -85,6 +108,12 @@ const HomePageDisplay = () => {
           );
         })}
       </div>
+
+      {open && (
+        <ModelForm onClose={handleClose}>
+          <AddChief />
+        </ModelForm>
+      )}
     </div>
   );
 };
@@ -97,6 +126,14 @@ export const CardArrayLong: AddCardProp[] = [
     color: "purple",
     btnText: "Add Product",
     path: adminPath + "/addproduct",
+  },
+  {
+    Title: "Our Team",
+    icon: <GiCook />,
+    text: "Quickly View all the new Teams/members in your store inventory",
+    color: "green",
+    btnText: "View Our Team",
+    path: adminPath + "/teams",
   },
   {
     Title: "See All Product",

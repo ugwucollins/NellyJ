@@ -4,12 +4,12 @@ import Card from "../Context/Card";
 import { UserSellerAuth } from "../Context/SellersContext";
 import { GrDeliver } from "react-icons/gr";
 import type { AddCardProp, CardProp } from "../Context/Types";
-import { sellerPath } from "../../context/UserContext";
 import { MdEventAvailable, MdProductionQuantityLimits } from "react-icons/md";
 import AddCard from "../Context/AddCard";
 import { PiPlus } from "react-icons/pi";
 import { RealValues } from "../Context/RealValues";
 import CustomContentOfTooltip from "../../Admin/charts/BarChart";
+export const sellerPath: string = import.meta.env.VITE_SELLER_PATH;
 
 const SellerDashboard = () => {
   return (

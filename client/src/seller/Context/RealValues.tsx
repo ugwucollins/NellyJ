@@ -13,10 +13,10 @@ export const RealValues = () => {
 
   async function totalSales() {
     let amount =
-      (await allOrders.reduce(async (acc: any, item: any) => {
+      (await allOrders?.reduce(async (acc: any, item: any) => {
         return (await acc) + item.totalPrice + item.deliveryFee;
       }, 0)) ||
-      (await sales.reduce(async (acc: any, item: any) => {
+      (await sales?.reduce(async (acc: any, item: any) => {
         return (await acc) + item.amount;
       }, 0));
     setTotalAmount(amount);

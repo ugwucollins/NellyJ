@@ -25,3 +25,15 @@ export const RegisterSellerSchema = z
     password: z.string().min(8, MinPassword).regex(Regex, PasswordRegexM),
   })
   .strict();
+export const RegisterChiefSchema = z
+  .object({
+    name: z.string().trim().min(5, "please enter your fullname"),
+
+    role: z.enum(["CEO", "manager", "caterer", "worker", "seller", "chief"]),
+    email: z.string().email().trim(),
+    facebook: z.string().optional(),
+    instagram: z.string().optional(),
+    twitter: z.string().optional(),
+    whatsapp: z.string().optional(),
+  })
+  .strict();

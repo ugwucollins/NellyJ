@@ -2,40 +2,22 @@ import { GrSubtract } from "react-icons/gr";
 import { PagenationFun } from "../../context/pagenation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { buttonClassName, YSlideIn } from "../Animation";
-import { production, UserAuth } from "../../context/UserContext";
+import { YSlideIn } from "../../component/Animation";
+import { adminPath, production } from "../../context/UserContext";
+import { FaFacebook, FaWhatsapp } from "react-icons/fa";
+import { ImInstagram } from "react-icons/im";
+import { BsPencilFill, BsTwitter } from "react-icons/bs";
+import { UserAdminAuth } from "../context/AdminContext";
+import { EmptyItems } from "../../component/ShoppingCart";
+import { GiCook } from "react-icons/gi";
 import { Link } from "react-router-dom";
-import { Social } from "../../Admin/chiefs/AdminChiefsCard";
 
-const ChiefSection = () => {
-  return (
-    <div className="bg-primary1 max-[170px]:px-1 py-6 px-20 max-md:px-10 max-sm:px-5 dark:text-primary1 min-h-[95vh] dark:bg-secondary">
-      <div className="flex flex-col w-full">
-        <div className="flex justify-between px-3 flex-wrap pt-10 gap-2 gap-y-4 items-center">
-          <h1 className="text-[min(5vw,32px)] font-bold">
-            Meet With Our Chiefs
-          </h1>
-
-          <Link to={"/event"}>
-            <button className={buttonClassName}>
-              <p>Book An Event</p>
-            </button>
-          </Link>
-        </div>
-        <ChiefsCard />
-      </div>
-    </div>
-  );
-};
-
-export default ChiefSection;
-
-export const ChiefsCard = () => {
+const AdminChiefsCard = () => {
   const [index, setindex] = useState(0);
   const [current, setcurrent] = useState(1);
   const [indexIcon, setindexIcon] = useState(0);
   const [indexBtn, setindexBtn] = useState(0);
-  const { teams }: any = UserAuth();
+  const { teams }: any = UserAdminAuth();
 
   return (
     <div className="pb-0 pt-10 w-full flex-col flex justify-center items-center text-center min-h-[55vh] overflow-hidden">
@@ -47,34 +29,56 @@ export const ChiefsCard = () => {
               variants={YSlideIn(-150, 0.5, indexs, production ? 0.5 : 0.8)}
               whileInView={"show"}
               initial={"hidden"}
+              className="relative"
             >
               <div
-                className={`bg-primary dark:bg-primary1/10 dark:text-primary1 drop-shadow rounded-xl hover:shadow-xl hover:drop-shadow-md dark:shadow-primary1/40  w-auto  ${
+                className={`bg-primary dark:bg-primary1/10 dark:text-primary1 drop-shadow rounded-xl hover:shadow-xl hover:drop-shadow-md dark:shadow-primary1/40 relative overflow-hidden  w-auto  ${
                   index === indexs
                     ? "px-8 pt-10 pb-5 max-[160px]:p-2 w-auto shadow-lg duration-300 transition-all "
                     : "p-10 py-12 shadow-md max-[160px]:p-2 w-auto"
                 }`}
                 onClick={() => setindex(indexs)}
               >
+                <Link to={item?._id} className=" absolute top-0 right-0">
+                  <div className=" p-4 bg-gray-50 cursor-pointer hover:scale-105 hover:text-yellow-800 hover:bg-gray-100 transition-all hover:backdrop-blur-none backdrop-blur-md border border-white rounded-lg">
+                    <BsPencilFill />
+                  </div>
+                </Link>
                 <div>
                   <img
                     src={item.imageUrl}
                     alt={item.name}
                     loading="lazy"
-                    className="size-[220px] ring-1 ring-yellow-800 object-cover rounded-full"
+                    className="size-[220px] object-cover rounded-full ring-2 ring-yellow-800"
                   />
                   <div className="pt-5">
                     <h1 className="font-bold uppercase">{item.name}</h1>
-                    <span className="opacity-80">
-                      {item.experience === 1
-                        ? item.experience + " Year experience"
-                        : item.experience + " Years experience"}
-                    </span>
+                    <div>
+                      <p className="opacity-80">{item?.email}</p>
+                      <span className="opacity-80 font-semibold">
+                        {item.experience === 1
+                          ? item.experience + " Year experience"
+                          : item.experience + " Years experience"}
+                      </span>
+                    </div>
                   </div>
 
                   {index === indexs ? (
                     <div className="flex w-full flex-wrap items-center gap-2 justify-center pt-7">
-                      {Social.map((list: any, index: number) => (
+                      {/* {item.handle.map((list: any, index: number) => (
+                        <div
+                          key={index}
+                          onClick={() => setindexIcon(index)}
+                          className={`text-xl font-bold  rounded-lg ${
+                            indexIcon === index
+                              ? "bg-yellow-800 p-3 dark:text-primary1  text-primary1 dark:bg-yellow-800"
+                              : "bg-primary1 p-2 dark:bg-primary1/20 dark:text-primary "
+                          }`}
+                        >
+                          {list.icon}
+                        </div>
+                      ))} */}
+                      {Social.map((list, index: number) => (
                         <div
                           key={index}
                           onClick={() => setindexIcon(index)}
@@ -92,11 +96,17 @@ export const ChiefsCard = () => {
                     <></>
                   )}
                 </div>
+                <div
+                  className={` rounded h-1 w-full absolute bottom-0 left-0 ${
+                    item.status === "active" ? "bg-green-800" : "bg-yellow-800"
+                  }`}
+                />
               </div>
             </motion.div>
           )
         )}
       </div>
+
       <div className="flex gap-3 items-center flex-wrap pt-8">
         {PagenationFun(teams, 4, current).pages.map(
           (no: any, index: number) => (
@@ -126,6 +136,24 @@ export const ChiefsCard = () => {
           )
         )}
       </div>
+
+      {teams.length === 0 && (
+        <EmptyItems
+          title="No Active Team/Members"
+          icon={<GiCook />}
+          LinkPath={adminPath + "/teams"}
+          Text="Create a Team"
+        />
+      )}
     </div>
   );
 };
+
+export default AdminChiefsCard;
+
+export const Social = [
+  <FaFacebook />,
+  <ImInstagram />,
+  <BsTwitter />,
+  <FaWhatsapp />,
+];

@@ -13,6 +13,7 @@ import router from "./src/routes/imageRouter.js";
 import contactRouter from "./src/routes/contactRoute.js";
 import eventRouter from "./src/routes/eventRoute.js";
 import salesRouter from "./src/routes/salesRoute.js";
+import teamsRouter from "./src/routes/teamsRouter.js";
 DBConnect();
 const { PORT, API_PATH, ORIGIN_URL } = process.env;
 
@@ -36,11 +37,18 @@ app.use(`${API_PATH}/v1`, router);
 app.use(`${API_PATH}/v1/product`, productRouter);
 app.use(`${API_PATH}/v1/user/address`, addressRouter);
 app.use(`${API_PATH}/v1/orders`, ordersRouter);
+app.use(`${API_PATH}/v1/teams`, teamsRouter);
 app.use(`${API_PATH}/v1/sales`, salesRouter);
 app.use(`${API_PATH}/v1/contact`, contactRouter);
 app.use(`${API_PATH}/v1/events`, eventRouter);
 
 app.use(errorHandler);
+app.use(async (req, res, next) => {
+  res.status(404).json({
+    message: "Url path Not Found, Please check Your Link",
+    success: false,
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server app listening on port ${port}!`);

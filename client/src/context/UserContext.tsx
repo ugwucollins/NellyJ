@@ -21,6 +21,7 @@ const UserContext = ({ children }: any) => {
   const [token, setToken] = useState(JSON.parse(authHeader!));
   const [UsersAddress, setUsersAddress] = useState<any>([]);
   const [events, setEvents] = useState([]);
+  const [teams, setTeams] = useState([]);
 
   const options = {
     headers: {
@@ -29,6 +30,19 @@ const UserContext = ({ children }: any) => {
   };
 
   const router = useNavigate();
+
+  async function GetAllTeams() {
+    try {
+      const res = await ApiURL.get("/v1/teams/get", options);
+      const data = res.data;
+
+      if (data.success) {
+        setTeams(data.data);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.message, { id: "chiefs" });
+    }
+  }
 
   const LogOut = () => {
     setUser(null);
@@ -103,12 +117,16 @@ const UserContext = ({ children }: any) => {
   };
 
   useEffect(() => {
+    GetAllTeams();
     if (user) {
       handleEvents();
     }
   }, []);
 
   const Values = {
+    teams,
+    setTeams,
+    GetAllTeams,
     options,
     token,
     setToken,

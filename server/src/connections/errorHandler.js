@@ -1,4 +1,4 @@
-const errorHandler = (err, req, res, next) => {
+const errorHandler = async (err, req, res, next) => {
   console.log(err);
   console.log(
     `\x1b[31m${err.statusCode}\x1b[0m`,
@@ -8,6 +8,8 @@ const errorHandler = (err, req, res, next) => {
   res
     .status(err.statusCode)
     .json({ success: false, message: err.message, status: err.statusCode });
+
+  next(err);
 };
 export default errorHandler;
 

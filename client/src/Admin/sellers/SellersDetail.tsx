@@ -75,8 +75,8 @@ export const SellersInfo = ({ _id }: any) => {
           });
           setTimeout(() => {
             setLoading(false);
-            router(adminPath + "/sellers", { replace: true });
             GetAllSellers();
+            router(adminPath + "/sellers", { replace: true });
           }, 1000);
         } else {
           toast.error(data.message);

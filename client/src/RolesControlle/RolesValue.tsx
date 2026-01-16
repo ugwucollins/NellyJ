@@ -1,4 +1,5 @@
-import { adminPath, sellerPath } from "../context/UserContext";
+const adminPath: string = import.meta.env.VITE_ADMIN_PATH;
+const sellerPath: string = import.meta.env.VITE_SELLER_PATH;
 
 const { VITE_SELLERS_ROLE, VITE_USERS_ROLE, VITE_ADMIN_ROLE } = import.meta.env;
 export const PersonalRoles = {
