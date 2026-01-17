@@ -54,7 +54,7 @@ export const ContactHeader = () => {
           -25,
           0.2,
           "flex  gap-1 flex-wrap",
-          "text-[min(10vw,30px)] font-bold"
+          "text-[min(10vw,30px)] font-bold",
         )}
       </h1>
       <div className="flex gap-1 flex-wrap">
@@ -220,7 +220,9 @@ export const ContactForm = () => {
           <div>
             <h1 className="font-bold pb-2 text-[min(4vw,18px)]">Address</h1>
             <div className=" opacity-80">
-              <address>92502 Presion Rd. Inglewood, Maine 98380</address>
+              <address>
+                Hilltop Junction Road Abakalili Ebony State, Nigeria.
+              </address>
             </div>
           </div>
 
@@ -229,11 +231,15 @@ export const ContactForm = () => {
             <div className="flex flex-col">
               <div className="flex flex-wrap gap-1.5 opacity-90">
                 <p>Phone:</p>
-                <span>+2348107289948</span>
+                <Link to={"tel:+2348107289948"}>
+                  <span>+2348107289948</span>
+                </Link>
               </div>
               <div className="flex flex-wrap gap-1.5 opacity-90">
                 <p>Email:</p>
-                <span>example@gmail.com</span>
+                <Link to={"mail:nellyjkitchens2025@gmail.com"}>
+                  <span>nellyjkitchens2025@gmail.com</span>
+                </Link>
               </div>
             </div>
           </div>

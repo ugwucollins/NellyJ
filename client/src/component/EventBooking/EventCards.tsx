@@ -8,7 +8,7 @@ const EventCards = ({ imageUrl, Title, comment }: EventCardsProp) => {
         <div className="size-20 relative rounded-full">
           <img
             src={imageUrl ? imageUrl : Assets.Jellofrice1}
-            className="object-cover absolute w-full h-full rounded-full"
+            className="object-cover ring-2 ring-white absolute w-full h-full rounded-full"
             alt="photo"
           />
         </div>

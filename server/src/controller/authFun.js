@@ -10,7 +10,6 @@ import { ROLES } from "../middleware/role.middleware.js";
 const { JWT_SECRET, EMAIL, PASSWORD, SELLER_EMAIL, ROLEEMAIL, ROLEPASSWORD } =
   process.env;
 export const Register = async (req, res) => {
-  await DBConnect();
   const { firstName, lastName, email, password } = req.body;
   const ExistingUser = await UserModel.findOne({
     email: email,
@@ -123,7 +122,6 @@ export const CreateSeller = async (req, res) => {
 };
 
 export const Login = async (req, res) => {
-  await DBConnect();
   const { email, password } = req.body;
   try {
     const user = await UserModel.findOne({ email: email });
@@ -262,7 +260,7 @@ export const Reset_Password = async (req, res) => {
       data,
       {
         new: true,
-      }
+      },
     );
     const newUser = userPassword;
     return res.status(200).json({
@@ -305,7 +303,7 @@ export const CompleteProfile = async (req, res) => {
       data,
       {
         new: true,
-      }
+      },
     );
     const savedUser = updatedUser;
 

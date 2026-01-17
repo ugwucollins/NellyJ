@@ -580,8 +580,11 @@ export const FooterLink: Footer = [
   {
     title: "Contact Info",
     link: [
-      { text: "+2348107289948", path: "tel=+234107289948" },
-      { text: "Email", path: "mailto:nellykitchen2025@gmail.com" },
+      { text: "+2348107289948", path: "tel:+234107289948" },
+      {
+        text: "nellykitchen2025@gmail.com",
+        path: "mailto:nellykitchen2025@gmail.com",
+      },
       { text: "NO 10 hilltop road Ebony state", path: "" },
       { text: "FAQs", path: "/faqs" },
     ],
